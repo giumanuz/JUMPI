@@ -3,12 +3,14 @@ IL BWR MARINO
 di Giuseppe Zamparo
 
 L 
-Line not found -1
+<Line not found>
+0.0%
 
 A COMMISSIONE per l'Energia Atomica
 
 (AEC) e la « Maritime Administration > 
-(AEC) e la Maritime Administration 94.44444444444444
+(AEC) e la Maritime Administration
+94.4%
 
 (MA) del Ministero del Commercio degli
 
@@ -31,10 +33,12 @@ tata lorda) capace di un carico di 180 000 barili
 e progettata per una velocità normale di 20 nodi
 
 a 20.000 SHIP (envalli nsse). 
-20 000 SHP (eavalli asse). 83.63636363636364
+20 000 SHP (eavalli asse).
+83.6%
 
 Mentre, dopo il varo, la nave attendeva che si 
-Mentre. dopo il varo, la DATE attendera che di 84.78260869565217
+Mentre. dopo il varo, la DATE attendera che di
+84.8%
 
 decidesse il tipo di apparato propulsore che le
 
@@ -43,7 +47,8 @@ avrebbe dato vita, il Congresso Americano riget-
 tava una prima richiesta di fondi, pari a 7,1
 
 milioni di dollari per il reattore, ed una succes- 
-milioni di dollari per il reattore, ed una spores 92.92929292929293
+milioni di dollari per il reattore, ed una spores
+92.9%
 
 siva di 9 milioni di dollari per lo stesso reattore
 
@@ -76,7 +81,8 @@ di ogni altro appare di vantaggiosa ed imme-
 diata applicazione, è quello ad acqua ad ebol-
 
 lizione. Esso presenta indubbi vantaggi rispetto 
-lizione, Esso presenta indubbi vantage rispetto 94.73684210526316
+lizione, Esso presenta indubbi vantage rispetto
+94.7%
 
 al reattore ad nequa pressurizzata (PWR) sia
 
@@ -85,14 +91,16 @@ per quanto riguarda la sua stessa realizzazione
 ed il suo autocontrollo, sia per il costo relativo,
 
 E' difficile però confrontare più da vicino i 
-E' difficile però confrontare pin da vieine 90.9090909090909
+E' difficile però confrontare pin da vieine
+90.9%
 
 due sistemi perché mentre il PWR può essere
 
 identifiento nel cielo impiegato per il sommergi-
 
 bilo « Nautilus >, il BWR (boiling water reactor) 
-bile Nantilus > il BWR (boiling water reactor 91.48936170212765
+bile Nantilus > il BWR (boiling water reactor
+91.5%
 
 consente, a partire dal EBWR (experimental
 
@@ -101,49 +109,60 @@ boiling water reactor) che sta dando ad Argonne
 risultati sorprendenti, l'uso di eicli di diversa
 
 coneczione. 
-concezione 85.71428571428572
+concezione
+85.7%
 
 Il BWR, come inteso nei diversi progetti pre-
 
 parati dall'industria americana, può essere del
 
 tipo: 
-ton 50.0
+ton
+50.0%
 
 a) a cielo diretto (fig. 1) 
-BWR a cielo duale. 53.333333333333336
+BWR a cielo duale.
+53.3%
 
 b) a cielo indiretto (fig. 2) 
-Fig. 2 BWR a ciclo indiretto. 62.06896551724138
+Fig. 2 BWR a ciclo indiretto.
+62.1%
 
 c) a ciclo duale, che a sua volta può distin- 
-c) A eielo duale, che a KUA volta può distin- 86.66666666666667
+c) A eielo duale, che a KUA volta può distin-
+86.7%
 
 guersi in : 
-guersi in 90.0
+guersi in
+90.0%
 
 I) cielo duale, propriamente detto (fig. 3)
 
 II) cielo a vaporizzazione secondaria per espan- 
-secondaria per espansione. 54.054054054054056
+secondaria per espansione.
+54.1%
 
 sione (fig. 4).
 
 Un reattore ad acqua ad ebollizione può fun-
 
 zionare : 
-zionare: 94.11764705882352
+zionare:
+94.1%
 
 1) ad acqua naturale e/o nequa pesante
 
 2) con moderatore a livello costante od a livello 
-Fig. BWR con moderatore a livello 60.97560975609756
+Fig. BWR con moderatore a livello
+61.0%
 
 variabile (fig. 5) 
-variabile. 71.42857142857143
+variabile.
+71.4%
 
 3) a circolazione naturale od a circolazione for- 
-3) eireolazione naturale od a circolazione for 92.63157894736842
+3) eireolazione naturale od a circolazione for
+92.6%
 
 zata
 
@@ -154,7 +173,8 @@ chimento e con o senza ossido di torio
 5) con o senza surriscaldatore.
 
 Il primo reattore ad nequa ad ebollizione con- 
-II primo reattore ad acqua ad ebollizione con- 93.47826086956522
+II primo reattore ad acqua ad ebollizione con-
+93.5%
 
 siderato per la propulsione nucleare di una
 
@@ -167,32 +187,38 @@ ritime Admistration > : avrebbe dovuto rappre-
 sentare l'apparato motore di una petroliera
 
 della classe < W. Alton Jones > di 38 000 DWT, 
-della classe . W. Alton Jones di 000 DWT. 89.65517241379311
+della classe . W. Alton Jones di 000 DWT.
+89.7%
 
 ed era previsto come un reattore nd nequa ad
 
 ebollizione del tipo a ciclo chiuso, cioè indi-
 
 retto. Esso era ritenuto come un sistema nu- 
-retto, Esso era ritenate come un sistema must 87.64044943820225
+retto, Esso era ritenate come un sistema must
+87.6%
 
 eleare di concetto avanzato sin rispetto allo 
-cleare di concette avanzato sia rispetto allo 93.33333333333333
+cleare di concette avanzato sia rispetto allo
+93.3%
 
 EBWR del Laboratorio Nazionale della AEC
 
 ad Argonne, che è a ciclo diretto, e per il quale 
-ad Argonne, che è a cielo diretto per il quale 94.73684210526316
+ad Argonne, che è a cielo diretto per il quale
+94.7%
 
 si temeva, allora, che il vapore radicattivo do-
 
 vesse nuceere alla turbina e sollevare troppi 
-muccere alla turbina sollevare troppi 85.36585365853658
+muccere alla turbina sollevare troppi
+85.4%
 
 problemi di schermatura biologica, sia rispetto
 
 ad altri del tipo PWR, cioè ad nequa pressu- 
-ad altri del tipo PWR. cioe ad acqua pressu- 90.9090909090909
+ad altri del tipo PWR. cioe ad acqua pressu-
+90.9%
 
 rizzata. L'AMF Atomies aveva sviluppato que-
 
@@ -201,7 +227,8 @@ sto progetto in due varianti: in una versione
 veniva introdotto del vapore saturo nella tur-
 
 hina, nell'altra del vapore surriscaldato affer- 
-hina, nell'altra del vapore surrisealdate after 92.63157894736842
+hina, nell'altra del vapore surrisealdate after
+92.6%
 
 mando che in genere questo sistema nucleare,
 
@@ -212,26 +239,32 @@ tenza, consentiva un minore investimento di
 capitali ed un più alto rendimento dell'in
 
 pianto. In particolare, nel caso del ciclo coz 
-pianto, In particolare, nel easo del ciclo not 91.30434782608697
+pianto, In particolare, nel easo del ciclo not
+91.3%
 
 vapore saturo, la capacità di enrico annuale 
-vapore saturo, la capacità di carico annual 94.25287356321839
+vapore saturo, la capacità di carico annual
+94.3%
 
 della nave sarebbe stata ciren del 10 % mig- 
-della nave sarebbe stata eiren del milk 86.74698795180723
+della nave sarebbe stata eiren del milk
+86.7%
 
 giore di quella di una petroliera uguale a pro 
-giore di quella di una petroliers uguale pre 93.33333333333333
+giore di quella di una petroliers uguale pre
+93.3%
 
 pulsione convenzionale, ed il costo totale di
 
 esercizio della petroliera nucleare sarebbe ##: 
-esercizio della petroliera nucleare sarebbe AT 94.6236559139785
+esercizio della petroliera nucleare sarebbe AT
+94.6%
 
 mentato di eirea il 10 %.
 
 Il vantaggio, che questo sistema nucleare pre- 
-II vantaggio, che questo sistema nucleare pro 94.5054945054945
+II vantaggio, che questo sistema nucleare pro
+94.5%
 
 sentava rispetto agli altri, dipendeva in part
 
@@ -240,26 +273,32 @@ dall'uso di componenti del ciclo che sono propri
 ad impianti convenzionali. Difatti tutte le parti
 
 del circuito secondario sono disponibili sul mer- 
-del circuite secondario sotto disponibili sn met 88.65979381443299
+del circuite secondario sotto disponibili sn met
+88.7%
 
 cato delle apparecchiature marittime usuali " 
-rato delle appareechiature marittime usuali 93.18181818181819
+rato delle appareechiature marittime usuali
+93.2%
 
 solo quelle del circuito primario del vapor
 
 dovevano essere progettate e costruite, La scell 
-dovevance essere progettate costruite Ln well 88.17204301075269
+dovevance essere progettate costruite Ln well
+88.2%
 
 tra l'impiego di vapore saturo o surrisenldate 
-tra l'impiego di vapore saturo 0 surrisendals 92.3076923076923
+tra l'impiego di vapore saturo 0 surrisendals
+92.3%
 
 veniva rimessn al risultato di un più accurale
 
 studio strecessivo che doveva esaminare anele 
-studio successivo ebe dovera esaminare anex 84.0909090909091
+studio successivo ebe dovera esaminare anex
+84.1%
 
 altri problemi e preparare i dati su cui l'inde 
-altri problemi preparare dati NII eni l'indo 83.51648351648352
+altri problemi preparare dati NII eni l'indo
+83.5%
 
 stria privata avrebbe, poi, basati i preventivi
 
@@ -268,133 +307,168 @@ di spesa da sottoporre alla « Maritime Admi
 nistration >. Robert W. & Robert C. Morrel.
 
 architetti navali di New York, assistevan 
-arehitetti navali di New York, assisterant 93.97590361445783
+arehitetti navali di New York, assisterant
+94.0%
 
 l'AMF Atomies in questo progetto.
 
 Sarebbe interessante poter esporre in modo pa 
-Sarehbe interessante poter esporre in modo 94.25287356321839
+Sarehbe interessante poter esporre in modo
+94.3%
 
 dettagliato lo sviluppo di questo studio, ma
 
 spazio qui non lo consente. Si riassumerà, In 
-spazio qui non lo consente, Si riassumerà 93.02325581395348
+spazio qui non lo consente, Si riassumerà
+93.0%
 
 vece, il concetto finale dell'impianto propose 
-veee, il concetto finale dell'impianto propor 94.5054945054945
+veee, il concetto finale dell'impianto propor
+94.5%
 
 per la nave da 38 000 DWT.
 
 Esso consiste in un ciclo indiretto, la cui part 
-Esso consiste in un eielo indiretto, la eni para 89.58333333333334
+Esso consiste in un eielo indiretto, la eni para
+89.6%
 
 primaria contiene il vapore saturo generato 
-primario costante e vapore secondario 67.5
+primario costante e vapore secondario
+67.5%
 
 reattore, mentre la secondaria fornisce vap" 
-reattore, mentre la secondaria fornisee vapin 94.3820224719101
+reattore, mentre la secondaria fornisee vapin
+94.4%
 
 non-radioattivo alla turbina di propulsione
 
 ni turbogeneratori. 
-ai turbogeneratori. 94.73684210526316
+ai turbogeneratori.
+94.7%
 
 Il reattore ha un « cores, che è In sua parte 
-II reattore ha un core>, che a la sua para 82.75862068965517
+II reattore ha un core>, che a la sua para
+82.8%
 
 centrale, moderato e raffreddato nd nequa 
-centrale, moderato e raffreddato ad acqua 92.6829268292683
+centrale, moderato e raffreddato ad acqua
+92.7%
 
 turale, e costituito da 5488 barre cilindriche 
-turale, e costituito da 5488 barre eilindriede 93.47826086956522
+turale, e costituito da 5488 barre eilindriede
+93.5%
 
 combustibile suddivise in 112 raggruppamene 
-combustibile saddivise in 112 raggruppantal 90.69767441860466
+combustibile saddivise in 112 raggruppantal
+90.7%
 
 Una miscela di UO2-ThO2, è stata scelta com 
-Una miscela di UO2-ThO2 & stata seelta 88.88888888888889
+Una miscela di UO2-ThO2 & stata seelta
+88.9%
 
 combustibile per il vantaggioso costo di ett 
-combustibile per il vantaggiose costo di 92.85714285714286
+combustibile per il vantaggiose costo di
+92.9%
 
 eizão, per la sua stabilità sotto irradiazioni, Pf 
-cizio, per la sua stabilità sotto irradiazioni. per 89.10891089108911
+cizio, per la sua stabilità sotto irradiazioni. per
+89.1%
 
 che chimienmente inerte all'acqua ed al vapor 
-ché chimicamente inerte all'acqua ed al vapan 88.88888888888889
+ché chimicamente inerte all'acqua ed al vapan
+88.9%
 
 perché isotropica durante il processo di fabbe 
-perché isotropica durante il processo di 93.02325581395348
+perché isotropica durante il processo di
+93.0%
 
 cazione, ed infine per la sua stabilità di fas
 
 sino al punto di liquefazione, In un reatten 
-sine al punto di liquefazione. In un 85.0
+sine al punto di liquefazione. In un
+85.0%
 
 il eni combustibile è torio, data l'alta condu 
-il eni combustibile è torio, data l'alta 93.02325581395348
+il eni combustibile è torio, data l'alta
+93.0%
 
 tività termien e l'assenza del cambiamento 
-tività termica l'assenza del camhiamento 90.2439024390244
+tività termica l'assenza del camhiamento
+90.2%
 
 fase di questo elemento si può pervenire a de 
-fase di questo elemento si paò pervenire 91.76470588235294
+fase di questo elemento si paò pervenire
+91.8%
 
 sità di potenza molto elevata, Le percentuali : 
-sità di potenza molto elevata, Le percentually 94.6236559139785
+sità di potenza molto elevata, Le percentually
+94.6%
 
 urania (UO2), toria (ThO2) ed ossido di 
-uranin (UO.) toria (ThO2) ed ossido di 93.5064935064935
+uranin (UO.) toria (ThO2) ed ossido di
+93.5%
 
 sono rispettivamente fissate a 24,5 9%. 12 
-some rispettivamente fissate a 24,5% 87.17948717948718
+some rispettivamente fissate a 24,5%
+87.2%
 
 e 0,5 %. Per l'incamiciatura del combustilak 
-e Per l'incamiciators del combustible 81.4814814814815
+e Per l'incamiciators del combustible
+81.5%
 
 come materiale di struttura della parte att
 
 del core, le cui dimensioni medie sono 140 
-del core, le eni dimensioni medie sono 146 92.85714285714286
+del core, le eni dimensioni medie sono 146
+92.9%
 
 di diametro e 152 em di altezza, a usato
 
 Zirealoy-2, Un totale di 16 barre di controas 
-Zirealoy-2, Un totale di 16 barre di controllo 94.5054945054945
+Zirealoy-2, Un totale di 16 barre di controllo
+94.5%
 
 forma di eroce, delle quali quattro central 
-forma di eroce, delle quali quattro centrali born 93.47826086956522
+forma di eroce, delle quali quattro centrali born
+93.5%
 
 afnio e le altre di aceinio inossidabile al bur 
-afnio le altre di accinio inossidabile al 90.9090909090909
+afnio le altre di accinio inossidabile al
+90.9%
 
 disposte verso l'esterno, possono controllano
 
 eccesso di reattività pari a eiren il 23 70: 
-eccesso di reattività pari a cirea il 86.41975308641976
+eccesso di reattività pari a cirea il
+86.4%
 
 massa critica è fornita approssimativamente 
-massa critica is fornita approssimat 86.07594936708861
+massa critica is fornita approssimat
+86.1%
 
 110 kg di U-325, Il meccanismo di movimen
 
 delle barre di controllo è disposto al di
 
 del serbatoio del reattore, E ciò per diver 
-del serbatoio del reattore. E ciè per 87.5
+del serbatoio del reattore. E ciè per
+87.5%
 
 ragioni : 
-ragioni 87.5
+ragioni
+87.5%
 
 1) facilità di rimozione del core
 
 2) flusso del vapore non ostacolato
 
 3) probabilità di una più prolungata resist 
-3) probabilità di una più prolungata 91.13924050632912
+3) probabilità di una più prolungata
+91.1%
 
 del materiale in acqua bollente piuttosto che 
-del materiale in acqua bollente pinttosto 93.02325581395348
+del materiale in acqua bollente pinttosto
+93.0%
 
 ambiente di vapore.
 
@@ -403,27 +477,34 @@ La principale funzione di questo meccanismo di
 controllo è quella di regolare la reattività del
 
 reattore variando verticalmente In posizione di 
-matters variando verticalmente la posizione di 88.17204301075269
+matters variando verticalmente la posizione di
+88.2%
 
 za o più barre in seno al core. Il movimento 
-tita più barre in semo al core. II movimento 88.63636363636364
+tita più barre in semo al core. II movimento
+88.6%
 
 deve essere tale da permettere immediate e vo- 
-dere essere tale da permettere immediate vo 94.3820224719101
+dere essere tale da permettere immediate vo
+94.4%
 
 lendo anche minime variazioni di posizione delle 
-leader anche minime variazioni di posizione delle 94.84536082474226
+leader anche minime variazioni di posizione delle
+94.8%
 
 barre e ciò sin con comando a mano sin con 
-tarty eiis sia con comande a mano SID COD 67.46987951807229
+tarty eiis sia con comande a mano SID COD
+67.5%
 
 comando automatico. Queste variazioni possono
 
 essere necessarie durante l'avviamento del reat- 
-exacted necessarie durante l'avviamento del reat- 90.72164948453609
+exacted necessarie durante l'avviamento del reat-
+90.7%
 
 tore, nel quale caso la variabile da controllare 
-sure. nel quale caso la variabile da controllare 93.75
+sure. nel quale caso la variabile da controllare
+93.8%
 
 e rappresentata dal flusso neutronico; oppure
 
@@ -432,10 +513,12 @@ per mantenere la potenza costante, a motivo di
 un mutamento nella concentrazione del combu-
 
 stibile, dello xeno e di altri prodotti di fissione; 
-stibile dello xemo di altri prodotti di fissione: 93.06930693069306
+stibile dello xemo di altri prodotti di fissione:
+93.1%
 
 of ancora in seguito nd altre enuse proprie al- 
-abrora in seguito nd altre cause proprie al 86.66666666666667
+abrora in seguito nd altre cause proprie al
+86.7%
 
 l'applicazione marina di un reattore ad acqua
 
@@ -446,191 +529,246 @@ Erano nel caso delle centrali funzionanti a terra.
 Certamente i peggiori inconvenienti che pos-
 
 Sotio verifienrsi in un apparato motore nucleare 
-sono verifiears in un apparato motore nucleare 91.48936170212765
+sono verifiears in un apparato motore nucleare
+91.5%
 
 sono il brusco scatto della turbina dovuto n
 
 fuoriuscita dell'elica in mare grosso, la perdita 
-tuotissita dell'elica in mare grosso, la perdita 92.78350515463917
+tuotissita dell'elica in mare grosso, la perdita
+92.8%
 
 di vioto nel condensatore, l'insufficente lubrifi- 
-vuoto nel condensatore, l'insufficente lubrifi- 94.84536082474226
+vuoto nel condensatore, l'insufficente lubrifi-
+94.8%
 
 tazione, ecc. La manovra stessa della nave im- 
-razione, ecc. La manovra stessa della have im 94.5054945054945
+razione, ecc. La manovra stessa della have im
+94.5%
 
 pone al reattore un carico variabile ed al sistema
 
 di controllo un'insolita fatica. Dal punto di vista 
-controllo l'insolita fatica, Dal punto di vista 91.83673469387756
+controllo l'insolita fatica, Dal punto di vista
+91.8%
 
 teleare, però, il controllo del sistema BWR 
-sucleare, perè, il controllo del sistema BWR 91.95402298850574
+sucleare, perè, il controllo del sistema BWR
+92.0%
 
 son ne risente. 
-risente, 60.86956521739131
+risente,
+60.9%
 
 le possibili conseguenze del rullio e beccheggio
 
 Per una nave dotata di un BWR sono state mo- 
-per and have dotata di un BWR sono state mo- 90.9090909090909
+per and have dotata di un BWR sono state mo-
+90.9%
 
 tivo di vasta analisi, Il movimento di questa 
-di vasta analisi, II movimento di questa 91.76470588235294
+di vasta analisi, II movimento di questa
+91.8%
 
 ave, e di conseguenza dell'apparato motore
 
 abeleare, influisce sulla densità del moderatore 
-mucleare, influisce sulla densità del moderatore 93.75
+mucleare, influisce sulla densità del moderatore
+93.8%
 
 sulla reattività e stabilità del reattore. Per
 
 mifare che la reattività venga sensibilmente 
-witare ehe la reattività venga sensibilmente 93.18181818181819
+witare ehe la reattività venga sensibilmente
+93.2%
 
 Butata con l'inclinazione assunta dal reattore,
 
 spessore del moderatore - cioè del riflet- 
-spessore del moderatore cicè del riflet 93.82716049382715
+spessore del moderatore cicè del riflet
+93.8%
 
 pre - al di sopra del core è mantenuto ad 
-al di sopra del core è mantenuto ad 92.10526315789474
+al di sopra del core è mantenuto ad
+92.1%
 
 certo livello. Le caratteristiche di autocon-
 
 suelo, intrinseche ad un BWR, consentono di 
-trullo, intrinseche ad un BWR consentono di 93.02325581395348
+trullo, intrinseche ad un BWR consentono di
+93.0%
 
 servare invariata nel core la frazione media 
-invariata nel core la frazione media 90.0
+invariata nel core la frazione media
+90.0%
 
 vapore o di vuoto, quando l'esercizio del reat- 
-di vuoto, quando l'esereizio del reat- 87.05882352941177
+di vuoto, quando l'esereizio del reat-
+87.1%
 
 e avviene a pressione costante, Allorché il
 
 Fattore è in posizione inclinata, In frazione di 
-Frattore in posizione inelinata, In frazione di 94.73684210526316
+Frattore in posizione inelinata, In frazione di
+94.7%
 
 pore & essenzialmente immutata, mentre è 
-report essenzialmente immutata, mentre è 92.5
+report essenzialmente immutata, mentre è
+92.5%
 
 Alotta In forza motrice impressa al fluido nel 
-Stotta la forza motrice impressa al fluido nel 91.30434782608697
+Stotta la forza motrice impressa al fluido nel
+91.3%
 
 fenito, Da qui il vantaggio di adottare la eir- 
-cresito, Da qui il vantaggio di adottare la cir 91.48936170212765
+cresito, Da qui il vantaggio di adottare la cir
+91.5%
 
 aucune forzata, anebe se aumenta il costo 
-alazione forzata. anche se aumenta il eosto 80.95238095238095
+alazione forzata. anche se aumenta il eosto
+81.0%
 
 l'impianto. La potenza generata dal reattore, 
-La potenza generata dal reattore, 84.61538461538461
+La potenza generata dal reattore,
+84.6%
 
 questo prelevata, è ridotta con il diminuire 
-talla questo prelevata, ridotta con il dimisuire 89.13043478260869
+talla questo prelevata, ridotta con il dimisuire
+89.1%
 
 Als ricircolazione del fluido, Come conse- 
-heircolazione del fluide Come conse- 84.61538461538461
+heircolazione del fluide Come conse-
+84.6%
 
 Renza, a seguito del rullio e beecheggio, la 
-seguito del rullio e becebeggio, la 83.54430379746836
+seguito del rullio e becebeggio, la
+83.5%
 
 glenn del reattore dovrebbe cecillare attorno 
-del reattore dovrebbe oseillare attorno 88.09523809523809
+del reattore dovrebbe oseillare attorno
+88.1%
 
 un certo livello di equilibrio. La frequenza 
-title certo livello di equilibrio. La frequenza 92.3076923076923
+title certo livello di equilibrio. La frequenza
+92.3%
 
 le oscillazioni sarebbe in fuzione della fre-
 
 rua del movimento della nave: il rullio da- 
-rebite movimento della nave: il rullio da. 87.05882352941177
+rebite movimento della nave: il rullio da.
+87.1%
 
 origine alla perturbazione predominante. 
-alla perturbazione predominante 87.32394366197182
+alla perturbazione predominante
+87.3%
 
 presso che queste oscillazioni di potenza non 
-che queste oscillazioni di potenza non 91.56626506024097
+che queste oscillazioni di potenza non
+91.6%
 
 pillo suficientemente assorbite dal duomo di 
-sufficientemente assorbite dal duomo di 91.56626506024097
+sufficientemente assorbite dal duomo di
+91.6%
 
 hore al di sopra del core e dagli scambia- 
-di sopra del core dagli scambia 84.93150684931507
+di sopra del core dagli scambia
+84.9%
 
 di calore e siano presenti pure in turbina, 
-calore siano presenti pure in turbina 92.5
+calore siano presenti pure in turbina
+92.5%
 
 el con l'uso di uno searico automatico varia- 
-l'uso di uno scarico automatico varias 86.74698795180723
+l'uso di uno scarico automatico varias
+86.7%
 
 del vapore piuttosto che con le barre di 
-inpore piuttosto che con le barre di 89.47368421052632
+inpore piuttosto che con le barre di
+89.5%
 
 atollo che esse verranno eliminate, Uno stu- 
-ebe esse verratino eliminate Uno stil. 75.60975609756098
+ebe esse verratino eliminate Uno stil.
+75.6%
 
 sperimentale dovrebbe possibilmente essere
 
 punto a questa analisi sviluppata per il 
-EWELL questa analisi sviluppata per il 84.61538461538461
+EWELL questa analisi sviluppata per il
+84.6%
 
 Wit sotto l'effetto di mare grosso. Difatti, 
-sotto l'effetto di mare grosso, Difatti. 90.47619047619048
+sotto l'effetto di mare grosso, Difatti.
+90.5%
 
 be me i risultati di questo studio come si 
-risultati di questo studio come si 89.47368421052632
+risultati di questo studio come si
+89.5%
 
 grato sono soddisfacenti, l'importanza degli 
-sono soddisfacenti, l'importanza degli 92.6829268292683
+sono soddisfacenti, l'importanza degli
+92.7%
 
 poli di un'accelerazione verticale del fluido e 
-di accelerazione verticale del fluide 88.09523809523809
+di accelerazione verticale del fluide
+88.1%
 
 worthza dell'inclinazione meriterebbero una 
-dell'inelinazione meriterebbero una 87.17948717948718
+dell'inelinazione meriterebbero una
+87.2%
 
 ya pratica. 
-pratica, 73.6842105263158
+pratica,
+73.7%
 
 hay fazone ai possibili perturbamenti accen- 
-ai possibili perturbamenti accen- 85.71428571428572
+ai possibili perturbamenti accen-
+85.7%
 
 il sistema di controllo del reattore deve
 
 ten capace di regolare e mantenere la po- 
-capace di regolare e mantenere la po- 94.87179487179486
+capace di regolare e mantenere la po-
+94.9%
 
 pet di uscita del reattore entro determinati 
-di useita del reattore entro determinat 91.56626506024097
+di useita del reattore entro determinat
+91.6%
 
 a. in dipendenza di un cambiamento 
-KLA in dipendenza di un cambiamento 92.7536231884058
+KLA in dipendenza di un cambiamento
+92.8%
 
 ne Trattività, sia in funzione delle enratte- 
-rettività sia in funzione delle caratte 85.71428571428572
+rettività sia in funzione delle caratte
+85.7%
 
 anche dei materiali impiegati a determinate 
-dei material impiegati a determinate 91.13924050632912
+dei material impiegati a determinate
+91.1%
 
 azioni di temperatura e pressione, sia per 
-di temperatura 0 pressione, sia per 88.31168831168831
+di temperatura 0 pressione, sia per
+88.3%
 
 a che riguarda le varianti dovute alle manovre 
-varianti dovute alle manovre 75.67567567567568
+varianti dovute alle manovre
+75.7%
 
 nave, sia infine per quanto riguarda la 
-sia infine per quanto riguarda la 91.66666666666666
+sia infine per quanto riguarda la
+91.7%
 
 tap para dell'impianto e dell'equipaggio. Un al- 
-l'equipaggio. Un al- 58.82352941176471
+l'equipaggio. Un al-
+58.8%
 
 fro fattore che può logicamente influenzare la 
-può logicamente influenzare la 78.94736842105263
+può logicamente influenzare la
+78.9%
 
 scelta del sistema di controllo di un BWR è 
-scelta del sisteros di controllo di un BWR i 91.95402298850574
+scelta del sisteros di controllo di un BWR i
+92.0%
 
 quello economico,
 
@@ -643,7 +781,8 @@ seguenti condizioni:
 1) pressione del vapore primario e secondario
 
 costante 
-comita, 53.333333333333336
+comita,
+53.3%
 
 2) pressione del vapore primario costante e del
 
@@ -652,10 +791,12 @@ vapore secondario variabile
 3) pressione del vapore primario variabile e
 
 del vapore secondario costante. 
-primario e secondario costanti. 74.19354838709677
+primario e secondario costanti.
+74.2%
 
 Ciascuno di essi è brevemente più sotto espo- 
-Ciaseuno di essi is brevemente pill sotto espo- 91.30434782608697
+Ciaseuno di essi is brevemente pill sotto espo-
+91.3%
 
 sto ed illustrato dai relativi schemi e grafiei
 
@@ -664,16 +805,20 @@ i quali danno la variazione della pressione del
 vapore primario e secondario in funzione della
 
 potenza crogata. 
-potenza erogata. 93.75
+potenza erogata.
+93.8%
 
 Il primo schema (fig. 6) è fornito di uno seam- 
-II primo schema (fig. 6) è fornito di uno ROAD 88.17204301075269
+II primo schema (fig. 6) è fornito di uno ROAD
+88.2%
 
 bintore di calore, in cui può essere variata la 
-hintore di enlore, in eui può essere variata la 91.48936170212765
+hintore di enlore, in eui può essere variata la
+91.5%
 
 superficie di trasmissione del calore, ossia il 
-superficie di trasmissione del calore le aim. 86.95652173913044
+superficie di trasmissione del calore le aim.
+87.0%
 
 livello dell'acqua secondaria che è attraversata
 
@@ -688,15 +833,18 @@ la pressione del vapore primario. La pressione
 del vapore secondario è regolata variando la
 
 superficie di trasmissione del calore. La diffi- 
-Line not found -1
+<Line not found>
+0.0%
 
 coltà di progettazione di un simile senmbiatore 
-colti di progettazione di un simile scambiatore 93.61702127659575
+colti di progettazione di un simile scambiatore
+93.6%
 
 non fa di questo sistema il più sconsigliabile.
 
 Il secondo tipo (fig. 7) è senz'altro vantaggio:o 
-II secondo tipo (fig. 7) senz'altro vantaggio.o 93.75
+II secondo tipo (fig. 7) senz'altro vantaggio.o
+93.8%
 
 dal punto di vista del reattore, tuttavia richiede
 
@@ -707,10 +855,12 @@ scambiatore di calore tali da operare in modo
 soddisfacente in un intervallo di pressione pint-
 
 tosto ampio, cioè da 600 psi n 900 psi, cesia 
-tosto ampio, ciol do 600 psi n 900 psi, ossia 91.11111111111111
+tosto ampio, ciol do 600 psi n 900 psi, ossia
+91.1%
 
 da circa 41 n 61 ntm rispettivamente. In questo 
-da circa 41 61 atro rispettivamente. In questo 92.47311827956989
+da circa 41 61 atro rispettivamente. In questo
+92.5%
 
 sistema le barre di controllo sono regolate in
 
@@ -731,14 +881,16 @@ tare del carico alla turbina e l'assorbe in caso
 contrario.
 
 Lo schema rappresentato in fig. 8 è invece con- 
-Lo schema rappresentato in fig. 8 is invoce com- 92.63157894736842
+Lo schema rappresentato in fig. 8 is invoce com-
+92.6%
 
 veniente dal punto di vista della turbina ed in
 
 generale del macchinario del circuito secondario,
 
 in quanto esso è meno dispendioso e più facile 
-in quanto esso à meno dispendioso pill facile 92.3076923076923
+in quanto esso à meno dispendioso pill facile
+92.3%
 
 da calcolare se la pressione del vapore secon-
 
@@ -791,7 +943,8 @@ condario trasmette un segnale ad un rivelatore,
 che lo raffronta ad un valore della pressione
 
 secondaria giù stabilito e regolabile n mano. 
-secondaria gia stabilito e regolabile a mano 94.3820224719101
+secondaria gia stabilito e regolabile a mano
+94.4%
 
 Ogni differenza, in eccesso od in difetto, è tra-
 
@@ -800,10 +953,12 @@ smessa ad un apparecchio di controllo della
 pressione, il cui segnale d'uscita determina il
 
 conseguente valore della pressione del vapore 
-Fig. 6 Controllo della pressione a vapore 67.44186046511628
+Fig. 6 Controllo della pressione a vapore
+67.4%
 
 primario. La pressione reale del vapore nel 
-primario variabile e vapore secondario 64.19753086419753
+primario variabile e vapore secondario
+64.2%
 
 circuito primario è direttamente misurata con
 

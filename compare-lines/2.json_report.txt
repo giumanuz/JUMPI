@@ -1,5 +1,6 @@
 Inchieste di Casabella 
-Line not found -1
+<Line not found>
+0.0%
 
 Da sinistra a destra: Interno della Badia di S. Lorenzo (sec. XIII). Portale nell'abside del Duomo (sec. XIII). Piazza del Duomo dall'aereo; vi prospettano il fianco nord della Cattedrale, il
 
@@ -110,7 +111,8 @@ quistato con stenti. La storia dei se-
 coli più vicini a noi mostra tale de-
 
 stino - grigio e monotono, forse - 
-stino grigio e monotono, forse 93.75
+stino grigio e monotono, forse
+93.8%
 
 giacché fra questi monti che non mu-
 
@@ -125,7 +127,8 @@ persistenza su di una terra povera e
 avara, contesa spesso a fatica di brac-
 
 cia al sasso e al bosco, con scarse ri- 
-cia al sasso al bosco. con scarse ri 93.33333333333333
+cia al sasso al bosco. con scarse ri
+93.3%
 
 sorse locali, con modesti traffici. Un
 
@@ -134,7 +137,8 @@ esistere che si riduce talvolta a tener
 duro per virtù di lavoro e di econo-
 
 mia, d'industriosità e di pazienza » (G. 
-mia. d'industriosità di pazienza (G. 92.10526315789474
+mia. d'industriosità di pazienza (G.
+92.1%
 
 B. Emett, Monumenti di Trento, Tren-
 
@@ -415,7 +419,8 @@ drone della città, cessa così «de facto»
 il Principato Vescovile di Trento, per
 
 estinguersi di lì a poco anche « de 
-estinguersi di li a poco anche de 94.11764705882352
+estinguersi di li a poco anche de
+94.1%
 
 jure ». Unita prima al Regno Italico,
 
@@ -478,10 +483,12 @@ meni europei sottraendosi al generico
 solo per la frequente comparsa di mo-
 
 delli « stilistici » o derivati dalla « Se- 
-delli stilistici o derivati dalla Se- 92.5
+delli stilistici o derivati dalla Se-
+92.5%
 
 zession » viennese. 
-zession viennese. 94.44444444444444
+zession viennese.
+94.4%
 
 Questo è il fenomeno aulico, grigio e
 

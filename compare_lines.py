@@ -15,7 +15,7 @@ def fuzzy_match_lines(matched_pairs, source_lines: list[Line], target_lines, thr
             matched_pairs[idx] = (source_line, best_match[0], best_match[1])
             target_lines.remove(best_match[0]) 
         elif matched_pairs[idx] is None:
-            matched_pairs[idx] = (source_line, 'Line not found', -1)
+            matched_pairs[idx] = (source_line, '<Line not found>', 0)
     
     return matched_pairs
 
@@ -76,11 +76,11 @@ for azure_file in os.listdir(azure_dir):
                     elif score>=THREASHOLD_MEDIUM:
                         polygon_points = [(point.x, point.y) for point in polygon.points]
                         draw.polygon(polygon_points, outline='yellow', width=0, fill=(255, 230, 0, 40))
-                        output_file.write(f"{source.content} \n{target} {score}\n\n")
+                        output_file.write(f"{source.content} \n{target}\n{score:.1f}%\n\n")
                     else:
                         polygon_points = [(point.x, point.y) for point in polygon.points]
                         draw.polygon(polygon_points, outline='red', width=0, fill=(255, 0, 0, 40))
-                        output_file.write(f"{source.content} \n{target} {score}\n\n")
+                        output_file.write(f"{source.content} \n{target}\n{score:.1f}%\n\n")
                     
                 img.save(comparison_image_path)
 

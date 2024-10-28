@@ -55,7 +55,8 @@ mination is absurd, since all Italian Universities are
 already controlled by the State.
 
 × 
-Line not found -1
+<Line not found>
+0.0%
 
 Pour l'assainissement des quartiers artistiques des
 
@@ -178,7 +179,8 @@ sovvenzionata al tema del risanamento significherebbe contribuire a organare que
 piani nell'ambito di una coerente visione urbanistica.
 
 4.39 
-39 66.66666666666667
+39
+66.7%
 
 Cherchez la femme
 
@@ -215,5 +217,6 @@ tinuerà un lavoro che sarà superiore a quello degli altri miei seguaci. Mi dic
 se Taliesin continuerà per 50 anni - è un periodo abbastanza lungo ». A questo punto inter-
 
 editoriali in breve 
-editoriaux secreta 59.45945945945945
+editoriaux secreta
+59.5%
 

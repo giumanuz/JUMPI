@@ -305,7 +305,8 @@ cessaria azione di rielaborazione positiva, ciò corrisponderebbe esatta-
 mente al mio pensiero espresso in Casabella n. 215 (« Continuità o
 
 crisi? »). 
-crisi? 75.0
+crisi?
+75.0%
 
 Ma non è ciò che Mr. Banham sostiene facendo uno stralcio tanto im-
 
@@ -320,7 +321,8 @@ di demagogo dello spirito borghese.
 D'altronde proprio in quello stesso numero di Casabella n. 219 Aldo
 
 Rossi (« Una critica che respingiamo »), criticando il libro di Hans 
-Rossi Una critica che respingiamo: criticando il libro di Hans 93.84615384615384
+Rossi Una critica che respingiamo: criticando il libro di Hans
+93.8%
 
 Sedlmayr contro l'arte moderna, sottolineava, interpretando una posi-
 
@@ -349,7 +351,8 @@ Perché il Banham che vuol fare l'esperto di cose italiane non ha cercato
 di leggere meglio e di più invece di insistere sulle sue definizioni dei
 
 « milanesi » e dei « torinesi » che sanno troppo di luogo comune? 
-milanesi e dei torinesi che sanno troppo di luogo comune? 93.44262295081968
+milanesi e dei torinesi che sanno troppo di luogo comune?
+93.4%
 
 Né Gabetti-Isola e gli altri sono la stessa cosa perché se la definizione
 
@@ -368,7 +371,8 @@ soci). Quanto alle opere della « Cooperativa Architetti e Ingegneri di
 Reggio Emilia », non sono Neoliberty affatto e potrebbero quasi essere
 
 prese come esempi di « current architecture ». 
-prese come esempi di current architecture 94.25287356321839
+prese come esempi di current architecture
+94.3%
 
 Neppure Figini e Pollini sono Neoliberty: è ovvio, anche quando in-
 
@@ -403,5 +407,6 @@ nel guardare, deforma ogni cosa che vede: « Il moderno lo si praticava
 come uno stile perché non lo si poteva praticare come una disciplina:
 
 6 
-Line not found -1
+<Line not found>
+0.0%
 
