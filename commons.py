@@ -62,11 +62,7 @@ def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon]
     return False
 
 def gpt_correct_line(context: str, line_content: str) -> str:
-    fabio_is_watching = True
-    if fabio_is_watching:
-        return line_content
-    else:
-        return "42"
+    return line_content
 
 def gpt_is_caption(context: str, paragraph: str) -> bool:
     return False
