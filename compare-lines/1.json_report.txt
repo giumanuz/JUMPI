@@ -334,7 +334,7 @@ Esso consiste in un eielo indiretto, la eni para
 
 primaria contiene il vapore saturo generato 
 primario costante e vapore secondario
-67.5%
+65.0%
 
 reattore, mentre la secondaria fornisce vap" 
 reattore, mentre la secondaria fornisee vapin
@@ -792,7 +792,7 @@ vapore secondario variabile
 
 del vapore secondario costante. 
 primario e secondario costanti.
-74.2%
+71.0%
 
 Ciascuno di essi è brevemente più sotto espo- 
 Ciaseuno di essi is brevemente pill sotto espo-
@@ -818,7 +818,7 @@ hintore di enlore, in eui può essere variata la
 
 superficie di trasmissione del calore, ossia il 
 superficie di trasmissione del calore le aim.
-87.0%
+84.8%
 
 livello dell'acqua secondaria che è attraversata
 
