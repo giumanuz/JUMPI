@@ -66,17 +66,17 @@ def extract_lines(file_path: str) -> list[Line]:
 
     return lines_result
 
-# if __name__ == "__main__":
-#     input_folder = "aws-json"
-#     output_folder = "aws-lines"
-#     os.makedirs(output_folder, exist_ok=True)
+if __name__ == "__main__":
+    input_folder = "aws-json"
+    output_folder = "aws-lines"
+    os.makedirs(output_folder, exist_ok=True)
     
-#     for filename in os.listdir(input_folder):
-#         if filename.endswith(".json"):
-#             input_path = os.path.join(input_folder, filename)
-#             lines = extract_lines(input_path)
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".json"):
+            input_path = os.path.join(input_folder, filename)
+            lines = extract_lines(input_path)
             
-#             output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
-#             with open(output_path, "w") as output_file:
-#                 for line in lines:
-#                     output_file.write(line.content + "\n")
+            output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
+            with open(output_path, "w") as output_file:
+                for line in lines:
+                    output_file.write(line.content + "\n")
