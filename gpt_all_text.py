@@ -2,17 +2,13 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Carica le variabili di ambiente dal file .env
 load_dotenv()
 
-# Imposta la chiave API di OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# Percorsi delle cartelle
 input_folder = 'azure'
 output_folder = 'azure-gpt'
 
-# Crea la cartella di output se non esiste
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
