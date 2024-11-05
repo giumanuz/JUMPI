@@ -1,0 +1,10 @@
+python-dotenv~=1.0.1
+openai~=1.53.1
+tqdm~=4.66.6
+pandas~=2.2.3
+Levenshtein~=0.26.1
+matplotlib~=3.9.2
+shapely~=2.0.6
+language_tool_python~=2.8.1
+pyspellchecker~=0.8.1
+pillow~=11.0.0
