@@ -1,4 +1,6 @@
 import os
+from functools import cache
+
 from openai import OpenAI
 from dotenv import load_dotenv
 from extract_lines_azure import extract_lines as extract_lines_azure
@@ -13,62 +15,94 @@ input_folder = 'azure-json'
 output_folder = 'azure-gpt-lines'
 NUMBER_OF_CONTEXT_LINES = 5
 
+def main():
+    process_file("azure-json/1.json")
+    # for input_file in os.listdir(input_folder):
+    #     print(f'Processing {input_file}')
+    #     input_file_path = os.path.join(input_folder, input_file)
+    #
+    #     if '8' not in input_file:
+    #         continue
+    #
+    #     if os.path.isfile(input_file_path):
+    #         file_lines = [line.content for line in extract_lines_azure(input_file_path)]
+    #
+    #         corrected_lines = parallel_correct_text(file_lines, NUMBER_OF_CONTEXT_LINES)
+    #
+    #         output_path = os.path.join(output_folder, input_file.replace('.json', '.txt'))
+    #
+    #         with open(output_path, 'w', encoding='utf-8') as file:
+    #             for line in corrected_lines:
+    #                 file.write(line + '\n')
+    #
+    #         print(f'Corrected text saved in {output_path}')
+
+def process_file(filepath: str) -> None:
+    file_lines = "\n".join([line.content for line in extract_lines_azure(filepath)[:100]])
+    # print(file_lines)
+    # return
+    response = call_api(file_lines)
+    print(response)
+
+
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-def generate_correction_prompt(line:str, context_text:str):
-        return f"""
-Analizza e correggi la seguente stringa estratta tramite OCR.
 
-Restituisci solo la linea corretta in output correggendo solo grammatica, punteggiatura e caratteri speciali di questa singola linea senza alterare le parole o aggiungere testo extra. 
+@cache
+def get_correction_system_prompt() -> str:
+    with open("gpt_prompt.md", "r") as f:
+        return f.read()
 
-Fai attenzione a non includere né riferimenti né testo del contesto. Mantieni la frase intatta e correggi solo piccoli errori di caratteri, come punti al posto di virgole o virgolette francesi (« »). Non cambiare il significato o l'ordine delle parole e non inserire punti alla fine della frase se non ci sono. 
 
-Se la linea da correggere termina con '-' non devi correggere la parola spezzata.
+def get_formatted_input(context: str, line: str) -> str:
+    out = "<context>\n"
+    for l in context.split("\n"):
+        if l == line:
+            out += f"<line>{l}</line>\n"
+        else:
+            out += f"{l}\n"
+    out += "</context>"
+    return out
 
-In output, restituisci solo la linea corretta, senza aggiungere nulla del contesto.
-
-Contesto comprendente la linea da correggere: 
--------------------------------------------------------
-{context_text}
--------------------------------------------------------
-Linea da correggere:
--------------------------------------------------------
-{line}
--------------------------------------------------------
-"""
 
 def call_api(prompt):
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
+                {"role": "system", "content": get_correction_system_prompt()},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=4096,
-            temperature=0.1
+            temperature=0.2
         )
+        # print(response)
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Error in API request: {e}")
         return None
 
-def parallel_correct_text(text, x):
-    corrected_text = [None] * len(text)
 
-    def process_text(i, line:str, context_text:str):
-        prompt = generate_correction_prompt(line, context_text)
-        response = call_api(prompt)
-        return i, response
+def process_text(i, line: str, context: str):
+    prompt = get_formatted_input(context, line)
+    response = call_api(prompt)
+    print(f"response: {response}")
+    return i, response
+
+
+def parallel_correct_text(lines, x):
+    corrected_text = [None] * len(lines)
 
     with ThreadPoolExecutor() as executor:
         futures = {}
 
-        for i in range(len(text)):
-            context_lines = text[max(0, i - x) : min(len(text), i + 1 + x)]
-            context_text = " ".join(context_lines).replace('-\n', '').replace('\n', ' ')
-            line = text[i]
-            futures[executor.submit(process_text, i, line, context_text)] = i
+        for i in range(len(lines)):
+            context_lines = lines[max(0, i - x) : min(len(lines), i + 1 + x)]
+            context = "\n".join(context_lines)
+            # context_text = " ".join(context_lines).replace('-\n', '').replace('\n', ' ')
+            line = lines[i]
+            futures[executor.submit(process_text, i, line, context)] = i
 
         for future in tqdm(as_completed(futures), total=len(futures), desc="Processing lines"):
             i, response = future.result()
@@ -76,22 +110,6 @@ def parallel_correct_text(text, x):
 
     return corrected_text
 
-for input_file in os.listdir(input_folder):
-    print(f'Processing {input_file}')
-    input_file_path = os.path.join(input_folder, input_file)
 
-    if '8' not in input_file:
-        continue
-
-    if os.path.isfile(input_file_path):
-        file_lines = [line.content for line in extract_lines_azure(input_file_path)]
-        
-        corrected_lines = parallel_correct_text(file_lines, NUMBER_OF_CONTEXT_LINES)
-
-        output_path = os.path.join(output_folder, input_file.replace('.json', '.txt'))
-
-        with open(output_path, 'w', encoding='utf-8') as file:
-            for line in corrected_lines:
-                file.write(line + '\n')
-
-        print(f'Corrected text saved in {output_path}')
+if __name__ == '__main__':
+    main()
