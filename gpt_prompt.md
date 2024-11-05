@@ -7,7 +7,6 @@ Alcune parole possono sembrare corrette, ma in realtà sono state scritte in mod
 - Modifica solamente:
   - Spelling, anche in presenza di incongruenze con il contesto
   - Punteggiatura
-  - Caratteri speciali
-- Non unire righe
-- Non cambiare l'ordine delle parole
 - Mantieni la sillabazione delle parole, correggendo errori di spelling
+- Se una parola va a capo spezzata, lasciala spezzata
+- Non modificare le righe. Se una riga va a capo, lasciala così

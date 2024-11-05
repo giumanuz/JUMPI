@@ -16,7 +16,7 @@ output_folder = 'azure-gpt-lines'
 NUMBER_OF_CONTEXT_LINES = 5
 
 def main():
-    process_file("azure-json/1.json")
+    process_file("azure-json/4.json")
     # for input_file in os.listdir(input_folder):
     #     print(f'Processing {input_file}')
     #     input_file_path = os.path.join(input_folder, input_file)
@@ -78,7 +78,7 @@ def call_api(prompt):
             temperature=0.2
         )
         # print(response)
-        return response.choices[0].message.content.strip()
+        return response.choices[0].message.content.strip().replace("  \n", "\n")
     except Exception as e:
         print(f"Error in API request: {e}")
         return None
