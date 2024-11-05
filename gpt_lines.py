@@ -4,6 +4,7 @@ from functools import cache
 from openai import OpenAI
 from dotenv import load_dotenv
 from extract_lines_azure import extract_lines as extract_lines_azure
+from extract_lines_aws import extract_lines as extract_lines_aws
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -13,13 +14,16 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def main():
-    input_folder = 'azure-json'
-    output_folder = 'azure-gpt-lines'
+    input_folder = 'aws-json'
+    output_folder = 'aws-gpt-lines'
     process_files_in_parallel(input_folder, output_folder)
 
 
 def process_file_and_get_result(filepath: str) -> tuple[str, str]:
-    file_lines = "\n".join([line.content for line in extract_lines_azure(filepath)[:1]])
+    if 'azure' in filepath:
+        file_lines = "\n".join([line.content for line in extract_lines_azure(filepath)])
+    elif 'aws' in filepath:
+        file_lines = "\n".join([line.content for line in extract_lines_aws(filepath)])
     response = call_api(file_lines)
     return response, filepath
 

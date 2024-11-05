@@ -1,0 +1,331 @@
+IL BWR MARINO
+di Giuseppe Zamparo
+A
+COMMISSIONE per l'Energia Atomica
+(AEC) e la Maritime Administration
+(MA) del Ministero del Commercio degli
+Stati Uniti annunciarono nel marzo del 1958
+che la George G. Sharp, Inc., in qualità di archi-
+tetti navali, la General Electric Company, qua-
+le esperta della parte nucleare, erano state pre-
+selezionate per studiare la conversione, da conven-
+zionale a nucleare, della petroliera American
+Explorer del tipo T-5 di 2500 DWT (por-
+tata lorda) capace di un carico di 000 barili
+progettata per una velocità normale di 20 nodi
+20 000 SHP (cavalli asse).
+Mentre, dopo il varo, la DATE attendeva che si
+decidesse il tipo di apparato propulsore che le
+avrebbe dato vita, il Congresso Americano rigettava
+una prima richiesta di fondi, pari a 7.1
+milioni di dollari per il reattore, ed una spesa
+siva di 9 milioni di dollari per lo stesso reattore
+la conversione dello scafo. Bocciata in questa
+proposta, per mancanza di fondi federali, la
+AEC-MA sta curando ora il progetto per una
+petroliera nucleare di 60-80 000 tonn. È
+spaziale che lo studio economico riferito ad una
+nave di maggiore tonnellaggio appaia più al-
+lettante anche agli amministratori governativi e
+che finalmente quei piani e programmi suggeriti,
+proposti, vagliati, mutati, riconsiderati
+confrontati sin dal lontano 7 novembre 1955
+prendano consistenza.
+Si può dire che il tipo di reattore, che oggi più
+di ogni altro appare di vantaggiosa ed imme-
+diata applicazione, è quello ad acqua ad ebollizione.
+Esso presenta indubbi vantaggi rispetto
+al reattore ad acqua pressurizzata (PWR) sia
+per quanto riguarda la sua stessa realizzazione
+ed il suo autocontrollo, sia per il costo relativo.
+È difficile però confrontare più da vicino
+i due sistemi perché mentre il PWR può essere
+identificato nel ciclo impiegato per il sommergibile
+Nautilus, il BWR (boiling water reactor)
+consente, a partire dal EBWR (experimental
+boiling water reactor) che sta dando ad Argonne
+risultati sorprendenti, l'uso di stili di diversa
+concezione.
+Il BWR, come inteso nei diversi progetti pre-
+parati dall'industria americana, può essere del
+tipo:
+a) a ciclo diretto (fig. 1)
+b) a ciclo indiretto (fig. 2)
+c) a ciclo duale, che a sua volta può distin-
+guersi in
+I) ciclo duale, propriamente detto (fig. 3)
+II) ciclo a vaporizzazione secondaria per espansione (fig. 4)
+Un reattore ad acqua ad ebollizione può fun-
+zionare:
+1) ad acqua naturale e/o acqua pesante
+2) con moderatore a livello costante o a livello
+variabile (fig. 5)
+3) circolazione naturale o a circolazione forzata
+4) con uranio o ossido di uranio di vario arricchimento e con o senza ossido di torio
+5) con o senza surriscaldatore
+Il primo reattore ad acqua ad ebollizione con-
+siderato per la propulsione nucleare di una
+petroliera fu quello presentato sotto forma di
+progetto dall'AMF Atomics, Inc., alla Ma-
+ritime Administration: avrebbe dovuto rappre-
+sentare l'apparato motore di una petroliera
+della classe W. Alton Jones di 000 DWT.
+Fig. BWR a ciclo diretto.
+ed era previsto come un reattore ad acqua ad
+ebollizione del tipo a ciclo indiretto. Esso era ritenuto come un sistema molto più
+chiaro di concetti avanzati sia rispetto allo
+EBWR del Laboratorio Nazionale della AEC
+ad Argonne, che è a ciclo diretto per il quale
+si temeva, allora, che il vapore radioattivo do-
+vesse alla turbina sollevare troppi
+problemi di schermatura biologica, sia rispetto
+ad altri del tipo PWR, cioè ad acqua pressu-
+rizzata. L'AMF Atomics aveva sviluppato que-
+sto progetto in due varianti: in una versione
+veniva introdotto del vapore saturo nella tur-
+bina, nell'altra del vapore surriscaldato.
+Fig. 2 BWR a ciclo indiretto.
+Fig. 3
+BWR a ciclo duale.
+mando che in genere questo sistema nucleare
+raffrontato ad uno del tipo PWR di uguale
+tenza, consentiva un minore investimento
+capitale ed un più alto rendimento dell'im-
+pianto. In particolare, nel caso del ciclo con
+vapore saturo, la capacità di carico annuale
+della nave sarebbe stata superiore di quella di
+una petroliera uguale per propulsione convenzionale, ed il costo totale di
+esercizio della petroliera nucleare sarebbe aumentato di circa il 10%.
+Fig. 4. BWR a ciclo a vaporizzazione
+secondaria per espansione.
+Il vantaggio, che questo sistema nucleare pro-
+sentava rispetto agli altri, dipendeva in parte
+dall'uso di componenti del ciclo che sono propri
+ad impianti convenzionali. Difatti tutte le parti
+del circuito secondario sono disponibili e met-
+tono a disposizione delle apparecchiature marittime usuali;
+solo quelle del circuito primario del vapore
+dovevano essere progettate e costruite.
+L'impiego di vapore saturo o surriscaldato
+veniva ritenuto il risultato di uno studio successivo che doveva esaminare anche
+altri problemi e preparare dati. L'industria privata avrebbe, poi, basato i preventivi
+di spesa da sottoporre alla Maritime Adm-
+inistration. Robert W. & Robert C. Morrel,
+architetti navali di New York, assistevano
+l'AMF Atomics in questo progetto.
+Sarebbe interessante poter esporre in modo
+dettagliato lo sviluppo di questo studio, ma
+spazio qui non lo consente. Si riassumerà
+brevemente il concetto finale dell'impianto proposto
+per la nave da 38 000 DWT.
+Esso consiste in un ciclo indiretto, la sua parte
+primaria contiene il vapore saturo generato
+dal reattore, mentre la secondaria fornisce vapore
+non-radioattivo alla turbina di propulsione
+e ai turbogeneratori.
+Il reattore ha un core, che ha la sua parte
+centrale, moderato e raffreddato ad acqua
+naturale, e costituito da 5488 barre cilindriche
+di combustibile suddivise in 112 raggruppamenti.
+Una miscela di UO2-ThO2 è stata selezionata
+come combustibile per il vantaggioso costo di
+esercizio, per la sua stabilità sotto irradiazioni, per
+ché chimicamente inerte all'acqua ed al vapore
+perché isotropica durante il processo di
+fabbricazione, ed infine per la sua stabilità di
+fino al punto di liquefazione. In un
+ciclo il suo combustibile è torio, data l'alta
+attività termica, l'assenza del cambiamento
+di fase di questo elemento si può pervenire
+a potenze molto elevate. Le percentuali
+di uranio (UO2) e torio (ThO2) ed ossido di
+torio sono rispettivamente fissate a 24,5%
+e 75,5%. Per l'incamiciatura del combustibile
+come materiale di struttura della parte
+del core, le sue dimensioni medie sono 146
+mm di diametro e 152 cm di altezza. È usato
+Zircaloy-2. Un totale di 16 barre di controllo
+a forma di croce, delle quali quattro centrali
+in afnio e le altre di acciaio inossidabile,
+disposte verso l'esterno, possono controllare
+l'eccesso di reattività pari a circa il
+massimo critico fornito approssimativamente
+110 kg di U-325. Il meccanismo di movimento
+delle barre di controllo è disposto al di
+sotto del serbatoio del reattore. E ciò per
+ragioni:
+1) facilità di rimozione del core
+2) flusso del vapore non ostacolato
+3) probabilità di una più prolungata
+durata del materiale in acqua bollente piuttosto
+che in ambiente di vapore.
+La principale funzione di questo meccanismo di
+controllo è quella di regolare la reattività del
+reattore variando verticalmente la posizione di
+alcune barre in seno al core. Il movimento
+deve essere tale da permettere immediate
+variazioni anche minime di posizione delle
+barre stesse sia con comandi a mano sia con
+controllo automatico. Queste variazioni possono
+essere necessarie durante l'avviamento del reattore,
+nel quale caso la variabile da controllare
+è rappresentata dal flusso neutronico; oppure
+per mantenere la potenza costante, a motivo di
+un mutamento nella concentrazione del combu-
+stibile o di altri prodotti di fissione;
+ad esempio in seguito ad altre cause proprie al
+l'applicazione marina di un reattore ad acqua
+ad ebollizione che generalmente non si incon-
+trano nel caso delle centrali funzionanti a terra.
+Certamente i peggiori inconvenienti che pos-
+sono verificarsi in un apparato motore nucleare
+sono il brusco scatto della turbina dovuto a
+una variazione della velocità dell'elica in mare grosso, la perdita
+di vuoto nel condensatore, l'insufficiente lubrificazione, ecc. La manovra stessa della nave im-
+pone al reattore un carico variabile ed al sistema
+di controllo l'insolita fatica. Dal punto di vista
+nucleare, però, il controllo del sistema BWR
+risente delle possibili conseguenze del rullio e beccheggio
+per una nave dotata di un BWR sono state mo-
+tivate da vasta analisi. Il movimento di questa
+nave, di conseguenza dell'apparato motore
+nucleare, influisce sulla densità del moderatore
+e sulla reattività e stabilità del reattore. Per
+evitare che la reattività venga sensibilmente
+mutata con l'inclinazione assunta dal reattore,
+lo spessore del moderatore, cioè del riflettore
+al di sopra del core, è mantenuto ad un
+certo livello. Le caratteristiche di autocont-
+rollo, intrinseche ad un BWR, consentono di
+mantenere invariata nel core la frazione media
+di vuoto, quando l'esercizio del reattore
+avviene a pressione costante. Allora, se il
+reattore è in posizione inclinata, la frazione di
+vuoto rimane essenzialmente immutata, mentre è
+sotto la forza motrice impressa al fluido nel
+circuito. Da qui il vantaggio di adottare la cir-
+colazione forzata, anche se aumenta il costo.
+La potenza generata dal reattore,
+tuttavia, questa prelevata, ridotta con il diminuire
+della circolazione del fluido. Come conseguenza
+del rullio e beccheggio, la
+potenza del reattore dovrebbe oscillare attorno
+ad un certo livello di equilibrio. La frequenza
+delle oscillazioni sarebbe in funzione della frequenza
+del movimento della nave: il rullio da
+alla perturbazione predominante.
+È importante che queste oscillazioni di potenza non
+siano sufficientemente assorbite dal domo di
+riflessione al di sopra del core affinché gli scambiatori
+di calore siano presenti pure in turbina.
+L'uso di uno scarico automatico varrebbe
+piuttosto che con le barre di controllo,
+e esse verrebbero eliminate. Uno stil-
+lo sperimentale dovrebbe possibilmente essere
+realizzato in questa analisi sviluppata per il
+sotto l'effetto di mare grosso. Difatti,
+i risultati di questo studio, come si
+sono dimostrati soddisfacenti, l'importanza degli
+effetti di accelerazione verticale del fluido
+e dell'inclinazione meriterebbero una
+pratica.
+I possibili perturbamenti accennati
+sistema di controllo del reattore deve essere
+capace di regolare e mantenere la potenza
+di uscita del reattore entro determinati
+limiti in dipendenza di un cambiamento
+di reattività sia in funzione delle caratteristiche
+dei materiali impiegati a determinate
+condizioni di temperatura o pressione, sia per
+varianti dovute alle manovre
+sia infine per quanto riguarda la
+presenza dell'equipaggio. Un al-
+tro fattore può logicamente influenzare la
+Fig. BWR con moderatore a livello
+variabile.
+Fig. 6 Controllo della pressione a vapore
+primario e secondario costanti.
+Fig. Controllo della pressione a vapore
+primario costante e vapore secondario
+variabile.
+scelta del sistema di controllo di un BWR è
+quello economico.
+Fig. Controllo della pressione a vapore
+primario variabile e vapore secondario
+costante.
+I tre schemi basilari di controllo, che furono
+suggeriti, consentono di mantenere nel ciclo le
+seguenti condizioni:
+1) pressione del vapore primario e secondario
+costante
+2) pressione del vapore primario costante e del
+vapore secondario variabile
+3) pressione del vapore primario variabile
+e del vapore secondario costante.
+Ciascuno di essi è brevemente descritto ed illustrato dai relativi schemi e grafici
+i quali danno la variazione della pressione del
+vapore primario e secondario in funzione della
+potenza erogata.
+Il primo schema (fig. 6) è fornito di uno scambiatore di calore, in cui può essere variata la
+superficie di trasmissione del calore, ossia il
+livello dell'acqua secondaria che è attraversata
+dal circuito primario. Le barre di controllo,
+di conseguenza, regolano la potenza erogata dal reattore,
+sono regolate in maniera da mantenere costante
+la pressione del vapore primario. La pressione
+del vapore secondario è regolata variando la
+superficie di trasmissione del calore. I limiti
+di progettazione di un simile scambiatore
+non fanno di questo sistema il più sconsigliabile.
+Il secondo tipo (fig. 7) senz'altro vantaggioso
+dal punto di vista del reattore, tuttavia richiede
+una turbina ed apparecchiature relative allo
+scambiatore di calore tali da operare in modo
+soddisfacente in un intervallo di pressione piuttosto
+ampio, cioè da 600 psi a 900 psi, ossia
+da circa 41 a 61 atmosfere rispettivamente. In questo
+sistema le barre di controllo sono regolate in
+maniera da mantenere costante la pressione del
+vapore primario, riducendo così la possibilità di
+perturbazioni nella reattività. La superficie di
+trasmissione del calore nello scambiatore rimane
+costante, mentre il circuito del vapore secondario
+libera l'energia immagazzinata con l'aumento
+del carico alla turbina e l'assorbe in caso
+contrario.
+Lo schema rappresentato in fig. 8 è conveniente dal punto di vista della turbina ed in
+generale del macchinario del circuito secondario
+in quanto esso è meno dispendioso e più facile
+da calcolare se la pressione del vapore secondario
+è mantenuta costante. Tale sistema è pro-
+gettato in maniera che le barre di controllo,
+e di conseguenza il livello di potenza del reattore,
+sono difatti regolate in modo da mantenere costante
+la pressione del vapore secondario. Questo si-
+stema può essere significativamente meno stabile del
+precedente. Altro svantaggio è dovuto al fatto
+che mentre nel caso di carichi maggiori il circuito
+primario richiede calore addizionale, co-
+stringendo il reattore ad affaticamento, quando
+invece il carico diminuisce l'energia termica
+immagazzinata nel circuito primario deve essere
+liberata, causando non semplici problemi.
+Stabilito il sistema più conveniente, la potenza
+erogata dal reattore potrà essere variata dal
+5 al 100% della potenza di normale esercizio
+mediante controllo automatico. Il sistema che
+meglio risponderebbe allo scopo è quello basato
+sulla pressione del vapore primario costante e
+del vapore secondario variabile. Questo sistema
+di controllo è interamente elettrico. Un trasduttore
+di pressione sulla tubatura del vapore secondario
+trasmette un segnale ad un rivelatore
+che lo raffronta ad un valore della pressione
+secondaria già stabilito e regolabile a mano.
+Ogni differenza, in eccesso o in difetto, è trasmessa
+ad un apparecchio di controllo della
+pressione, il cui segnale d'uscita determina il
+conseguente valore della pressione del vapore
+primario. La pressione reale del vapore nel
+circuito primario è direttamente misurata con
+un trasduttore, ed il seg
