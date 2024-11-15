@@ -5,14 +5,12 @@ from functools import cache
 from PIL import Image, ImageDraw
 from typing import Tuple
 
-
 from commons import Line
 from extract_lines_aws import extract_lines as extract_lines_aws
 from extract_lines_azure import extract_lines as extract_lines_azure
 from dotenv import load_dotenv
 import openai
 from tqdm import tqdm
-import tiktoken
 
 load_dotenv()
 
@@ -85,7 +83,7 @@ def iterative_fuzzy_matching(source_lines, target_lines, initial_threshold=100, 
 
 azure_dir = 'azure-json'
 aws_dir = 'aws-json'
-output_dir = 'compare-lines'
+output_dir = 'compare-lines2'
 output_dir_merged_gpt_lines = 'merged-gpt-lines'
 images_dir_input = 'Images'
 images_out_input = 'Images-comparison'
@@ -102,7 +100,7 @@ if not os.path.exists(images_out_input):
 if not os.path.exists(output_dir_merged_gpt_lines):
     os.makedirs(output_dir_merged_gpt_lines)
 
-for azure_file in os.listdir(azure_dir):
+for azure_file in tqdm(os.listdir(azure_dir)):
     print(f'Processing {azure_file}')
     azure_file_path = os.path.join(azure_dir, azure_file)
     aws_file_path = os.path.join(aws_dir, azure_file)
@@ -119,6 +117,7 @@ for azure_file in os.listdir(azure_dir):
         prompt = f"AZURE:\n{lines_1}\n--------------\nAWS:\n{lines_2}"
         corrected_lines = call_api(prompt)
 
+        # TODO: change the names of the output files because now it is .json
         with open(os.path.join(output_dir_merged_gpt_lines, azure_file), 'w') as f:
             f.write(corrected_lines)
 
