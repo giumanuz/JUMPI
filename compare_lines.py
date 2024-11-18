@@ -11,6 +11,7 @@ from extract_lines_azure import extract_lines as extract_lines_azure
 from dotenv import load_dotenv
 import openai
 from tqdm import tqdm
+import re
 
 load_dotenv()
 
@@ -33,7 +34,14 @@ def call_api(prompt):
             temperature=0.2
         )
         content = response.choices[0].message.content
-        return "\n".join((l.strip() for l in content.split("\n")))
+        all_lines = "\n".join((l.strip() for l in content.split("\n")))
+        match = re.search(r"AZURE:\s*(.*?)(?=\s*AWS:|\s*-{2,})", all_lines, re.DOTALL)
+
+        if match:
+            all_lines = match.group(1)
+
+        return all_lines
+
     except Exception as e:
         print(f"Error in API request: {e}")
         return None
@@ -117,8 +125,7 @@ for azure_file in tqdm(os.listdir(azure_dir)):
         prompt = f"AZURE:\n{lines_1}\n--------------\nAWS:\n{lines_2}"
         corrected_lines = call_api(prompt)
 
-        # TODO: change the names of the output files because now it is .json
-        with open(os.path.join(output_dir_merged_gpt_lines, azure_file), 'w') as f:
+        with open(os.path.join(output_dir_merged_gpt_lines, azure_file).replace('.json', '.txt'), 'w') as f:
             f.write(corrected_lines)
 
         gpt_lines = [Line([], line, 0, []) for line in corrected_lines.split("\n")]
@@ -135,15 +142,14 @@ for azure_file in tqdm(os.listdir(azure_dir)):
                 draw = ImageDraw.Draw(img, 'RGBA')
                 for idx, (source, target, score) in enumerate(matches_azure_aws):
                     polygon = source.polygons[0]
+                    gpt_line = matches_azure_gpt[idx][1]
                     if score >= THREASHOLD_HIGH:
-                        output_file.write(f"{source.content}\n\n")
+                        output_file.write(f"{gpt_line.content}\n\n")
                     elif score >= THREASHOLD_MEDIUM:
-                        gpt_line = matches_azure_gpt[idx][1]
                         polygon_points = [(point.x, point.y) for point in polygon.points]
                         draw.polygon(polygon_points, outline='yellow', width=0, fill=(255, 230, 0, 40))
                         output_file.write(f"{source.content} \n{target.content}\n{gpt_line.content}\n{score:.1f}%\n\n")
                     else:
-                        gpt_line = matches_azure_gpt[idx][1]
                         polygon_points = [(point.x, point.y) for point in polygon.points]
                         draw.polygon(polygon_points, outline='red', width=0, fill=(255, 0, 0, 40))
                         output_file.write(f"{source.content} \n{target.content}\n{gpt_line.content}\n{score:.1f}%\n\n")

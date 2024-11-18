@@ -4,7 +4,7 @@ di Giuseppe Zamparo
 
 L 
 <Line not found>
-<Line not found>
+L
 0.0%
 
 A COMMISSIONE per l'Energia Atomica
@@ -28,7 +28,7 @@ scelte per studiare la conversione, da conven-
 
 zionale a nucleare, della petroliera « American
 
-Explorer > del tipo T-5 di 22500 DWT (por-
+Explorer » del tipo T-5 di 22500 DWT (por-
 
 tata lorda) capace di un carico di 180 000 barili
 
@@ -63,11 +63,11 @@ proposta, per mancanza di fondi federali, la
 
 AEC-MA sta curando ora il progetto per una
 
-petroliera nucleare di 60-80 000 tonn. E' spe-
+petroliera nucleare di 60-80 000 tonn. È spe-
 
 rabile che lo studio economico riferito ad una
 
-nave di maggiore tonnellaggio appain più al-
+nave di maggiore tonnellaggio appaia più al-
 
 lettante anche agli amministratori governativi e
 
@@ -90,11 +90,11 @@ lizione, Esso presenta indubbi vantage rispetto
 lizione. Esso presenta indubbi vantaggi rispetto
 94.7%
 
-al reattore ad nequa pressurizzata (PWR) sia
+al reattore ad acqua pressurizzata (PWR) sia
 
 per quanto riguarda la sua stessa realizzazione
 
-ed il suo autocontrollo, sia per il costo relativo,
+ed il suo autocontrollo, sia per il costo relativo.
 
 E' difficile però confrontare più da vicino i 
 E' difficile però confrontare pin da vieine
@@ -103,7 +103,7 @@ E' difficile però confrontare pin da vieine
 
 due sistemi perché mentre il PWR può essere
 
-identifiento nel cielo impiegato per il sommergi-
+identificato nel ciclo impiegato per il sommergi-
 
 bilo « Nautilus >, il BWR (boiling water reactor) 
 bile Nantilus > il BWR (boiling water reactor
@@ -114,7 +114,7 @@ consente, a partire dal EBWR (experimental
 
 boiling water reactor) che sta dando ad Argonne
 
-risultati sorprendenti, l'uso di eicli di diversa
+risultati sorprendenti, l'uso di cicli di diversa
 
 coneczione. 
 concezione
@@ -150,7 +150,7 @@ guersi in
 guersi in:
 90.0%
 
-I) cielo duale, propriamente detto (fig. 3)
+I) ciclo duale, propriamente detto (fig. 3)
 
 II) cielo a vaporizzazione secondaria per espan- 
 secondaria per espansione.
@@ -166,7 +166,7 @@ zionare:
 zionare:
 94.1%
 
-1) ad acqua naturale e/o nequa pesante
+1) ad acqua naturale e/o acqua pesante
 
 2) con moderatore a livello costante od a livello 
 Fig. BWR con moderatore a livello
@@ -185,7 +185,7 @@ variabile (fig. 5)
 
 zata
 
-4) con uranio od ossido di uranio di vario arrie-
+4) con uranio od ossido di uranio di vario arric-
 
 chimento e con o senza ossido di torio
 
@@ -200,9 +200,9 @@ siderato per la propulsione nucleare di una
 
 petroliera fu quello presentato sotto forma di
 
-progetto dall'AMF Atomics, Inc., alla < Ma-
+progetto dall'AMF Atomics, Inc., alla « Ma-
 
-ritime Admistration > : avrebbe dovuto rappre-
+ritime Administration »: avrebbe dovuto rappre-
 
 sentare l'apparato motore di una petroliera
 
@@ -211,7 +211,7 @@ della classe . W. Alton Jones di 000 DWT.
 della classe « W. Alton Jones » di 38 000 DWT,
 89.7%
 
-ed era previsto come un reattore nd nequa ad
+ed era previsto come un reattore ad acqua ad
 
 ebollizione del tipo a ciclo chiuso, cioè indi-
 
@@ -232,7 +232,7 @@ ad Argonne, che è a cielo diretto per il quale
 ad Argonne, che è a ciclo diretto, e per il quale
 94.7%
 
-si temeva, allora, che il vapore radicattivo do-
+si temeva, allora, che il vapore radioattivo do-
 
 vesse nuceere alla turbina e sollevare troppi 
 muccere alla turbina sollevare troppi
@@ -246,7 +246,7 @@ ad altri del tipo PWR. cioe ad acqua pressu-
 ad altri del tipo PWR, cioè ad acqua pressu-
 90.9%
 
-rizzata. L'AMF Atomies aveva sviluppato que-
+rizzata. L'AMF Atomics aveva sviluppato que-
 
 sto progetto in due varianti: in una versione
 
@@ -263,7 +263,7 @@ raffrontato ad uno del tipo PWR di uguale po-
 
 tenza, consentiva un minore investimento di
 
-capitali ed un più alto rendimento dell'in
+capitali ed un più alto rendimento dell'im-
 
 pianto. In particolare, nel caso del ciclo coz 
 pianto, In particolare, nel easo del ciclo not
@@ -292,14 +292,14 @@ esercizio della petroliera nucleare sarebbe AT
 esercizio della petroliera nucleare sarebbe au-
 94.6%
 
-mentato di eirea il 10 %.
+mentato di circa il 10 %.
 
 Il vantaggio, che questo sistema nucleare pre- 
 II vantaggio, che questo sistema nucleare pro
 Il vantaggio, che questo sistema nucleare pre-
 94.5%
 
-sentava rispetto agli altri, dipendeva in part
+sentava rispetto agli altri, dipendeva in parte
 
 dall'uso di componenti del ciclo che sono propri
 
@@ -315,7 +315,7 @@ rato delle appareechiature marittime usuali
 cato delle apparecchiature marittime usuali e
 93.2%
 
-solo quelle del circuito primario del vapor
+solo quelle del circuito primario del vapore
 
 dovevano essere progettate e costruite, La scell 
 dovevance essere progettate costruite Ln well
@@ -327,7 +327,7 @@ tra l'impiego di vapore saturo 0 surrisendals
 tra l'impiego di vapore saturo o surriscaldato
 92.3%
 
-veniva rimessn al risultato di un più accurale
+veniva rimessa al risultato di un più accurato
 
 studio strecessivo che doveva esaminare anele 
 studio successivo ebe dovera esaminare anex
@@ -339,25 +339,25 @@ altri problemi preparare dati NII eni l'indo
 altri problemi e preparare i dati su cui l'indu-
 83.5%
 
-stria privata avrebbe, poi, basati i preventivi
+stria privata avrebbe, poi, basato i preventivi
 
-di spesa da sottoporre alla « Maritime Admi
+di spesa da sottoporre alla « Maritime Admi-
 
-nistration >. Robert W. & Robert C. Morrel.
+nistration ». Robert W. & Robert C. Morrel,
 
 architetti navali di New York, assistevan 
 arehitetti navali di New York, assisterant
 architetti navali di New York, assistevano
 94.0%
 
-l'AMF Atomies in questo progetto.
+l'AMF Atomics in questo progetto.
 
 Sarebbe interessante poter esporre in modo pa 
 Sarehbe interessante poter esporre in modo
 Sarebbe interessante poter esporre in modo più
 94.3%
 
-dettagliato lo sviluppo di questo studio, ma
+dettagliato lo sviluppo di questo studio, ma lo
 
 spazio qui non lo consente. Si riassumerà, In 
 spazio qui non lo consente, Si riassumerà
@@ -378,7 +378,7 @@ Esso consiste in un ciclo indiretto, la cui parte
 
 primaria contiene il vapore saturo generato 
 primario costante e vapore secondario
-primaria contiene il vapore saturo generato nel
+primaria contiene il vapore saturo generato dal
 65.0%
 
 reattore, mentre la secondaria fornisce vap" 
@@ -386,7 +386,7 @@ reattore, mentre la secondaria fornisee vapin
 reattore, mentre la secondaria fornisce vapore
 94.4%
 
-non-radioattivo alla turbina di propulsione
+non-radioattivo alla turbina di propulsione e
 
 ni turbogeneratori. 
 ai turbogeneratori.
@@ -438,7 +438,7 @@ perché isotropica durante il processo di
 perché isotropica durante il processo di fabbri-
 93.0%
 
-cazione, ed infine per la sua stabilità di fas
+cazione, ed infine per la sua stabilità di fase
 
 sino al punto di liquefazione, In un reatten 
 sine al punto di liquefazione. In un
@@ -452,7 +452,7 @@ il cui combustibile è torio, data l'alta condu-
 
 tività termien e l'assenza del cambiamento 
 tività termica l'assenza del camhiamento
-tività termica e l'assenza del cambiamento di
+ttività termica e l'assenza del cambiamento di
 90.2%
 
 fase di questo elemento si può pervenire a de 
@@ -467,7 +467,7 @@ sità di potenza molto elevata. Le percentuali di
 
 urania (UO2), toria (ThO2) ed ossido di 
 uranin (UO.) toria (ThO2) ed ossido di
-uranio (UO2), torio (ThO2) ed ossido di torio
+uranio (UO2), torio (ThO2) ed ossido di
 93.5%
 
 sono rispettivamente fissate a 24,5 9%. 12 
@@ -480,14 +480,14 @@ e Per l'incamiciators del combustible
 e 0,5 %. Per l'incamiciatura del combustibile,
 81.5%
 
-come materiale di struttura della parte att
+come materiale di struttura della parte attiva
 
 del core, le cui dimensioni medie sono 140 
 del core, le eni dimensioni medie sono 146
 del core, le cui dimensioni medie sono 140 cm
 92.9%
 
-di diametro e 152 em di altezza, a usato
+di diametro e 152 cm di altezza, è usato
 
 Zirealoy-2, Un totale di 16 barre di controas 
 Zirealoy-2, Un totale di 16 barre di controllo
@@ -504,7 +504,7 @@ afnio le altre di accinio inossidabile al
 afnio e le altre di acciaio inossidabile al boro,
 90.9%
 
-disposte verso l'esterno, possono controllano
+disposte verso l'esterno, possono controllare un
 
 eccesso di reattività pari a eiren il 23 70: 
 eccesso di reattività pari a cirea il
@@ -516,9 +516,9 @@ massa critica is fornita approssimat
 massa critica è fornita approssimativamente da
 86.1%
 
-110 kg di U-325, Il meccanismo di movimen
+110 kg di U-235. Il meccanismo di movimento
 
-delle barre di controllo è disposto al di
+delle barre di controllo è disposto al di sotto
 
 del serbatoio del reattore, E ciò per diver 
 del serbatoio del reattore. E ciè per
@@ -587,7 +587,7 @@ sure. nel quale caso la variabile da controllare
 tore, nel quale caso la variabile da controllare
 93.8%
 
-e rappresentata dal flusso neutronico; oppure
+è rappresentata dal flusso neutronico; oppure
 
 per mantenere la potenza costante, a motivo di
 
@@ -607,7 +607,7 @@ l'applicazione marina di un reattore ad acqua
 
 ad ebollizione e che generalmente non si incon-
 
-Erano nel caso delle centrali funzionanti a terra.
+trano nel caso delle centrali funzionanti a terra.
 
 Certamente i peggiori inconvenienti che pos-
 
@@ -616,7 +616,7 @@ sono verifiears in un apparato motore nucleare
 sono verificarsi in un apparato motore nucleare
 91.5%
 
-sono il brusco scatto della turbina dovuto n
+sono il brusco scatto della turbina dovuto al
 
 fuoriuscita dell'elica in mare grosso, la perdita 
 tuotissita dell'elica in mare grosso, la perdita
@@ -650,7 +650,7 @@ risente,
 non ne risente.
 60.9%
 
-le possibili conseguenze del rullio e beccheggio
+Le possibili conseguenze del rullio e beccheggio
 
 Per una nave dotata di un BWR sono state mo- 
 per and have dotata di un BWR sono state mo-
@@ -662,21 +662,21 @@ di vasta analisi, II movimento di questa
 tivo di vasta analisi. Il movimento di questa
 91.8%
 
-ave, e di conseguenza dell'apparato motore
+nave, e di conseguenza dell'apparato motore
 
 abeleare, influisce sulla densità del moderatore 
 mucleare, influisce sulla densità del moderatore
 nucleare, influisce sulla densità del moderatore
 93.8%
 
-sulla reattività e stabilità del reattore. Per
+e sulla reattività e stabilità del reattore. Per
 
 mifare che la reattività venga sensibilmente 
 witare ehe la reattività venga sensibilmente
 evitare che la reattività venga sensibilmente
 93.2%
 
-Butata con l'inclinazione assunta dal reattore,
+mutata con l'inclinazione assunta dal reattore,
 
 spessore del moderatore - cioè del riflet- 
 spessore del moderatore cicè del riflet
@@ -688,24 +688,24 @@ al di sopra del core è mantenuto ad
 tore - al di sopra del core è mantenuto ad un
 92.1%
 
-certo livello. Le caratteristiche di autocon-
+certo livello. Le caratteristiche di autocontrollo,
 
 suelo, intrinseche ad un BWR, consentono di 
 trullo, intrinseche ad un BWR consentono di
-trollo, intrinseche ad un BWR, consentono di
+intrinseche ad un BWR, consentono di con-
 93.0%
 
 servare invariata nel core la frazione media 
 invariata nel core la frazione media
-conservare invariata nel core la frazione media
+servare invariata nel core la frazione media di
 90.0%
 
 vapore o di vuoto, quando l'esercizio del reat- 
 di vuoto, quando l'esereizio del reat-
-di vapore o di vuoto, quando l'esercizio del reat-
+vapore o di vuoto, quando l'esercizio del reat-
 87.1%
 
-e avviene a pressione costante, Allorché il
+tore avviene a pressione costante. Allorché il
 
 Fattore è in posizione inclinata, In frazione di 
 Frattore in posizione inelinata, In frazione di
@@ -762,16 +762,16 @@ title certo livello di equilibrio. La frequenza
 ad un certo livello di equilibrio. La frequenza
 92.3%
 
-le oscillazioni sarebbe in fuzione della fre-
+delle oscillazioni sarebbe in funzione della fre-
 
 rua del movimento della nave: il rullio da- 
 rebite movimento della nave: il rullio da.
-quenza del movimento della nave: il rullio da-
+quenza del movimento della nave: il rullio dà
 87.1%
 
 origine alla perturbazione predominante. 
 alla perturbazione predominante
-rebbe origine alla perturbazione predominante.
+origine alla perturbazione predominante.
 87.3%
 
 presso che queste oscillazioni di potenza non 
@@ -781,7 +781,7 @@ Qualora queste oscillazioni di potenza non
 
 pillo suficientemente assorbite dal duomo di 
 sufficientemente assorbite dal duomo di
-fossero sufficientemente assorbite dal duomo di
+siano sufficientemente assorbite dal duomo di
 91.6%
 
 hore al di sopra del core e dagli scambia- 
@@ -809,11 +809,11 @@ ebe esse verratino eliminate Uno stil.
 controllo che esse verranno eliminate. Uno stu-
 75.6%
 
-sperimentale dovrebbe possibilmente essere
+dio sperimentale dovrebbe possibilmente essere
 
 punto a questa analisi sviluppata per il 
 EWELL questa analisi sviluppata per il
-dedicato a questa analisi sviluppata per il
+condotto a questa analisi sviluppata per il
 84.6%
 
 Wit sotto l'effetto di mare grosso. Difatti, 
@@ -851,7 +851,7 @@ ai possibili perturbamenti accen-
 In relazione ai possibili perturbamenti accen-
 85.7%
 
-il sistema di controllo del reattore deve
+nati, il sistema di controllo del reattore deve
 
 ten capace di regolare e mantenere la po- 
 capace di regolare e mantenere la po-
@@ -870,12 +870,12 @@ limiti, in dipendenza di un cambiamento
 
 ne Trattività, sia in funzione delle enratte- 
 rettività sia in funzione delle caratte
-della reattività, sia in funzione delle caratteristiche
+della reattività, sia in funzione delle caratteri-
 85.7%
 
 anche dei materiali impiegati a determinate 
 dei material impiegati a determinate
-dei materiali impiegati a determinate
+stiche dei materiali impiegati a determinate
 91.1%
 
 azioni di temperatura e pressione, sia per 
@@ -908,11 +908,11 @@ scelta del sisteros di controllo di un BWR i
 scelta del sistema di controllo di un BWR è
 92.0%
 
-quello economico,
+quello economico.
 
 I tre schemi basilari di controllo, che furono
 
-suggeriti, consentono di mantenere nel cielo le
+suggeriti, consentono di mantenere nel ciclo le
 
 seguenti condizioni:
 
@@ -939,7 +939,7 @@ Ciaseuno di essi is brevemente pill sotto espo-
 Ciascuno di essi è brevemente più sotto espo-
 91.3%
 
-sto ed illustrato dai relativi schemi e grafiei
+sto ed illustrato dai relativi schemi e grafici
 
 i quali danno la variazione della pressione del
 
@@ -1000,7 +1000,7 @@ una turbina ed apparecchiature relative allo
 
 scambiatore di calore tali da operare in modo
 
-soddisfacente in un intervallo di pressione pint-
+soddisfacente in un intervallo di pressione piut-
 
 tosto ampio, cioè da 600 psi n 900 psi, cesia 
 tosto ampio, ciol do 600 psi n 900 psi, ossia
@@ -1018,7 +1018,7 @@ maniera da mantenere costante la pressione del
 
 vapore primario, riducendo così la possibilità di
 
-perturbazioni nella reattività, La superficie di
+perturbazioni nella reattività. La superficie di
 
 trasmissione del calore nello scambiatore rimane
 
@@ -1056,21 +1056,21 @@ sono difatti regolate così da mantenere costante
 
 la pressione del vapore secondario. Questo si-
 
-stema può essere cinetienmente meno stabile del
+stema può essere cinematicamente meno stabile del
 
-precedente, Altro svantaggio è dovuto al fatto
+precedente. Altro svantaggio è dovuto al fatto
 
-che mentre nel enso di carichi maggiori il cir-
+che mentre nel caso di carichi maggiori il cir-
 
-enito primario richiede calore addizionale, co-
+cuito primario richiede calore addizionale, co-
 
 stringendo il reattore ad affaticamento, quando
 
-invece il carico diminuisce l'energia termien
+invece il carico diminuisce l'energia termica
 
-immagazzinata nel eireuito primario deve essere
+immagazzinata nel circuito primario deve essere
 
-liberata, causando non semplici problemi,
+liberata, causando non semplici problemi.
 
 Stabilito il sistema più conveniente, la potenza
 
@@ -1084,9 +1084,9 @@ meglio risponderebbe allo scopo è quello basato
 
 sulla pressione del vapore primario costante e
 
-del vapore secondario variabile, Questo sistema
+del vapore secondario variabile. Questo sistema
 
-di controllo è interamente elettrico, Un trasdut-
+di controllo è interamente elettrico. Un trasdut-
 
 tore di pressione sulla tubatura del vapore se-
 

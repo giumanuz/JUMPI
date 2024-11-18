@@ -1,7 +1,7 @@
 IL BWR MARINO
 di Giuseppe Zamparo
-
-LA COMMISSIONE per l'Energia Atomica
+L
+A COMMISSIONE per l'Energia Atomica
 (AEC) e la « Maritime Administration »
 (MA) del Ministero del Commercio degli
 Stati Uniti annunciarono nel marzo del 1958
@@ -121,7 +121,7 @@ spazio qui non lo consente. Si riassumerà, in-
 vece, il concetto finale dell'impianto proposto
 per la nave da 38 000 DWT.
 Esso consiste in un ciclo indiretto, la cui parte
-primaria contiene il vapore saturo generato nel
+primaria contiene il vapore saturo generato dal
 reattore, mentre la secondaria fornisce vapore
 non-radioattivo alla turbina di propulsione e
 ai turbogeneratori.
@@ -137,10 +137,10 @@ perché isotropica durante il processo di fabbri-
 cazione, ed infine per la sua stabilità di fase
 sino al punto di liquefazione. In un reattore
 il cui combustibile è torio, data l'alta condu-
-tività termica e l'assenza del cambiamento di
+ttività termica e l'assenza del cambiamento di
 fase di questo elemento si può pervenire a den-
 sità di potenza molto elevata. Le percentuali di
-uranio (UO2), torio (ThO2) ed ossido di torio
+uranio (UO2), torio (ThO2) ed ossido di
 sono rispettivamente fissate a 24,5 %, 12 %
 e 0,5 %. Per l'incamiciatura del combustibile,
 come materiale di struttura della parte attiva
@@ -181,7 +181,7 @@ ad ebollizione e che generalmente non si incon-
 trano nel caso delle centrali funzionanti a terra.
 Certamente i peggiori inconvenienti che pos-
 sono verificarsi in un apparato motore nucleare
-sono il brusco scatto della turbina dovuto a
+sono il brusco scatto della turbina dovuto al
 fuoriuscita dell'elica in mare grosso, la perdita
 di vuoto nel condensatore, l'insufficiente lubrifi-
 cazione, ecc. La manovra stessa della nave im-
@@ -199,10 +199,10 @@ evitare che la reattività venga sensibilmente
 mutata con l'inclinazione assunta dal reattore,
 lo spessore del moderatore - cioè del riflet-
 tore - al di sopra del core è mantenuto ad un
-certo livello. Le caratteristiche di autocon-
-trollo, intrinseche ad un BWR, consentono di
-conservare invariata nel core la frazione media
-di vapore o di vuoto, quando l'esercizio del reat-
+certo livello. Le caratteristiche di autocontrollo,
+intrinseche ad un BWR, consentono di con-
+servare invariata nel core la frazione media di
+vapore o di vuoto, quando l'esercizio del reat-
 tore avviene a pressione costante. Allorché il
 reattore è in posizione inclinata, la frazione di
 vapore è essenzialmente immutata, mentre è
@@ -216,17 +216,17 @@ guenza, a seguito del rullio e beccheggio, la
 potenza del reattore dovrebbe oscillare attorno
 ad un certo livello di equilibrio. La frequenza
 delle oscillazioni sarebbe in funzione della fre-
-quenza del movimento della nave: il rullio da-
-rebbe origine alla perturbazione predominante.
+quenza del movimento della nave: il rullio dà
+origine alla perturbazione predominante.
 Qualora queste oscillazioni di potenza non
-fossero sufficientemente assorbite dal duomo di
+siano sufficientemente assorbite dal duomo di
 vapore al di sopra del core e dagli scambia-
 tori di calore e siano presenti pure in turbina,
 sarà con l'uso di uno scarico automatico varia-
 bile del vapore piuttosto che con le barre di
 controllo che esse verranno eliminate. Uno stu-
 dio sperimentale dovrebbe possibilmente essere
-dedicato a questa analisi sviluppata per il
+condotto a questa analisi sviluppata per il
 BWR sotto l'effetto di mare grosso. Difatti,
 anche se i risultati di questo studio come si
 spera sono soddisfacenti, l'importanza degli
@@ -238,8 +238,8 @@ nati, il sistema di controllo del reattore deve
 essere capace di regolare e mantenere la po-
 tenza di uscita del reattore entro determinati
 limiti, in dipendenza di un cambiamento
-della reattività, sia in funzione delle caratteristiche
-dei materiali impiegati a determinate
+della reattività, sia in funzione delle caratteri-
+stiche dei materiali impiegati a determinate
 condizioni di temperatura e pressione, sia per
 quanto riguarda le varianti dovute alle manovre
 della nave, sia infine per quanto riguarda la
