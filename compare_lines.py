@@ -6,8 +6,8 @@ from PIL import Image, ImageDraw
 from typing import Tuple
 
 from commons import Line
-from extract_lines_aws import extract_lines as extract_lines_aws
-from extract_lines_azure import extract_lines as extract_lines_azure
+from aws.extract_lines import extract_lines as extract_lines_aws
+from azure.extract_lines import extract_lines as extract_lines_azure
 from dotenv import load_dotenv
 import openai
 from tqdm import tqdm
@@ -19,7 +19,7 @@ client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
 
 @cache
 def get_correction_system_prompt() -> str:
-    with open("gpt_prompt_together.md", "r") as f:
+    with open("gpt/prompts/two-tools.md", "r") as f:
         return f.read()
     
 def call_api(prompt):
@@ -89,12 +89,12 @@ def iterative_fuzzy_matching(source_lines, target_lines, initial_threshold=100, 
     return matches
 
 
-azure_dir = 'azure-json'
-aws_dir = 'aws-json'
-output_dir = 'compare-lines2'
-output_dir_merged_gpt_lines = 'merged-gpt-lines'
-images_dir_input = 'Images'
-images_out_input = 'Images-comparison'
+azure_dir = 'azure/json'
+aws_dir = 'aws/json'
+output_dir = 'compare-aws-azure-gpt'
+output_dir_merged_gpt_lines = 'gpt/lines'
+images_dir_input = 'images'
+images_out_input = 'images-comparison'
 THREASHOLD_HIGH = 95
 THREASHOLD_MEDIUM = 90
 THREASHOLD_LOW = 85
@@ -109,6 +109,8 @@ if not os.path.exists(output_dir_merged_gpt_lines):
     os.makedirs(output_dir_merged_gpt_lines)
 
 for azure_file in tqdm(os.listdir(azure_dir)):
+    if '8' not in azure_file:
+        continue
     print(f'Processing {azure_file}')
     azure_file_path = os.path.join(azure_dir, azure_file)
     aws_file_path = os.path.join(aws_dir, azure_file)
