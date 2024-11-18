@@ -6,8 +6,8 @@ from PIL import Image, ImageDraw
 from typing import Tuple
 
 from commons import Line
-from extract_lines_aws import extract_lines as extract_lines_aws
-from extract_lines_azure import extract_lines as extract_lines_azure
+from aws.extract_lines import extract_lines as extract_lines_aws
+from azure.extract_lines import extract_lines as extract_lines_azure
 from dotenv import load_dotenv
 import openai
 from tqdm import tqdm

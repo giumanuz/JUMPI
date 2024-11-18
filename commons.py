@@ -1,5 +1,9 @@
 from shapely.geometry import Polygon as ShapelyPolygon
 
+'''
+The following classes and functions are used to extract lines from aws and azure jsons.
+'''
+
 class Point:
     def __init__(self, x: int, y: int):
         self.x = x
@@ -31,13 +35,13 @@ class Line:
             "spans": [...]
         }
     ]
-    '''
-    # aws doesn't have spans
-    def __init__(self, polygons: list[Polygon], content: str, confidence: float, spans: list = []):
+    '''    
+    def __init__(self, polygons: list[Polygon], content: str, confidence: float, spans: list = [], is_caption: bool = False):
         self.polygons = polygons
-        self.spans = spans
+        self.spans = spans # aws doesn't have spans
         self.content = content
         self.confidence = confidence
+        self.is_caption = is_caption
 
     def get_polygon(self):
         return self.polygons[0]
@@ -61,8 +65,6 @@ def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon]
             return True
     return False
 
-def gpt_correct_line(context: str, line_content: str) -> str:
-    return line_content
-
-def gpt_is_caption(context: str, paragraph: str) -> bool:
+def gpt_is_caption(paragraph: str) -> bool:
+    # TODO: implement asking GPT
     return False

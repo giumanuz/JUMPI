@@ -1,6 +1,6 @@
-import json
-from commons import Polygon, Line, is_line_inside_figure, gpt_correct_line, gpt_is_caption
-import os
+import json, os, sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commons import Polygon, Line, is_line_inside_figure, gpt_is_caption
 
 def is_line_in_captions(line_spans: list[dict], captions_spans: list[tuple]) -> bool:
     line_start = min(span["offset"] for span in line_spans)
@@ -83,7 +83,6 @@ def extract_lines(file_path: str) -> list[Line]:
 
             line_confidence = get_confidence(line_spans, words[page_idx])
             line_polygons = [line_polygon]
-            line_content = gpt_correct_line(whole_text, line_content)
             new_line = Line(
                 polygons=line_polygons, 
                 content=line_content, 
@@ -95,8 +94,8 @@ def extract_lines(file_path: str) -> list[Line]:
     return lines
 
 if __name__ == "__main__":
-    input_folder = "azure-json"
-    output_folder = "azure-lines"
+    input_folder = "json"
+    output_folder = "tmp"
     os.makedirs(output_folder, exist_ok=True)
     
     for filename in os.listdir(input_folder):
@@ -105,6 +104,5 @@ if __name__ == "__main__":
             lines = extract_lines(input_path)
             
             output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
-            with open(output_path, "w") as output_file:
-                for line in lines:
-                    output_file.write(line.content + "\n")
+            with open(output_path, "w", encoding="utf-8") as output_file:
+                output_file.write("\n".join(line.content for line in lines))
