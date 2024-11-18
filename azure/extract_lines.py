@@ -17,9 +17,6 @@ def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon]
     overlap_percentage = 0
     for figure_polygon in figures_polygons:
         overlap_percentage += compute_overlap_percentage(line_polygon, figure_polygon)
-    # TODO: remove
-    # if overlap_percentage >= threshold:
-    #     print("miao")
     return overlap_percentage >= threshold
 
 def gpt_is_caption(paragraph: str) -> bool:
@@ -131,6 +128,7 @@ if __name__ == "__main__":
         if filename.endswith(".json"):
             input_path = os.path.join(input_folder, filename)
             lines = extract_lines(input_path)
+
             output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
             with open(output_path, "w", encoding="utf-8") as output_file:
                 output_file.write("\n".join(line.content for line in lines))
