@@ -130,9 +130,7 @@ if __name__ == "__main__":
     for filename in os.listdir(input_folder):
         if filename.endswith(".json"):
             input_path = os.path.join(input_folder, filename)
-            print(f"Processing {input_path}")
             lines = extract_lines(input_path)
-            print()
-            # output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
-            # with open(output_path, "w", encoding="utf-8") as output_file:
-            #     output_file.write("\n".join(line.content for line in lines))
+            output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
+            with open(output_path, "w", encoding="utf-8") as output_file:
+                output_file.write("\n".join(line.content for line in lines))
