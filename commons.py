@@ -1,7 +1,7 @@
 from shapely.geometry import Polygon as ShapelyPolygon
 
 '''
-The following classes and functions are used to extract lines from aws and azure jsons.
+The following classes are used to extract lines from azure jsons.
 '''
 
 class Point:
@@ -38,7 +38,7 @@ class Line:
     '''    
     def __init__(self, polygons: list[Polygon], content: str, confidence: float, spans: list = [], is_caption: bool = False):
         self.polygons = polygons
-        self.spans = spans # aws doesn't have spans
+        self.spans = spans
         self.content = content
         self.confidence = confidence
         self.is_caption = is_caption
