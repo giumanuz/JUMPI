@@ -1,10 +1,8 @@
 import os
 from difflib import SequenceMatcher
 from functools import cache
-
 from PIL import Image, ImageDraw
 from typing import Tuple
-
 from commons import Line
 from aws.extract_lines import extract_lines as extract_lines_aws
 from azure.extract_lines import extract_lines as extract_lines_azure
@@ -47,13 +45,12 @@ def call_api(prompt):
         return None
 
 
-def custom_matcher(source_line_content, target_lines, threshold=80):
+def custom_matcher(source_line_content: str, target_lines: set[str], threshold=80):
     best_match = None
     best_score = 0
 
     for target_line in target_lines:
-        target_line_content = target_line.content
-        score = SequenceMatcher(None, source_line_content, target_line_content).ratio() * 100
+        score = SequenceMatcher(None, source_line_content, target_line).ratio() * 100
 
         if score > best_score and score >= threshold:
             best_match = target_line
@@ -62,7 +59,7 @@ def custom_matcher(source_line_content, target_lines, threshold=80):
     return (best_match, best_score) if best_match else None
 
 
-def fuzzy_match_lines(matched_pairs, source_lines: list[Line], target_lines: set[Line], threshold=80):
+def fuzzy_match_lines(matched_pairs, source_lines: list[Line], target_lines: set[str], threshold=80):
     for idx, source_line in enumerate(source_lines):
         best_match = custom_matcher(source_line.content, target_lines, threshold)
 
@@ -70,13 +67,12 @@ def fuzzy_match_lines(matched_pairs, source_lines: list[Line], target_lines: set
             matched_pairs[idx] = (source_line, best_match[0], best_match[1])
             target_lines.remove(best_match[0])
         elif matched_pairs[idx] is None:
-            matched_pairs[idx] = (source_line, Line([], '<Line not found>', 0, []), 0)
+            matched_pairs[idx] = (source_line, '<Line not found>', 0)
 
     return matched_pairs
 
 
-# questa funzione ritorna una lista di Tuple[Line_source, Line_target, score]
-def iterative_fuzzy_matching(source_lines, target_lines, initial_threshold=100, penalty_step=1, max_threshold=50) -> list[Tuple[Line, Line, float]]:
+def iterative_fuzzy_matching(source_lines, target_lines, initial_threshold=100, penalty_step=1, max_threshold=50) -> list[Tuple[Line, str, float]]:
     matches: list[Line] = [None] * len(source_lines)
     set_target_lines = set(target_lines)
     threshold = initial_threshold
@@ -109,8 +105,6 @@ if not os.path.exists(output_dir_merged_gpt_lines):
     os.makedirs(output_dir_merged_gpt_lines)
 
 for azure_file in tqdm(os.listdir(azure_dir)):
-    if '8' not in azure_file:
-        continue
     print(f'Processing {azure_file}')
     azure_file_path = os.path.join(azure_dir, azure_file)
     aws_file_path = os.path.join(aws_dir, azure_file)
@@ -121,22 +115,22 @@ for azure_file in tqdm(os.listdir(azure_dir)):
 
         matches_azure_aws = iterative_fuzzy_matching(azure_lines, aws_lines)
 
-        lines_1 = "\n".join([line.content for line, _, _ in matches_azure_aws])
-        lines_2 = "\n".join([line.content for _, line, _ in matches_azure_aws])
+        azure_lines_content = "\n".join([line.content for line, _, _ in matches_azure_aws])
+        aws_lines_content = "\n".join([line for _, line, _ in matches_azure_aws])
 
-        prompt = f"AZURE:\n{lines_1}\n--------------\nAWS:\n{lines_2}"
+        prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
         corrected_lines = call_api(prompt)
 
         with open(os.path.join(output_dir_merged_gpt_lines, azure_file).replace('.json', '.txt'), 'w') as f:
             f.write(corrected_lines)
 
-        gpt_lines = [Line([], line, 0, []) for line in corrected_lines.split("\n")]
+        gpt_lines = [line for line in corrected_lines.split("\n")]
 
         matches_azure_gpt = iterative_fuzzy_matching(azure_lines, gpt_lines)
 
-        image_path = os.path.join(images_dir_input, azure_file.replace('.json', '.JPG'))
-        comparison_image_path = os.path.join(images_out_input, azure_file.replace('.json', '.JPG'))
-        output_file_path = os.path.join(output_dir, f'{azure_file}_report.txt').replace('.json', '')
+        image_path = os.path.join(images_dir_input, azure_file.replace('.json', '.jpg'))
+        comparison_image_path = os.path.join(images_out_input, azure_file.replace('.json', '.jpg'))
+        output_file_path = os.path.join(output_dir, f'{azure_file}.txt').replace('.json', '')
 
         with open(output_file_path, 'w') as output_file:
             with Image.open(image_path) as img:
@@ -146,14 +140,14 @@ for azure_file in tqdm(os.listdir(azure_dir)):
                     polygon = source.polygons[0]
                     gpt_line = matches_azure_gpt[idx][1]
                     if score >= THREASHOLD_HIGH:
-                        output_file.write(f"{gpt_line.content}\n\n")
+                        output_file.write(f"{gpt_line}\n\n")
                     elif score >= THREASHOLD_MEDIUM:
                         polygon_points = [(point.x, point.y) for point in polygon.points]
                         draw.polygon(polygon_points, outline='yellow', width=0, fill=(255, 230, 0, 40))
-                        output_file.write(f"{source.content} \n{target.content}\n{gpt_line.content}\n{score:.1f}%\n\n")
+                        output_file.write(f"{source.content} \n{target}\n{gpt_line}\n{score:.1f}%\n\n")
                     else:
                         polygon_points = [(point.x, point.y) for point in polygon.points]
                         draw.polygon(polygon_points, outline='red', width=0, fill=(255, 0, 0, 40))
-                        output_file.write(f"{source.content} \n{target.content}\n{gpt_line.content}\n{score:.1f}%\n\n")
+                        output_file.write(f"{source.content} \n{target}\n{gpt_line}\n{score:.1f}%\n\n")
 
                 img.save(comparison_image_path)
