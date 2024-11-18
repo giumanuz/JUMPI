@@ -1,0 +1,1 @@
+Dato un paragrafo in input, devi dire solamente se è parte di una descrizione di un'immagine o meno. Se lo è devi restiuire "yes", altrimenti "no".
