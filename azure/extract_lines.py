@@ -1,6 +1,30 @@
 import json, os, sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from commons import Polygon, Line, is_line_inside_figure, gpt_is_caption
+from commons import Polygon, Line
+
+def compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
+    shapely_poly1 = polygon1.to_shapely()
+    shapely_poly2 = polygon2.to_shapely()
+    if not shapely_poly1.is_valid or not shapely_poly2.is_valid:
+        return 0
+    intersection_area = shapely_poly1.intersection(shapely_poly2).area
+    poly1_area = shapely_poly1.area
+    if poly1_area == 0:
+        return 0
+    return intersection_area / poly1_area
+
+def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon], threshold: float = 0.9) -> bool:
+    overlap_percentage = 0
+    for figure_polygon in figures_polygons:
+        overlap_percentage += compute_overlap_percentage(line_polygon, figure_polygon)
+    # TODO: remove
+    # if overlap_percentage >= threshold:
+    #     print("miao")
+    return overlap_percentage >= threshold
+
+def gpt_is_caption(paragraph: str) -> bool:
+    # TODO: implement asking GPT
+    return False
 
 def is_line_in_captions(line_spans: list[dict], captions_spans: list[tuple]) -> bool:
     line_start = min(span["offset"] for span in line_spans)
@@ -47,10 +71,9 @@ def extract_lines(file_path: str) -> list[Line]:
     with open(file_path, 'r') as file:
         data = json.load(file)
 
-    whole_text = data["analyzeResult"]["content"]
-
     figuresPolygons = [] # if the polygon of a line is inside a figure, the text will be skipped
     captionsSpans = [] # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
+    offsetPageNumber = [] # in this way I can idenfy the page number and skip it
 
     for figure in data["analyzeResult"].get("figures", []):
         for boundingRegion in figure.get("boundingRegions", []):
@@ -60,9 +83,11 @@ def extract_lines(file_path: str) -> list[Line]:
             captionsSpans.append((span["offset"], span["length"]))
 
     for paragraph in data["analyzeResult"].get("paragraphs", []):
-        result = gpt_is_caption(whole_text, paragraph.get("content", ""))
-        # TODO: should we remove the page number?
-        if result or paragraph.get("role", "") == "pageNumber":
+        if paragraph.get("role", "") == "pageNumber":
+            offsetPageNumber.append(paragraph.get("spans", [])[0]["offset"])
+            continue
+        result = gpt_is_caption(paragraph.get("content", ""))
+        if result:
             for span in paragraph.get("spans", []):
                 captionsSpans.append((span["offset"], span["length"]))
 
@@ -74,22 +99,26 @@ def extract_lines(file_path: str) -> list[Line]:
             line_polygon = Polygon(line["polygon"])
             line_spans = line.get("spans", [])
             line_content = line.get("content", "")
+            line_is_caption = False
+
+            if line_spans[0]["offset"] in offsetPageNumber:
+                continue
 
             if is_line_inside_figure(line_polygon, figuresPolygons):
                 continue
 
             if is_line_in_captions(line_spans, captionsSpans):
-                continue
+                line_is_caption = True
 
             line_confidence = get_confidence(line_spans, words[page_idx])
             line_polygons = [line_polygon]
-            new_line = Line(
-                polygons=line_polygons, 
-                content=line_content, 
-                confidence=line_confidence, 
-                spans=[(span["offset"], span["length"]) for span in line_spans]
-            )
-            lines.append(new_line)
+            lines.append(Line(
+                polygons=line_polygons,
+                content=line_content,
+                confidence=line_confidence,
+                spans=[(span["offset"], span["length"]) for span in line_spans],
+                is_caption=line_is_caption
+            ))
 
     return lines
 
@@ -101,8 +130,9 @@ if __name__ == "__main__":
     for filename in os.listdir(input_folder):
         if filename.endswith(".json"):
             input_path = os.path.join(input_folder, filename)
+            print(f"Processing {input_path}")
             lines = extract_lines(input_path)
-            
-            output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
-            with open(output_path, "w", encoding="utf-8") as output_file:
-                output_file.write("\n".join(line.content for line in lines))
+            print()
+            # output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
+            # with open(output_path, "w", encoding="utf-8") as output_file:
+            #     output_file.write("\n".join(line.content for line in lines))
