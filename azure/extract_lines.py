@@ -31,7 +31,7 @@ def get_correction_system_prompt() -> str:
     with open("gpt/prompts/is_caption.md", "r") as f:
         return f.read()
     
-def is_caption(paragraph: str) -> bool:
+def gpt_is_caption(paragraph: str) -> bool:
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
