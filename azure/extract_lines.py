@@ -1,6 +1,13 @@
-import json, os, sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import json, os, sys, openai
+from functools import cache
+from dotenv import load_dotenv
 from commons import Polygon, Line
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+load_dotenv()
+
+client = openai.Client(api_key=os.getenv("OPENAI_API_KEY")) 
+
 
 def compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
     shapely_poly1 = polygon1.to_shapely()
@@ -22,9 +29,31 @@ def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon]
     #     print("miao")
     return overlap_percentage >= threshold
 
-def gpt_is_caption(paragraph: str) -> bool:
-    # TODO: implement asking GPT
-    return False
+@cache
+def get_correction_system_prompt() -> str:
+    with open("gpt/prompts/is_caption.md", "r") as f:
+        return f.read()
+    
+def is_caption(paragraph: str) -> bool:
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": get_correction_system_prompt()},
+                {"role": "user", "content": paragraph}
+            ],
+            max_tokens=16384,
+            temperature=0.2
+        )
+        content = response.choices[0].message.content
+        if 'yes' in content:
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        print(f"Error in API request: {e}")
+        return None
 
 def is_line_in_captions(line_spans: list[dict], captions_spans: list[tuple]) -> bool:
     line_start = min(span["offset"] for span in line_spans)
