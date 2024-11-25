@@ -1,65 +1,39 @@
-import subprocess
-import os
+import boto3
 import json
+from dotenv import load_dotenv
+import os
 
 PATH_TO_IMAGE = "../images/2.jpg"
-PATH_OUTPUT = "output.json"
+PATH_OUTPUT_FOLDER = "json"
 AWS_TEXTRACT_FOLDER = "aws-textract"
 
 
-def run_textract_commands(path_to_image=PATH_TO_IMAGE):
-    if not os.path.exists(AWS_TEXTRACT_FOLDER):
-        print(f"Error: The folder '{AWS_TEXTRACT_FOLDER}' does not exist.")
-        return
-    
-    os.chdir(AWS_TEXTRACT_FOLDER)
-    
+def analyze_local_document(file_path=PATH_TO_IMAGE, feature_types=["LAYOUT"], output_path=PATH_OUTPUT_FOLDER):
+    load_dotenv(dotenv_path="../.env")
+    textract = boto3.client(
+        'textract',
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        region_name=os.getenv("AWS_REGION")
+    )
+
+    with open(file_path, 'rb') as document:
+        image_bytes = document.read()
+
     try:
-        print("Converting the image to Base64...")
-        subprocess.run(
-            ["base64", "-i", path_to_image, "-o", "temp_base64.txt"],
-            check=True
+        response = textract.analyze_document(
+            Document={'Bytes': image_bytes},
+            FeatureTypes=feature_types
         )
-        print("Conversion completed. Base64 file saved as 'temp_base64.txt'.")
-        
-        print("Reading the content of 'temp_base64.txt'...")
-        with open("temp_base64.txt", "r") as f:
-            base64_encoded = f.read().strip()
 
-        print("Creating a temporary JSON input file for AWS Textract...")
-        document_json = {
-            "Bytes": base64_encoded
-        }
-        with open("document.json", "w") as json_file:
-            json.dump(document_json, json_file)
+        output_file = f"{output_path}/{file_path.split('/')[-1].split('.')[0]}_NEW.json"
+        with open(output_file, 'w') as f:
+            json.dump(response, f, indent=4)
 
-        print("Running the AWS Textract command...")
-        aws_command = [
-            "aws", "textract", "analyze-document",
-            "--document", "file://document.json",
-            "--feature-types", "LAYOUT",
-            "--region", "us-east-1"
-        ]
-        
-        with open(PATH_OUTPUT, "w") as output_file:
-            subprocess.run(aws_command, stdout=output_file, check=True)
-        
-        print(f"Analysis completed. Results saved in {PATH_OUTPUT}.")
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error while executing the command: {e}")
+        print(f"Risultato salvato in: {output_file}")
     except Exception as e:
-        print(f"General error: {e}")
-    finally:
-        # Cleanup temporary files
-        print("Cleaning up temporary files...")
-        if os.path.exists("temp_base64.txt"):
-            os.remove("temp_base64.txt")
-            print("Removed 'temp_base64.txt'.")
-        if os.path.exists("document.json"):
-            os.remove("document.json")
-            print("Removed 'document.json'.")
+        print(f"Errore durante l'analisi del documento: {e}")
 
 
 if __name__ == "__main__":
-    run_textract_commands()
+    analyze_local_document(PATH_TO_IMAGE, ["LAYOUT"])
