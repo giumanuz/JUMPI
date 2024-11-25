@@ -5,7 +5,6 @@ import os
 
 PATH_TO_IMAGE = "../images/2.jpg"
 PATH_OUTPUT_FOLDER = "json"
-AWS_TEXTRACT_FOLDER = "aws-textract"
 
 
 def analyze_local_document(file_path=PATH_TO_IMAGE, feature_types=["LAYOUT"], output_path=PATH_OUTPUT_FOLDER):
@@ -30,9 +29,9 @@ def analyze_local_document(file_path=PATH_TO_IMAGE, feature_types=["LAYOUT"], ou
         with open(output_file, 'w') as f:
             json.dump(response, f, indent=4)
 
-        print(f"Risultato salvato in: {output_file}")
+        print(f"Result saved in: {output_file}")
     except Exception as e:
-        print(f"Errore durante l'analisi del documento: {e}")
+        print(f"Error during document analysis: {e}")
 
 
 if __name__ == "__main__":
