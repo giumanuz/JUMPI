@@ -30,6 +30,6 @@ def compare_files(path1, path2):
     print(f'\nWeighted average similarity: {weighted_average}')
 
 if __name__ == '__main__':
-    path1 = 'real-lines'
-    path2 = 'aws/lines'
+    path1 = 'azure/gpt-lines'
+    path2 = 'real/lines'
     compare_files(path1, path2)
