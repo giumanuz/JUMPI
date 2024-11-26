@@ -7,7 +7,7 @@ PATH_TO_IMAGE = "../images/2.jpg"
 PATH_OUTPUT_FOLDER = "json"
 
 
-def analyze_local_document(file_path=PATH_TO_IMAGE, feature_types=["LAYOUT"], output_path=PATH_OUTPUT_FOLDER):
+def analyze_document(file_path=PATH_TO_IMAGE, output_path=PATH_OUTPUT_FOLDER):
     load_dotenv(dotenv_path="../.env")
     textract = boto3.client(
         'textract',
@@ -22,10 +22,10 @@ def analyze_local_document(file_path=PATH_TO_IMAGE, feature_types=["LAYOUT"], ou
     try:
         response = textract.analyze_document(
             Document={'Bytes': image_bytes},
-            FeatureTypes=feature_types
+            FeatureTypes=['LAYOUT']
         )
 
-        output_file = f"{output_path}/{file_path.split('/')[-1].split('.')[0]}_NEW.json"
+        output_file = f"{output_path}/{file_path.split('/')[-1].split('.')[0]}.json"
         with open(output_file, 'w') as f:
             json.dump(response, f, indent=4)
 
@@ -35,4 +35,4 @@ def analyze_local_document(file_path=PATH_TO_IMAGE, feature_types=["LAYOUT"], ou
 
 
 if __name__ == "__main__":
-    analyze_local_document(PATH_TO_IMAGE, ["LAYOUT"])
+    analyze_document()

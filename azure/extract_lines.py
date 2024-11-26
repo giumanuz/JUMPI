@@ -32,6 +32,8 @@ def get_correction_system_prompt() -> str:
         return f.read()
     
 def gpt_is_caption(paragraph: str) -> bool:
+    # TODO: Only for testing purposes
+    return False
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
@@ -101,14 +103,14 @@ def extract_lines(file_path: str) -> list[Line]:
     captionsSpans = [] # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
     offsetPageNumber = [] # in this way I can idenfy the page number and skip it
 
-    for figure in data["analyzeResult"].get("figures", []):
+    for figure in data.get("figures", []):
         for boundingRegion in figure.get("boundingRegions", []):
             figuresPolygons.append(Polygon(boundingRegion["polygon"]))
         caption = figure.get("caption", {})
         for span in caption.get("spans", []):
             captionsSpans.append((span["offset"], span["length"]))
 
-    for paragraph in data["analyzeResult"].get("paragraphs", []):
+    for paragraph in data.get("paragraphs", []):
         if paragraph.get("role", "") == "pageNumber":
             offsetPageNumber.append(paragraph.get("spans", [])[0]["offset"])
             continue
@@ -118,10 +120,10 @@ def extract_lines(file_path: str) -> list[Line]:
                 captionsSpans.append((span["offset"], span["length"]))
 
     lines = []
-    words = [page.get("words", []) for page in data["analyzeResult"].get("pages", [])]
+    words = [page.get("words", []) for page in data.get("pages", [])]
 
-    for page_idx in range(len(data["analyzeResult"].get("pages", []))):
-        for line in data["analyzeResult"]["pages"][page_idx].get("lines", []):
+    for page_idx in range(len(data.get("pages", []))):
+        for line in data["pages"][page_idx].get("lines", []):
             line_polygon = Polygon(line["polygon"])
             line_spans = line.get("spans", [])
             line_content = line.get("content", "")

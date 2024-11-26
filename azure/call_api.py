@@ -11,7 +11,7 @@ PATH_TO_IMAGE = "../images/2.jpg"
 PATH_OUTPUT_FOLDER = "json"
 
 
-def analyze_layout(path_to_sample_document=PATH_TO_IMAGE, output_path=PATH_OUTPUT_FOLDER):
+def analyze_document(file_path=PATH_TO_IMAGE, output_path=PATH_OUTPUT_FOLDER):
     load_dotenv(dotenv_path="../.env")
 
     endpoint = 'https://mdp-test.cognitiveservices.azure.com/'
@@ -20,14 +20,14 @@ def analyze_layout(path_to_sample_document=PATH_TO_IMAGE, output_path=PATH_OUTPU
     document_intelligence_client = DocumentIntelligenceClient(endpoint=endpoint, credential=AzureKeyCredential(key))
 
     try:
-        with open(path_to_sample_document, "rb") as f:
+        with open(file_path, "rb") as f:
             poller = document_intelligence_client.begin_analyze_document(
                 "prebuilt-layout",
                 analyze_request=f,
                 content_type="application/octet-stream"
             )
         result: AnalyzeResult = poller.result()
-        output_file_path = os.path.join(output_path, os.path.basename(path_to_sample_document).replace('.jpg', '_NEW.json'))
+        output_file_path = os.path.join(output_path, os.path.basename(file_path).replace('.jpg', '.json'))
         with open(output_file_path, 'w') as output_file:
             json.dump(result.as_dict(), output_file, indent=4)
                 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     try:
         load_dotenv(dotenv_path="../.env")
-        analyze_layout()
+        analyze_document()
     except HttpResponseError as error:
         if error.error is not None:
             if error.error.code == "InvalidImage":
