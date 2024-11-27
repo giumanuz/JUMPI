@@ -1,10 +1,8 @@
-function SearchPage() {
+function UploadPage() {
   return (
-    <div
-      className="d-flex justify-content-center align-items-center vh-100"
-    >
+    <div className="d-flex justify-content-center align-items-center vh-100">
       <div className="card bg-body-secondary p-4 shadow-sm" style={{ width: "30rem" }}>
-        <h3 className="text-center mb-4">Create a New Article</h3>
+        <h3 className="text-center mb-4">Upload a New Article</h3>
         <form>
           <div className="mb-3">
             <label htmlFor="author" className="form-label">
@@ -48,4 +46,4 @@ function SearchPage() {
   );
 }
 
-export default SearchPage;
+export default UploadPage;
