@@ -2,9 +2,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.scss';
-import HomePage from './HomePage';
-import SearchPage from './SearchPage';
-import UploadPage from './UploadPage';
+import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
+import UploadPage from './pages/UploadPage';
 
 
 createRoot(document.getElementById('root')!).render(
