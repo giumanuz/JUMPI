@@ -55,13 +55,11 @@ def analyze_documents_endpoint():
     except json.JSONDecodeError:
         return jsonify({"error": "Invalid metadata format"}), 400
 
-    required_fields = ['name_magazine', 'abstract_magazine', 'year', 'publisher', 'genre', 'articles']
+    required_fields = ["name_magazine", "abstract_magazine", "year", "publisher", "genre", "article_title", 
+        "article_author", "article_page_range"]
     for field in required_fields:
         if field not in metadata:
             return jsonify({"error": f"Missing required field: {field}"}), 400
-
-    if not isinstance(metadata['articles'], list):
-        return jsonify({"error": "Field 'articles' must be a list"}), 400
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(process_single_file, files)
@@ -75,6 +73,9 @@ def analyze_documents_endpoint():
         "extracted_text": combined_text,
         "image_caption_pairs": [],
     }
+
+    # TODO: Save the extracted text and image-caption pairs to the database
+
     return jsonify(response)
 
 @app.route('/query', methods=['POST'])
@@ -82,7 +83,7 @@ def query_documents():
     query_params = request.json or {}
     results = []
 
-    # perform query on the database
+    # TODO: perform query on the database
 
     return jsonify(results)
 

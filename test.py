@@ -14,10 +14,9 @@ def test_analyze_documents(client):
         "year": 2023,
         "publisher": "Publisher Name",
         "genre": "Science",
-        "articles": [
-            {"title": "Article 1", "author": "Author 1", "page_range": "1-10"},
-            {"title": "Article 2", "author": "Author 2", "page_range": "11-20"}
-        ]
+        "article_title": "Article", 
+        "article_author": "Author", 
+        "article_page_range": "1-10",
     })
 
     with open('images/7.jpg', 'rb') as file1, open('images/8.jpg', 'rb') as file2:
