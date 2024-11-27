@@ -1,6 +1,4 @@
-import { Routes, Route, Navigate, Link } from 'react-router-dom';
-import SearchPage from './SearchPage';
-import UploadPage from './UploadPage';
+import { Link } from 'react-router-dom';
 
 function HomePage() {
   return (
