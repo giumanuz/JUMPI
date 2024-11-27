@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import InputField from '../components/InputField';
+import axios from 'axios';
 
 const UploadPage = () => {
   const [formData, setFormData] = useState({
@@ -21,10 +22,40 @@ const UploadPage = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Uploading data:', formData);
-    // Perform an upload operation (e.g., API call)
+
+    if (!formData.document) {
+      alert('Please upload a document.');
+      return;
+    }
+
+    try {
+      const metadata = JSON.stringify({
+        name_magazine: formData.name_magazine,
+        year: formData.year,
+        publisher: formData.publisher,
+        genre: formData.genre,
+        article_title: formData.article_title,
+        article_author: formData.article_author,
+        article_page_range: formData.article_page_range,
+      });
+
+      const uploadData = new FormData();
+      uploadData.append('metadata', metadata);
+      uploadData.append('files', formData.document);
+
+      const response = await axios.post('http://localhost:5000/analyze-documents', uploadData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      
+      alert('Document analyzed successfully!');
+      console.log('Response:', response.data);
+
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      alert('Failed to analyze document. Please try again.');
+    }
   };
 
   return (
