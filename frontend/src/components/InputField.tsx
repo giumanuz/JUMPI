@@ -1,6 +1,6 @@
 import {ChangeEvent, FC} from 'react';
 
-type InputFieldProps = {
+export type InputFieldProps = {
   id: string;
   label: string;
   placeholder: string;

@@ -1,6 +1,6 @@
 import {ChangeEvent, FC} from 'react';
 
-type TextAreaFieldProps = {
+export type TextAreaFieldProps = {
   id: string;
   label: string;
   placeholder: string;
