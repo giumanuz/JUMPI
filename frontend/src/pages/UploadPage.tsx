@@ -68,10 +68,10 @@ const UploadPage = () => {
 
   return (
     <FormTemplate
-      title={"Search for an article"}
+      title={"Upload an article"}
       button={
-        <button type="submit" className="btn btn-primary w-100">
-          Search
+        <button type="submit" className="btn btn-success w-100">
+          Upload
         </button>
       }
       onSubmit={onSubmit}
