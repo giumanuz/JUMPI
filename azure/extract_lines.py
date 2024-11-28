@@ -114,7 +114,8 @@ def extract_lines(file_path: str) -> list[Line]:
         if paragraph.get("role", "") == "pageNumber":
             offsetPageNumber.append(paragraph.get("spans", [])[0]["offset"])
             continue
-        result = gpt_is_caption(paragraph.get("content", ""))
+        paragraph_decoded = repr(paragraph.get("content", ""))
+        result = gpt_is_caption(paragraph_decoded)
         if result:
             for span in paragraph.get("spans", []):
                 captionsSpans.append((span["offset"], span["length"]))
@@ -126,7 +127,7 @@ def extract_lines(file_path: str) -> list[Line]:
         for line in data["pages"][page_idx].get("lines", []):
             line_polygon = Polygon(line["polygon"])
             line_spans = line.get("spans", [])
-            line_content = line.get("content", "")
+            line_content = repr(line.get("content", ""))
             line_is_caption = False
 
             if line_spans[0]["offset"] in offsetPageNumber:

@@ -12,7 +12,8 @@ from azure.call_api import analyze_document as azure_analyze_document
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/analyze-documents": {"origins": "http://localhost:5173"}})
+
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 
 TEMP_FOLDER = './temp'
@@ -43,6 +44,10 @@ def process_single_file(file):
 
 @app.route('/analyze-documents', methods=['POST'])
 def analyze_documents_endpoint():
+    if request.method == 'OPTIONS':
+        # Rispondere alla richiesta preflight con status 200
+        return '', 200
+
     if 'files' not in request.files:
         return jsonify({"error": "No files provided"}), 400
 
@@ -91,4 +96,4 @@ def query_documents():
     return jsonify(results)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5123)

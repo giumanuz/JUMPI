@@ -95,7 +95,7 @@ def process_file(
     images_out_input: str,
     image_path: str,
     threshold_high=95,
-    threshold_medium=90,
+    threshold_low=90,
 ):
     azure_file_path = os.path.join(azure_dir, azure_file)
     aws_file_path = os.path.join(aws_dir, azure_file)
@@ -129,7 +129,7 @@ def process_file(
         output_dir,
         image_path,
         threshold_high,
-        threshold_medium,
+        threshold_low,
     )
 
 def create_output_and_visuals(
@@ -141,7 +141,7 @@ def create_output_and_visuals(
     output_dir: str,
     image_path: str,
     threshold_high=95,
-    threshold_medium=90,
+    threshold_low=90,
 ):
     comparison_image_path = os.path.join(images_out_input, os.path.basename(image_path))
     output_file_path = os.path.join(output_dir, f'{azure_file}.txt').replace('.json', '')
@@ -150,17 +150,14 @@ def create_output_and_visuals(
         with Image.open(image_path) as img:
             img = img.convert("RGB")
             draw = ImageDraw.Draw(img, 'RGBA')
-            for idx, (source, target, score) in enumerate(matches_azure_aws):
-                polygon = source.polygons[0]
+            for idx, (azure, aws, score) in enumerate(matches_azure_aws):
+                polygon = azure.polygons[0]
                 gpt_line = matches_azure_gpt[idx][1]
-                if score >= threshold_high:
-                    output_file.write(f"{gpt_line}\n\n")
-                elif score >= threshold_medium:
-                    draw_polygon(draw, polygon, 'yellow')
-                    output_file.write(f"{source.content} \n{target}\n{gpt_line}\n{score:.1f}%\n\n")
-                else:
+                if score < threshold_low:
                     draw_polygon(draw, polygon, 'red')
-                    output_file.write(f"{source.content} \n{target}\n{gpt_line}\n{score:.1f}%\n\n")
+                elif score < threshold_high:
+                    draw_polygon(draw, polygon, 'yellow')
+                output_file.write(f"{azure.content} \n{aws}\n{gpt_line}\n\n\n")
             img.save(comparison_image_path)
 
 def draw_polygon(draw, polygon, color):
@@ -179,7 +176,7 @@ def main(
     images_dir_input='images',
     images_out_input='images-comparison',
     threshold_high=95,
-    threshold_medium=90,
+    threshold_low=90,
 ):
     ensure_directories([output_dir, output_dir_merged_gpt_lines, images_out_input])
     for azure_file in tqdm(os.listdir(azure_dir)):
@@ -193,7 +190,7 @@ def main(
             images_dir_input,
             images_out_input,
             threshold_high,
-            threshold_medium,
+            threshold_low,
         )
 
 def ensure_directories(directories: List[str]):

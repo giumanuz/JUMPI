@@ -4,7 +4,7 @@ import json, os
 def extract_lines(file_path: str) -> list[str]:
     with open(file_path, 'r') as file:
         data = json.load(file)['Blocks']
-    lines = [_["Text"] for _ in data if _['BlockType'] == 'LINE']
+    lines = [repr(_["Text"]) for _ in data if _['BlockType'] == 'LINE']
     return lines
 
 if __name__ == "__main__":
