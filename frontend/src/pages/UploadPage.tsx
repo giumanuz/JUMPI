@@ -19,7 +19,7 @@ const UploadPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {id, value, files} = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -27,7 +27,7 @@ const UploadPage = () => {
     }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.document) {
@@ -74,7 +74,7 @@ const UploadPage = () => {
           Search
         </button>
       }
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       loading={loading}
       loadingDescription={"Uploading document..."}
     >
@@ -83,14 +83,14 @@ const UploadPage = () => {
         label="Magazine Name"
         placeholder="Enter magazine name"
         value={formData.name_magazine}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="year"
         label="Year"
         placeholder="Enter year of publication"
         value={formData.year}
-        onChange={handleChange}
+        onChange={onChange}
         type="number"
       />
       <InputField
@@ -98,35 +98,35 @@ const UploadPage = () => {
         label="Publisher"
         placeholder="Enter publisher's name"
         value={formData.publisher}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="genre"
         label="Genre"
         placeholder="Enter genre (e.g., Science)"
         value={formData.genre}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="article_title"
         label="Article Title"
         placeholder="Enter article title"
         value={formData.article_title}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="article_author"
         label="Article Author"
         placeholder="Enter author's name"
         value={formData.article_author}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="article_page_range"
         label="Article Page Range"
         placeholder="Enter page range (e.g., 1-10)"
         value={formData.article_page_range}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <div className="mb-3">
         <label htmlFor="document" className="form-label">
@@ -137,7 +137,7 @@ const UploadPage = () => {
           className="form-control"
           id="document"
           accept="image/png, image/jpeg, .pdf"
-          onChange={handleChange}
+          onChange={onChange}
         />
       </div>
     </FormTemplate>

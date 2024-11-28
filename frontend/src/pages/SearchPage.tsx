@@ -15,7 +15,7 @@ const SearchPage = () => {
     content: '',
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {id, value} = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -23,7 +23,7 @@ const SearchPage = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Searching with data:', formData);
   };
@@ -36,21 +36,21 @@ const SearchPage = () => {
           Search
         </button>
       }
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     >
       <InputField
         id="name_magazine"
         label="Magazine Name"
         placeholder="Enter magazine name"
         value={formData.name_magazine}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="year"
         label="Year"
         placeholder="Enter year of publication"
         value={formData.year}
-        onChange={handleChange}
+        onChange={onChange}
         type="number"
       />
       <InputField
@@ -58,42 +58,42 @@ const SearchPage = () => {
         label="Publisher"
         placeholder="Enter publisher's name"
         value={formData.publisher}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="genre"
         label="Genre"
         placeholder="Enter genre (e.g., Science)"
         value={formData.genre}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="article_title"
         label="Article Title"
         placeholder="Enter article title"
         value={formData.article_title}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="article_author"
         label="Article Author"
         placeholder="Enter author's name"
         value={formData.article_author}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <InputField
         id="article_page_range"
         label="Article Page Range"
         placeholder="Enter page range (e.g., 1-10)"
         value={formData.article_page_range}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <TextAreaField
         id="content"
         label="Content"
         placeholder="Enter article content"
         value={formData.content}
-        onChange={handleChange}
+        onChange={onChange}
       />
     </FormTemplate>
   )
