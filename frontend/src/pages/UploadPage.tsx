@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import InputField from '../components/InputField';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const UploadPage = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,9 @@ const UploadPage = () => {
     article_page_range: '',
     document: null as File | null,
   });
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value, files } = e.target;
@@ -29,6 +33,8 @@ const UploadPage = () => {
       alert('Please upload a document.');
       return;
     }
+
+    setLoading(true); // Start loading
 
     try {
       const metadata = JSON.stringify({
@@ -48,13 +54,15 @@ const UploadPage = () => {
       const response = await axios.post('http://localhost:5123/analyze-documents', uploadData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      
-      alert('Document analyzed successfully!');
-      console.log('Response:', response.data);
 
+      // Navigate to the result page with the data from the response
+      navigate('/result', { state: response.data });
+      
     } catch (error) {
       console.error('Error uploading document:', error);
       alert('Failed to analyze document. Please try again.');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -153,6 +161,15 @@ const UploadPage = () => {
             Upload Article
           </button>
         </form>
+
+        {loading && (
+          <div className="text-center mt-3">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p>Processing your document...</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './index.scss';
+import './styles/index.scss';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import UploadPage from './pages/UploadPage';
+import ResultPage from './pages/ResultPage';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/" element={<HomePage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/upload" element={<UploadPage />} />
+      <Route path="/result" element={<ResultPage />} />
     </Routes>
     </BrowserRouter>
   </StrictMode>,

@@ -1,0 +1,22 @@
+.text-container {
+    max-height: 400px;
+    overflow-y: auto; 
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #343b40;
+  }
+  
+  .image-container {
+    max-width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+  
+  img {
+    max-width: 100%; 
+    height: auto;
+    border-radius: 5px;
+  }
+  

@@ -3,6 +3,7 @@ import concurrent.futures
 from pathlib import Path
 import json
 import os
+import base64
 from flask_cors import CORS
 
 from main import process_file
@@ -72,14 +73,23 @@ def analyze_documents_endpoint():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(process_single_file, files)
 
-    combined_text = ''
+    combined_text = []
     for text_file in [f for f in os.listdir(GPT_FOLDER)]:
         with open(os.path.join(GPT_FOLDER, text_file), 'r') as f:
-            combined_text += f.read() + '\n\n'
+            combined_text.append(f.read())
 
+    image_path = os.path.join(IMAGE_COMPARISON_FOLDER, os.listdir(IMAGE_COMPARISON_FOLDER)[0])
+
+    with open(image_path, 'rb') as image_file:
+        image_data = image_file.read()
+
+    image_base64 = base64.b64encode(image_data).decode('utf-8')
+
+    print("\n".join(combined_text))
+    
     response = {
-        "extracted_text": combined_text,
-        "image_caption_pairs": [],
+        "extracted_text": "\n".join(combined_text),
+        "image_comparison": image_base64
     }
 
     # TODO: Save the extracted text and image-caption pairs to the database
