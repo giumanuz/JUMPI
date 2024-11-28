@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
+import {ChangeEvent, FC} from 'react';
 
-interface TextAreaFieldProps {
+type TextAreaFieldProps = {
   id: string;
   label: string;
   placeholder: string;
@@ -9,7 +9,7 @@ interface TextAreaFieldProps {
   rows?: number;
 }
 
-const TextAreaField: React.FC<TextAreaFieldProps> = ({ id, label, placeholder, value, onChange, rows = 3 }) => (
+const TextAreaField: FC<TextAreaFieldProps> = ({id, label, placeholder, value, onChange, rows = 3}) => (
   <div className="mb-3">
     <label htmlFor={id} className="form-label">
       {label}
