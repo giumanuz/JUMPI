@@ -1,6 +1,6 @@
 import {FormEvent, ReactNode} from 'react';
 
-type FormBasePageProps = {
+type FormTemplateProps = {
   title: string;
   children: ReactNode;
   button: HTMLButtonElement;
@@ -9,7 +9,7 @@ type FormBasePageProps = {
   onSubmit: FormEvent<HTMLFormElement>;
 }
 
-const FormBasePage = ({children, button, loading, loadingDescription, title, onSubmit}: FormBasePageProps) => (
+const FormTemplate = ({children, button, loading, loadingDescription, title, onSubmit}: FormTemplateProps) => (
   <div className="d-flex justify-content-center align-items-center vh-100">
     <div className="card bg-body-secondary p-4 shadow-sm" style={{width: '50rem'}}>
       <h3 className="text-center mb-4">{title}</h3>
@@ -38,4 +38,4 @@ const FormBasePage = ({children, button, loading, loadingDescription, title, onS
   </div>
 );
 
-export default FormBasePage;
+export default FormTemplate;

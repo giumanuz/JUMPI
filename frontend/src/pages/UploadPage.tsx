@@ -2,7 +2,7 @@ import {ChangeEvent, FormEvent, useState} from 'react';
 import InputField from '../components/InputField';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
-import FormBasePage from "./FormPageBase.tsx";
+import FormTemplate from "./FormTemplate.tsx";
 
 const UploadPage = () => {
   const [formData, setFormData] = useState({
@@ -67,7 +67,7 @@ const UploadPage = () => {
   };
 
   return (
-    <FormBasePage
+    <FormTemplate
       title={"Search for an article"}
       button={
         <button type="submit" className="btn btn-primary w-100">
@@ -140,7 +140,7 @@ const UploadPage = () => {
           onChange={handleChange}
         />
       </div>
-    </FormBasePage>
+    </FormTemplate>
   );
 };
 

@@ -1,7 +1,7 @@
 import {ChangeEvent, FormEvent, useState} from 'react';
 import InputField from '../components/InputField';
 import TextAreaField from '../components/TextAreaField';
-import FormBasePage from "./FormPageBase.tsx";
+import FormTemplate from "./FormTemplate.tsx";
 
 const SearchPage = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const SearchPage = () => {
   };
 
   return (
-    <FormBasePage
+    <FormTemplate
       title={"Search for an article"}
       button={
         <button type="submit" className="btn btn-primary w-100">
@@ -95,7 +95,7 @@ const SearchPage = () => {
         value={formData.content}
         onChange={handleChange}
       />
-    </FormBasePage>
+    </FormTemplate>
   )
 };
 
