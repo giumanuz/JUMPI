@@ -1,6 +1,7 @@
 import boto3
 import json
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
 PATH_TO_IMAGE = "../images/2.jpg"
@@ -25,7 +26,7 @@ def analyze_document(file_path=PATH_TO_IMAGE, output_path=PATH_OUTPUT_FOLDER):
             FeatureTypes=['LAYOUT']
         )
 
-        output_file = f"{output_path}/{file_path.split('/')[-1].split('.')[0]}.json"
+        output_file = Path(output_path) / (Path(file_path).stem + ".json")        
         with open(output_file, 'w') as f:
             json.dump(response, f, indent=4)
 

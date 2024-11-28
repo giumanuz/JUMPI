@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import concurrent.futures
+from pathlib import Path
 import json
 import os
+from flask_cors import CORS
 
 from main import process_file
 from werkzeug.utils import secure_filename
@@ -10,6 +12,8 @@ from azure.call_api import analyze_document as azure_analyze_document
 
 
 app = Flask(__name__)
+CORS(app, resources={r"/analyze-documents": {"origins": "http://localhost:5173"}})
+
 
 TEMP_FOLDER = './temp'
 IMAGE_FOLDER = './temp/images'
@@ -34,8 +38,8 @@ def process_single_file(file):
     file.save(file_path)
     aws_analyze_document(file_path, AWS_FOLDER)
     azure_analyze_document(file_path, AZURE_FOLDER)
-    json_file = f'{filename.split(".")[0]}.json'
-    process_file(json_file, AZURE_FOLDER, AWS_FOLDER, GPT_FOLDER, REPORT_FOLDER, IMAGE_FOLDER, IMAGE_COMPARISON_FOLDER)
+    json_file = Path(filename).with_suffix('.json').name
+    process_file(json_file, AZURE_FOLDER, AWS_FOLDER, GPT_FOLDER, REPORT_FOLDER, IMAGE_FOLDER, IMAGE_COMPARISON_FOLDER, file_path)
 
 @app.route('/analyze-documents', methods=['POST'])
 def analyze_documents_endpoint():
@@ -55,8 +59,7 @@ def analyze_documents_endpoint():
     except json.JSONDecodeError:
         return jsonify({"error": "Invalid metadata format"}), 400
 
-    required_fields = ["name_magazine", "abstract_magazine", "year", "publisher", "genre", "article_title", 
-        "article_author", "article_page_range"]
+    required_fields = ["name_magazine", "year", "publisher", "genre", "article_title", "article_author", "article_page_range"]
     for field in required_fields:
         if field not in metadata:
             return jsonify({"error": f"Missing required field: {field}"}), 400

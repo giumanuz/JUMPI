@@ -1,0 +1,467 @@
+{
+    "apiVersion": "2024-07-31-preview",
+    "modelId": "prebuilt-layout",
+    "stringIndexType": "textElements",
+    "content": "19/19\nPrecision: 0.9683 Recall: 0.9754 F1-Score: 0.9715\nAccuracy: 0.9749 ROC AUC: 0.9991 :unselected:",
+    "pages": [
+        {
+            "pageNumber": 1,
+            "angle": 3.9957558328751475e-05,
+            "width": 424,
+            "height": 240,
+            "unit": "pixel",
+            "words": [
+                {
+                    "content": "19/19",
+                    "polygon": [
+                        42,
+                        12,
+                        120,
+                        12,
+                        120,
+                        37,
+                        42,
+                        37
+                    ],
+                    "confidence": 0.997,
+                    "span": {
+                        "offset": 0,
+                        "length": 5
+                    }
+                },
+                {
+                    "content": "Precision:",
+                    "polygon": [
+                        42,
+                        44,
+                        191,
+                        44,
+                        191,
+                        69,
+                        42,
+                        69
+                    ],
+                    "confidence": 0.993,
+                    "span": {
+                        "offset": 6,
+                        "length": 10
+                    }
+                },
+                {
+                    "content": "0.9683",
+                    "polygon": [
+                        212,
+                        44,
+                        305,
+                        44,
+                        305,
+                        69,
+                        212,
+                        69
+                    ],
+                    "confidence": 0.995,
+                    "span": {
+                        "offset": 17,
+                        "length": 6
+                    }
+                },
+                {
+                    "content": "Recall:",
+                    "polygon": [
+                        42,
+                        78,
+                        144,
+                        77,
+                        145,
+                        102,
+                        42,
+                        102
+                    ],
+                    "confidence": 0.989,
+                    "span": {
+                        "offset": 24,
+                        "length": 7
+                    }
+                },
+                {
+                    "content": "0.9754",
+                    "polygon": [
+                        166,
+                        77,
+                        259,
+                        77,
+                        259,
+                        101,
+                        166,
+                        102
+                    ],
+                    "confidence": 0.994,
+                    "span": {
+                        "offset": 32,
+                        "length": 6
+                    }
+                },
+                {
+                    "content": "F1-Score:",
+                    "polygon": [
+                        42,
+                        110,
+                        176,
+                        110,
+                        176,
+                        135,
+                        42,
+                        135
+                    ],
+                    "confidence": 0.992,
+                    "span": {
+                        "offset": 39,
+                        "length": 9
+                    }
+                },
+                {
+                    "content": "0.9715",
+                    "polygon": [
+                        197,
+                        110,
+                        289,
+                        110,
+                        289,
+                        134,
+                        197,
+                        135
+                    ],
+                    "confidence": 0.993,
+                    "span": {
+                        "offset": 49,
+                        "length": 6
+                    }
+                },
+                {
+                    "content": "Accuracy:",
+                    "polygon": [
+                        42,
+                        145,
+                        175,
+                        144,
+                        175,
+                        170,
+                        42,
+                        169
+                    ],
+                    "confidence": 0.993,
+                    "span": {
+                        "offset": 56,
+                        "length": 9
+                    }
+                },
+                {
+                    "content": "0.9749",
+                    "polygon": [
+                        197,
+                        144,
+                        289,
+                        144,
+                        289,
+                        168,
+                        197,
+                        169
+                    ],
+                    "confidence": 0.993,
+                    "span": {
+                        "offset": 66,
+                        "length": 6
+                    }
+                },
+                {
+                    "content": "ROC",
+                    "polygon": [
+                        42,
+                        176,
+                        86,
+                        176,
+                        86,
+                        201,
+                        42,
+                        201
+                    ],
+                    "confidence": 0.988,
+                    "span": {
+                        "offset": 73,
+                        "length": 3
+                    }
+                },
+                {
+                    "content": "AUC:",
+                    "polygon": [
+                        103,
+                        176,
+                        160,
+                        176,
+                        161,
+                        201,
+                        103,
+                        201
+                    ],
+                    "confidence": 0.992,
+                    "span": {
+                        "offset": 77,
+                        "length": 4
+                    }
+                },
+                {
+                    "content": "0.9991",
+                    "polygon": [
+                        181,
+                        176,
+                        273,
+                        176,
+                        274,
+                        201,
+                        181,
+                        201
+                    ],
+                    "confidence": 0.994,
+                    "span": {
+                        "offset": 82,
+                        "length": 6
+                    }
+                }
+            ],
+            "selectionMarks": [
+                {
+                    "state": "unselected",
+                    "polygon": [
+                        154,
+                        192,
+                        161,
+                        192,
+                        161,
+                        199,
+                        154,
+                        199
+                    ],
+                    "confidence": 0.1,
+                    "span": {
+                        "offset": 89,
+                        "length": 12
+                    }
+                }
+            ],
+            "lines": [
+                {
+                    "content": "19/19",
+                    "polygon": [
+                        42,
+                        12,
+                        120,
+                        12,
+                        120,
+                        36,
+                        42,
+                        36
+                    ],
+                    "spans": [
+                        {
+                            "offset": 0,
+                            "length": 5
+                        }
+                    ]
+                },
+                {
+                    "content": "Precision: 0.9683",
+                    "polygon": [
+                        42,
+                        44,
+                        304,
+                        44,
+                        304,
+                        69,
+                        42,
+                        69
+                    ],
+                    "spans": [
+                        {
+                            "offset": 6,
+                            "length": 17
+                        }
+                    ]
+                },
+                {
+                    "content": "Recall: 0.9754",
+                    "polygon": [
+                        42,
+                        77,
+                        258,
+                        77,
+                        258,
+                        102,
+                        42,
+                        102
+                    ],
+                    "spans": [
+                        {
+                            "offset": 24,
+                            "length": 14
+                        }
+                    ]
+                },
+                {
+                    "content": "F1-Score: 0.9715",
+                    "polygon": [
+                        42,
+                        110,
+                        289,
+                        110,
+                        289,
+                        135,
+                        42,
+                        135
+                    ],
+                    "spans": [
+                        {
+                            "offset": 39,
+                            "length": 16
+                        }
+                    ]
+                },
+                {
+                    "content": "Accuracy: 0.9749",
+                    "polygon": [
+                        41,
+                        145,
+                        289,
+                        144,
+                        289,
+                        169,
+                        42,
+                        170
+                    ],
+                    "spans": [
+                        {
+                            "offset": 56,
+                            "length": 16
+                        }
+                    ]
+                },
+                {
+                    "content": "ROC AUC: 0.9991",
+                    "polygon": [
+                        42,
+                        176,
+                        273,
+                        176,
+                        273,
+                        201,
+                        42,
+                        201
+                    ],
+                    "spans": [
+                        {
+                            "offset": 73,
+                            "length": 15
+                        }
+                    ]
+                }
+            ],
+            "spans": [
+                {
+                    "offset": 0,
+                    "length": 101
+                }
+            ]
+        }
+    ],
+    "tables": [],
+    "paragraphs": [
+        {
+            "spans": [
+                {
+                    "offset": 0,
+                    "length": 5
+                }
+            ],
+            "boundingRegions": [
+                {
+                    "pageNumber": 1,
+                    "polygon": [
+                        42,
+                        12,
+                        120,
+                        12,
+                        120,
+                        36,
+                        42,
+                        36
+                    ]
+                }
+            ],
+            "content": "19/19"
+        },
+        {
+            "spans": [
+                {
+                    "offset": 6,
+                    "length": 49
+                }
+            ],
+            "boundingRegions": [
+                {
+                    "pageNumber": 1,
+                    "polygon": [
+                        42,
+                        44,
+                        304,
+                        44,
+                        304,
+                        135,
+                        42,
+                        135
+                    ]
+                }
+            ],
+            "content": "Precision: 0.9683 Recall: 0.9754 F1-Score: 0.9715"
+        },
+        {
+            "spans": [
+                {
+                    "offset": 56,
+                    "length": 32
+                }
+            ],
+            "boundingRegions": [
+                {
+                    "pageNumber": 1,
+                    "polygon": [
+                        41,
+                        145,
+                        289,
+                        144,
+                        289,
+                        201,
+                        42,
+                        202
+                    ]
+                }
+            ],
+            "content": "Accuracy: 0.9749 ROC AUC: 0.9991"
+        }
+    ],
+    "styles": [],
+    "contentFormat": "text",
+    "sections": [
+        {
+            "spans": [
+                {
+                    "offset": 0,
+                    "length": 88
+                }
+            ],
+            "elements": [
+                "/paragraphs/0",
+                "/paragraphs/1",
+                "/paragraphs/2"
+            ]
+        }
+    ]
+}

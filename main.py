@@ -93,6 +93,7 @@ def process_file(
     output_dir: str,
     images_dir_input: str,
     images_out_input: str,
+    image_path: str,
     threshold_high=95,
     threshold_medium=90,
 ):
@@ -126,6 +127,7 @@ def process_file(
         images_dir_input,
         images_out_input,
         output_dir,
+        image_path,
         threshold_high,
         threshold_medium,
     )
@@ -137,11 +139,11 @@ def create_output_and_visuals(
     images_dir_input: str,
     images_out_input: str,
     output_dir: str,
+    image_path: str,
     threshold_high=95,
     threshold_medium=90,
 ):
-    image_path = os.path.join(images_dir_input, azure_file.replace('.json', '.jpg'))
-    comparison_image_path = os.path.join(images_out_input, azure_file.replace('.json', '.jpg'))
+    comparison_image_path = os.path.join(images_out_input, os.path.basename(image_path))
     output_file_path = os.path.join(output_dir, f'{azure_file}.txt').replace('.json', '')
 
     with open(output_file_path, 'w') as output_file:

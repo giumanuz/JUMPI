@@ -4,6 +4,7 @@ from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.ai.documentintelligence.models import AnalyzeResult
 from azure.core.exceptions import HttpResponseError
 from dotenv import load_dotenv
+from pathlib import Path
 import json
 
 
@@ -27,7 +28,8 @@ def analyze_document(file_path=PATH_TO_IMAGE, output_path=PATH_OUTPUT_FOLDER):
                 content_type="application/octet-stream"
             )
         result: AnalyzeResult = poller.result()
-        output_file_path = os.path.join(output_path, os.path.basename(file_path).replace('.jpg', '.json'))
+
+        output_file_path = Path(output_path) / Path(file_path).with_suffix('.json').name
         with open(output_file_path, 'w') as output_file:
             json.dump(result.as_dict(), output_file, indent=4)
                 
