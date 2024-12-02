@@ -12,12 +12,12 @@ class ElasticsearchDb(Database):
         self.api_key = api_key
         self.es = None
 
-    def connect(self) -> bool:
+    def connect(self) -> dict:
         self.es = Elasticsearch(
             [self.url],
             api_key=self.api_key,
         )
-        return self.is_connected()
+        return self.es.info()
     
     def is_connected(self) -> bool:
         return self.es.ping()

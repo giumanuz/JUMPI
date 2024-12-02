@@ -1,3 +1,4 @@
+import logging
 import shutil
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
@@ -174,7 +175,8 @@ def setup_db():
     elastic_api_key = os.getenv('ELASTIC_API_KEY')
     db = ElasticsearchDb(url=elastic_url, api_key=elastic_api_key)
     Database.set_instance(db)
-    db.connect()
+    info = db.connect()
+    logging.info(info)
     if not db.is_connected():
         raise Exception("Could not connect to the database")
 

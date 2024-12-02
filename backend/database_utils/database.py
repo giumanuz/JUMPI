@@ -12,7 +12,7 @@ class Database(ABC):
         return cls.instance
 
     @abstractmethod
-    def connect(self) -> bool:
+    def connect(self) -> dict:
         pass
 
     @abstractmethod
