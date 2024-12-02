@@ -5,17 +5,14 @@ from os import environ
 load_dotenv()
 
 es = Elasticsearch(
-    ["https://jumpi.edotm.net"],
+    ["https://jumpi.edotm.net/elastic"],
     api_key=environ.get("ELASTIC_API_KEY"),
 )
 
-# Check connection
 if es.ping():
     print("Successfully connected to Elasticsearch!")
 else:
     print("Connection failed.")
-    exit(1)
-exit(0)
 
 # Define the search criteria for the magazine
 magazine_name = "Casabella continuità"
@@ -85,6 +82,7 @@ except Exception as e:
     print(f"Error searching for the magazine: {e}")
 
 # 2. Update the magazine by adding a new article
+exit(0)
 try:
     update_response = es.update(
         index="magazines",  # The index where your magazine document is stored
