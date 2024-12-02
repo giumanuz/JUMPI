@@ -11,7 +11,9 @@ services:
       VITE_API_ENDPOINT: http://localhost:5123
 
   backend:
-    build: ./backend/
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile_dev
     volumes:
       - "./backend:/app"
     working_dir: /app
