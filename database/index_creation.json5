@@ -1,0 +1,57 @@
+// PUT /magazines
+{
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "keyword"
+      },
+      "abstract": {
+        "type": "text"
+      },
+      "year": {
+        "type": "integer"
+      },
+      "publisher": {
+        "type": "keyword"
+      },
+      "genre": {
+        "type": "keyword"
+      },
+      "articles": {
+        "type": "nested", 
+        "properties": {
+          "title": {
+            "type": "keyword"
+          },
+          "author": {
+            "type": "keyword"
+          },
+          "content": {
+            "type": "text"
+          },
+          "page_range": {
+            "type": "integer"
+          },
+          "page_offsets": {
+            "type": "integer"
+          },
+          "images": {
+            "type": "nested",
+            "properties": {
+              "data": {
+                "type": "binary"
+              },
+              "caption": {
+                "type": "text"
+              },
+              "page": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
