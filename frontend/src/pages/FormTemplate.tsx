@@ -1,12 +1,12 @@
-import {FormEvent, ReactNode} from 'react';
+import {FormEventHandler, ReactNode} from 'react';
 
 type FormTemplateProps = {
   title: string;
-  children: ReactNode;
-  button: HTMLButtonElement;
+  children: ReactNode[];
+  button: ReactNode;
   loading?: boolean;
   loadingDescription?: string;
-  onSubmit: FormEvent<HTMLFormElement>;
+  onSubmit: FormEventHandler<HTMLFormElement>;
 }
 
 const FormTemplate = ({children, button, loading, loadingDescription, title, onSubmit}: FormTemplateProps) => (
