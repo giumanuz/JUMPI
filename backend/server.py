@@ -95,22 +95,18 @@ def analyze_documents_endpoint():
             content = f"{text_file.name:-^50}\n" + content + f"\n{'-'*50}\n"
             response_text.append(content)
 
-        # Read the image comparison files
+        image_base64_list = []
         image_paths = [os.path.join(IMAGE_COMPARISON_FOLDER, filename) for filename in filenames]
         for image_path in image_paths:
             with Path(image_path).open('rb') as image_file:
                 image_data = image_file.read()
-                break   # TODO: only read the first image for now
+                image_base64_list.append(base64.b64encode(image_data).decode('utf-8'))
 
-        # Clean up the temp folder
         temp_folder = Path(TEMP_FOLDER)
         if temp_folder.exists() and temp_folder.is_dir():
             shutil.rmtree(temp_folder)
             temp_folder.mkdir()
     
-
-    image_base64 = base64.b64encode(image_data).decode('utf-8')
-
     print("\n".join(combined_text))
     
     extracted_text = "\n".join(combined_text)
@@ -138,7 +134,7 @@ def analyze_documents_endpoint():
 
     response = {
         "extracted_text": "\n".join(response_text),
-        "image_comparison": image_base64
+        "image_comparisons": image_base64_list
     }
 
     return jsonify(response)

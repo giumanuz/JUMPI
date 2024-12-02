@@ -1,8 +1,8 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import InputField from '../components/InputField';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
-import FormTemplate from "./FormTemplate.tsx";
+import { useNavigate } from 'react-router-dom';
+import FormTemplate from './FormTemplate.tsx';
 
 const UploadPage = () => {
   const [formData, setFormData] = useState({
@@ -13,25 +13,26 @@ const UploadPage = () => {
     article_title: '',
     article_author: '',
     article_page_range: '',
-    document: null as File | null,
+    documents: [] as File[],
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const {id, value, files} = e.target;
+    const { id, value, files } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
-      [id]: files ? files[0] : value,
+      [id]: files ? Array.from(files) : value,
     }));
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.document) {
-      alert('Please upload a document.');
+    if (!formData.documents.length) {
+      alert('Please upload at least one document.');
       return;
     }
 
@@ -50,26 +51,28 @@ const UploadPage = () => {
 
       const uploadData = new FormData();
       uploadData.append('metadata', metadata);
-      uploadData.append('files', formData.document);
+
+      formData.documents.forEach((file) => {
+        uploadData.append('files', file);
+      });
 
       const url = import.meta.env.VITE_API_ENDPOINT;
       const response = await axios.post(`${url}/analyze-documents`, uploadData, {
-        headers: {'Content-Type': 'multipart/form-data'},
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      // Navigate to the result page with the data from the response
-      navigate('/result', {state: response.data});
+      navigate('/result', { state: response.data });
     } catch (error) {
-      console.error('Error uploading document:', error);
-      alert('Failed to analyze document. Please try again.');
+      console.error('Error uploading documents:', error);
+      alert('Failed to analyze documents. Please try again.');
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
     <FormTemplate
-      title={"Upload an article"}
+      title="Upload an article"
       button={
         <button type="submit" className="btn btn-success w-100">
           Upload
@@ -77,7 +80,7 @@ const UploadPage = () => {
       }
       onSubmit={onSubmit}
       loading={loading}
-      loadingDescription={"Uploading document..."}
+      loadingDescription="Uploading documents..."
     >
       <InputField
         id="name_magazine"
@@ -130,14 +133,15 @@ const UploadPage = () => {
         onChange={onChange}
       />
       <div className="mb-3">
-        <label htmlFor="document" className="form-label">
-          Upload Document (Image or PDF)
+        <label htmlFor="documents" className="form-label">
+          Upload Documents (Images or PDFs)
         </label>
         <input
           type="file"
           className="form-control"
-          id="document"
+          id="documents"
           accept="image/png, image/jpeg, .pdf"
+          multiple
           onChange={onChange}
         />
       </div>
