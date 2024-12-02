@@ -52,7 +52,8 @@ const UploadPage = () => {
       uploadData.append('metadata', metadata);
       uploadData.append('files', formData.document);
 
-      const response = await axios.post('http://localhost:5123/analyze-documents', uploadData, {
+      const url = import.meta.env.VITE_API_ENDPOINT;
+      const response = await axios.post(`${url}/analyze-documents`, uploadData, {
         headers: {'Content-Type': 'multipart/form-data'},
       });
 

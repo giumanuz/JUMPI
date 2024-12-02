@@ -31,7 +31,8 @@ const SearchPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get('http://localhost:5123/query', {params});
+      const url = import.meta.env.VITE_API_ENDPOINT;
+      const response = await axios.get(`${url}/query`, {params});
       navigate('/queryResults', {state: {results: response.data}});
       console.log(response)
     } catch (error) {
