@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import UploadPage from './pages/UploadPage';
 import ResultPage from './pages/ResultPage';
+import QueryResultsPage from "./pages/QueryResultsPage.tsx";
 
 
 createRoot(document.getElementById('root')!).render(
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/search" element={<SearchPage />} />
       <Route path="/upload" element={<UploadPage />} />
       <Route path="/result" element={<ResultPage />} />
+      <Route path="/queryResults" element={<QueryResultsPage />} />
     </Routes>
     </BrowserRouter>
   </StrictMode>,

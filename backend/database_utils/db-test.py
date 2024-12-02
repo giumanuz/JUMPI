@@ -2,18 +2,6 @@ from elasticsearch import Elasticsearch
 from dotenv import load_dotenv
 from os import environ
 
-load_dotenv()
-
-es = Elasticsearch(
-    ["https://jumpi.edotm.net/elastic"],
-    api_key=environ.get("ELASTIC_API_KEY"),
-)
-
-if es.ping():
-    print("Successfully connected to Elasticsearch!")
-else:
-    print("Connection failed.")
-
 # Define the search criteria for the magazine
 magazine_name = "Casabella continuità"
 magazine_year = 1965

@@ -1,5 +1,0 @@
-M era tutto super lineare 10:35 V/
-A mano avrei fatto esattamente così 10:35 V/
-L'unica cosa che non mi è piaciuta è l'intestazione di una funzione che
-dava errore su vscode e GPT ha messo espressamente il tipo 10:36 V/
-Però tranne quello, tutto regolare 10:36 V/

@@ -2,35 +2,50 @@ import {ChangeEvent, FormEvent, useState} from 'react';
 import InputField from '../components/InputField';
 import TextAreaField from '../components/TextAreaField';
 import FormTemplate from "./FormTemplate.tsx";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const SearchPage = () => {
-  const [formData, setFormData] = useState({
+  const [params, setParams] = useState({
     name_magazine: '',
     year: '',
     publisher: '',
     genre: '',
     article_title: '',
     article_author: '',
-    article_page_range: '',
     content: '',
   });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {id, value} = e.target;
-    setFormData((prevData) => ({
+    setParams((prevData) => ({
       ...prevData,
       [id]: value,
     }));
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Searching with data:', formData);
+    setLoading(true);
+
+    try {
+      const response = await axios.get('http://localhost:5123/query', {params});
+      navigate('/queryResults', {state: {results: response.data}});
+      console.log(response)
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      alert('Failed to analyze document. Please try again.');
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   return (
     <FormTemplate
       title={"Search for an article"}
+      loading={loading}
       button={
         <button type="submit" className="btn btn-primary w-100">
           Search
@@ -42,14 +57,14 @@ const SearchPage = () => {
         id="name_magazine"
         label="Magazine Name"
         placeholder="Enter magazine name"
-        value={formData.name_magazine}
+        value={params.name_magazine}
         onChange={onChange}
       />
       <InputField
         id="year"
         label="Year"
         placeholder="Enter year of publication"
-        value={formData.year}
+        value={params.year}
         onChange={onChange}
         type="number"
       />
@@ -57,42 +72,35 @@ const SearchPage = () => {
         id="publisher"
         label="Publisher"
         placeholder="Enter publisher's name"
-        value={formData.publisher}
+        value={params.publisher}
         onChange={onChange}
       />
       <InputField
         id="genre"
         label="Genre"
         placeholder="Enter genre (e.g., Science)"
-        value={formData.genre}
+        value={params.genre}
         onChange={onChange}
       />
       <InputField
         id="article_title"
         label="Article Title"
         placeholder="Enter article title"
-        value={formData.article_title}
+        value={params.article_title}
         onChange={onChange}
       />
       <InputField
         id="article_author"
         label="Article Author"
         placeholder="Enter author's name"
-        value={formData.article_author}
-        onChange={onChange}
-      />
-      <InputField
-        id="article_page_range"
-        label="Article Page Range"
-        placeholder="Enter page range (e.g., 1-10)"
-        value={formData.article_page_range}
+        value={params.article_author}
         onChange={onChange}
       />
       <TextAreaField
         id="content"
         label="Content"
         placeholder="Enter article content"
-        value={formData.content}
+        value={params.content}
         onChange={onChange}
       />
     </FormTemplate>
