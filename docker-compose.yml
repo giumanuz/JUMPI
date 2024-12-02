@@ -7,6 +7,8 @@ services:
     command: npm run dev
     ports:
       - "5173:5173"
+    environment:
+      VITE_API_ENDPOINT: http://localhost:5123
 
   backend:
     build: ./backend/
