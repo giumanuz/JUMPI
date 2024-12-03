@@ -46,3 +46,7 @@ class Line:
 
     def get_polygon(self):
         return self.polygons[0]
+
+    @classmethod
+    def from_content(cls, content: str):
+        return cls([], content, 0.0)
