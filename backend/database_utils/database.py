@@ -13,6 +13,10 @@ class Database(ABC):
         return cls.instance
 
     @abstractmethod
+    def ping(self) -> bool:
+        pass
+
+    @abstractmethod
     def add_magazine(self, magazine) -> str:
         pass
 

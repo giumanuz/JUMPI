@@ -13,6 +13,7 @@ from azure.call_api import analyze_document as azure_analyze_document
 from dotenv import load_dotenv
 from flask import Flask, request, g
 from flask_cors import CORS
+from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import secure_filename
 
 from database_utils.classes import Article, Magazine
@@ -66,6 +67,8 @@ def load_user_api_key():
 # Error handling
 @app.errorhandler(elasticsearch.ApiError)
 def handle_elasticsearch_api_error(error: elasticsearch.ApiError):
+    logging.error("Elasticsearch error", exc_info=error)
+    logging.error(g.api_key)
     if error.status_code == 401:
         if error.message == "security_exception":
             return {"error": "Invalid API key"}, 401
@@ -75,6 +78,14 @@ def handle_elasticsearch_api_error(error: elasticsearch.ApiError):
     if error.status_code // 100 == 5:
         logging.error("Database error", exc_info=error)
         return {"error": "Internal server error"}, error.status_code
+
+@app.route('/validate-api-key', methods=['GET'])
+def validate_api_key():
+    ping = Database.get_instance().ping()
+    logging.error("Ping: %s", ping)
+    if not ping:
+        raise InternalServerError("Database is not available")
+    return {"message": "API key is valid"}
 
 
 @app.route('/analyze-documents', methods=['POST'])

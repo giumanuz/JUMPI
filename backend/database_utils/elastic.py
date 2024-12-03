@@ -34,7 +34,8 @@ class ElasticsearchDb(Database):
         return Elasticsearch([self.url], api_key=g.api_key)
 
     def ping(self) -> bool:
-        return Elasticsearch([self.url]).ping()
+        self.logger.error(self.es.info())
+        return self.es.ping()
 
     def add_magazine(self, magazine: Magazine) -> str:
         if self.magazine_exists(magazine):
