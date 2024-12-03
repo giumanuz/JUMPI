@@ -8,6 +8,21 @@ from database_utils.classes import Article, Magazine
 from database_utils.database import Database
 
 
+def _build_magazine_search_query(magazine: Magazine) -> dict:
+    return {
+        "query": {"bool": {"must": [
+            {"term": {"name": magazine.name}},
+            {"range": {"year": {
+                "gte": magazine.year,
+                "lte": magazine.year
+            }}},
+            {"term": {"publisher": magazine.publisher}}
+        ]}},
+        "fields": ["_id"],
+        "_source": False
+    }
+
+
 class ElasticsearchDb(Database):
     logger = logging.getLogger(__name__)
 
@@ -55,7 +70,7 @@ class ElasticsearchDb(Database):
         return res.body
 
     def get_magazine_id(self, magazine: Magazine) -> str:
-        query = self._build_magazine_search_query(magazine)
+        query = _build_magazine_search_query(magazine)
         res = self.es.search(index='magazines', body=query)
         self.__debug_log_query(query, res.body)
         if res['hits']['total']['value'] == 0:
@@ -68,20 +83,6 @@ class ElasticsearchDb(Database):
             return True
         except MagazineNotFoundError:
             return False
-
-    def _build_magazine_search_query(self, magazine: Magazine) -> dict:
-        return {
-            "query": {"bool": {"must": [
-                {"term": {"name": magazine.name}},
-                {"range": {"year": {
-                    "gte": magazine.year,
-                    "lte": magazine.year
-                }}},
-                {"term": {"publisher": magazine.publisher}}
-            ]}},
-            "fields": ["_id"],
-            "_source": False
-        }
 
     def query(self, magazine: Magazine, article: Article) -> dict:
         query = {
