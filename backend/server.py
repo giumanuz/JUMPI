@@ -12,6 +12,7 @@ from azure.call_api import analyze_document as azure_analyze_document
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
+from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import secure_filename
 
 from database_utils.classes import Article, Magazine
@@ -177,15 +178,13 @@ def query_documents():
     return jsonify(res)
 
 
-def setup_db():
+def setup_db(debug=False):
     elastic_url = os.getenv('ELASTIC_URL')
-    elastic_api_key = os.getenv('ELASTIC_API_KEY')
-    db = ElasticsearchDb(url=elastic_url, api_key=elastic_api_key)
+    db = ElasticsearchDb(url=elastic_url)
+    db.logger.setLevel(logging.DEBUG if debug else logging.INFO)
     Database.set_instance(db)
-    info = db.connect()
-    logging.info(info)
     if not db.is_connected():
-        raise Exception("Could not connect to the database")
+        raise InternalServerError("Could not connect to the database")
 
 
 if __name__ == '__main__':
@@ -193,5 +192,5 @@ if __name__ == '__main__':
     debug = os.getenv('DEBUG', 'False').lower() == 'true'
     host = os.getenv('HOST', '0.0.0.0')
     port = int(os.getenv('PORT', 5123))
-    setup_db()
+    setup_db(debug=debug)
     app.run(debug=debug, host=host, port=port)
