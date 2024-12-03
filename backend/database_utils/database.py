@@ -2,22 +2,15 @@ from abc import ABC, abstractmethod
 
 from database_utils.classes import Article, Magazine
 
+
 class Database(ABC):
     @classmethod
     def set_instance(cls, instance):
         cls.instance = instance
-    
+
     @classmethod
     def get_instance(cls) -> 'Database':
         return cls.instance
-
-    @abstractmethod
-    def connect(self) -> dict:
-        pass
-
-    @abstractmethod
-    def is_connected(self) -> bool:
-        pass
 
     @abstractmethod
     def add_magazine(self, magazine) -> str:

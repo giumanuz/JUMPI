@@ -28,20 +28,13 @@ class ElasticsearchDb(Database):
 
     def __init__(self, url):
         self.url = url
-        self.__es_base: Elasticsearch = None
-
-    def connect(self) -> dict:
-        self.__es_base = Elasticsearch([self.url])
-        conn_info = self.__es_base.info().body
-        self.logger.info(f"Connected to Elasticsearch: {conn_info}")
-        return conn_info
-
-    def is_connected(self) -> bool:
-        return self.__es_base.ping()
 
     @property
     def es(self):
-        return self.__es_base.options(api_key=g.api_key)
+        return Elasticsearch([self.url], api_key=g.api_key)
+
+    def ping(self) -> bool:
+        return Elasticsearch([self.url]).ping()
 
     def add_magazine(self, magazine: Magazine) -> str:
         if self.magazine_exists(magazine):

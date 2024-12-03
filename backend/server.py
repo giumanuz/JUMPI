@@ -7,12 +7,12 @@ import shutil
 from pathlib import Path
 from threading import Lock
 
+import elasticsearch
 from aws.call_api import analyze_document as aws_analyze_document
 from azure.call_api import analyze_document as azure_analyze_document
 from dotenv import load_dotenv
 from flask import Flask, request, g
 from flask_cors import CORS
-from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import secure_filename
 
 from database_utils.classes import Article, Magazine
@@ -58,10 +58,23 @@ def process_single_file(file):
 def load_user_api_key():
     if request.method == 'OPTIONS':
         return '', 200
-    logging.warning(request.headers)
     g.api_key = request.headers.get('X-API-KEY')
     if not g.api_key:
         return {"error": "API key is required"}, 401
+
+
+# Error handling
+@app.errorhandler(elasticsearch.ApiError)
+def handle_elasticsearch_api_error(error: elasticsearch.ApiError):
+    if error.status_code == 401:
+        if error.message == "security_exception":
+            return {"error": "Invalid API key"}, 401
+        return {"error": "Unauthorized"}, 401
+    if error.status_code // 100 == 4:
+        return {"error": "Bad request"}, error.status_code
+    if error.status_code // 100 == 5:
+        logging.error("Database error", exc_info=error)
+        return {"error": "Internal server error"}, error.status_code
 
 
 @app.route('/analyze-documents', methods=['POST'])
@@ -180,9 +193,6 @@ def setup_db(debug=False):
     db = ElasticsearchDb(url=elastic_url)
     db.logger.setLevel(logging.DEBUG if debug else logging.INFO)
     Database.set_instance(db)
-    db.connect()
-    if not db.is_connected():
-        raise InternalServerError("Could not connect to the database")
 
 
 if __name__ == '__main__':
