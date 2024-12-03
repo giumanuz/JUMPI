@@ -9,13 +9,17 @@ from database_utils.database import Database
 
 
 class ElasticsearchDb(Database):
+    logger = logging.getLogger(__name__)
+
     def __init__(self, url):
         self.url = url
         self.__es_base: Elasticsearch = None
 
     def connect(self) -> dict:
         self.__es_base = Elasticsearch([self.url])
-        return self.__es_base.info().body
+        conn_info = self.__es_base.info().body
+        self.logger.info(f"Connected to Elasticsearch: {conn_info}")
+        return conn_info
 
     def is_connected(self) -> bool:
         return self.__es_base.ping()
@@ -32,6 +36,7 @@ class ElasticsearchDb(Database):
     def _add_magazine_without_check(self, magazine: Magazine) -> str:
         magazine_dict = asdict(magazine)
         res = self.es.index(index='magazines', document=magazine_dict)
+        self.__debug_log_query(magazine_dict, res.body)
         return res['_id']
 
     def add_article(self, magazine: Magazine, article: Article) -> dict:
@@ -41,18 +46,18 @@ class ElasticsearchDb(Database):
             magazine_id = self.add_magazine(magazine)
         article_dict = asdict(article)
 
-        return self.es.update(
-            index="magazines",
-            id=magazine_id,
-            body={"script": {
-                "source": "ctx._source.articles.add(params.new_article);",
-                "params": {"new_article": article_dict}
-            }}
-        ).body
+        query = {"script": {
+            "source": "ctx._source.articles.add(params.new_article);",
+            "params": {"new_article": article_dict}
+        }}
+        res = self.es.update(index="magazines", id=magazine_id, body=query)
+        self.__debug_log_query(query, res.body)
+        return res.body
 
     def get_magazine_id(self, magazine: Magazine) -> str:
         query = self._build_magazine_search_query(magazine)
         res = self.es.search(index='magazines', body=query)
+        self.__debug_log_query(query, res.body)
         if res['hits']['total']['value'] == 0:
             raise MagazineNotFoundError
         return res['hits']['hits'][0]['_id']
@@ -79,12 +84,11 @@ class ElasticsearchDb(Database):
         }
 
     def query(self, magazine: Magazine, article: Article) -> dict:
-        # Initialize the base query
         query = {
             "query": {
                 "bool": {
-                    "filter": [],  # Exact match conditions go here
-                    "must": []  # Full-text search conditions go here
+                    "filter": [],
+                    "must": []
                 }
             }
         }
@@ -115,17 +119,20 @@ class ElasticsearchDb(Database):
                     }
                 }
             })
-
-        # Pretty-print the query
-        logging.error(query)
-
-        # Execute the query
         response = self.es.search(index="magazines", body=query)
-
-        # Print the results
-        print(response)
-
+        self.__debug_log_query(query, response.body)
         return response.body
+
+    def __debug_log_query(self, query: dict, res: dict):
+        self.logger.debug(
+            f"""
+            ----------------
+            Query: {query}
+            
+            Response: {res}
+            ----------------
+            """
+        )
 
 
 class MagazineNotFoundError(Exception):
