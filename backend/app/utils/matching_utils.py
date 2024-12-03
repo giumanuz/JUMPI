@@ -2,7 +2,6 @@ import os
 import re
 from difflib import SequenceMatcher
 from functools import cache
-from typing import Tuple, List
 
 import openai
 from PIL import Image, ImageDraw
@@ -60,8 +59,8 @@ def custom_matcher(source_line_content: str, target_lines: set[str], threshold=8
 
 
 def fuzzy_match_lines(
-        matched_pairs: List[Tuple[Line, str, float]],
-        source_lines: List[Line],
+        matched_pairs: list[tuple[Line, str, float]],
+        source_lines: list[Line],
         target_lines: set[str],
         threshold=80
 ):
@@ -76,13 +75,13 @@ def fuzzy_match_lines(
 
 
 def iterative_fuzzy_matching(
-        source_lines: List[Line],
-        target_lines: List[str],
+        source_lines: list[Line],
+        target_lines: list[str],
         initial_threshold=100,
         penalty_step=1,
         max_threshold=50
-) -> List[Tuple[Line, str, float]]:
-    matches: List[Tuple[Line, str, float]] = [None] * len(source_lines)
+) -> list[tuple[Line, str, float]]:
+    matches: list[tuple[Line, str, float]] = [None] * len(source_lines)
     set_target_lines = set(target_lines)
     threshold = initial_threshold
 
@@ -134,8 +133,8 @@ def process_file(
 
 def create_output_and_visuals(
         azure_file: str,
-        matches_azure_aws: List[Tuple[Line, str, float]],
-        matches_azure_gpt: List[Tuple[Line, str, float]],
+        matches_azure_aws: list[tuple[Line, str, float]],
+        matches_azure_gpt: list[tuple[Line, str, float]],
         image_path: str,
         threshold_high=95,
         threshold_low=90,
@@ -167,6 +166,6 @@ def draw_polygon(draw, polygon, color):
     draw.polygon(polygon_points, outline=color, width=0, fill=colors[color])
 
 
-def ensure_directories(directories: List[str]):
+def ensure_directories(directories: list[str]):
     for directory in directories:
         os.makedirs(directory, exist_ok=True)
