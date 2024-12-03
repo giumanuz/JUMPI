@@ -111,26 +111,26 @@ def extract_lines(file_path: str) -> list[Line]:
     with open(file_path, 'r') as file:
         data = json.load(file)
 
-    figuresPolygons = []  # if the polygon of a line is inside a figure, the text will be skipped
-    captionsSpans = []  # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
-    offsetPageNumber = []  # in this way I can idenfy the page number and skip it
+    figure_polygons = []  # if the polygon of a line is inside a figure, the text will be skipped
+    caption_spans = []  # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
+    offset_page_number = []  # in this way I can idenfy the page number and skip it
 
     for figure in data.get("figures", []):
         for boundingRegion in figure.get("boundingRegions", []):
-            figuresPolygons.append(Polygon(boundingRegion["polygon"]))
+            figure_polygons.append(Polygon(boundingRegion["polygon"]))
         caption = figure.get("caption", {})
         for span in caption.get("spans", []):
-            captionsSpans.append((span["offset"], span["length"]))
+            caption_spans.append((span["offset"], span["length"]))
 
     for paragraph in data.get("paragraphs", []):
         if paragraph.get("role", "") == "pageNumber":
-            offsetPageNumber.append(paragraph.get("spans", [])[0]["offset"])
+            offset_page_number.append(paragraph.get("spans", [])[0]["offset"])
             continue
         paragraph_decoded = repr(paragraph.get("content", ""))[1:-1]
         result = gpt_is_caption(paragraph_decoded)
         if result:
             for span in paragraph.get("spans", []):
-                captionsSpans.append((span["offset"], span["length"]))
+                caption_spans.append((span["offset"], span["length"]))
 
     lines = []
     words = [page.get("words", []) for page in data.get("pages", [])]
@@ -142,13 +142,13 @@ def extract_lines(file_path: str) -> list[Line]:
             line_content = repr(line.get("content", ""))[1:-1]
             line_is_caption = False
 
-            if line_spans[0]["offset"] in offsetPageNumber:
+            if line_spans[0]["offset"] in offset_page_number:
                 continue
 
-            if is_line_inside_figure(line_polygon, figuresPolygons):
+            if is_line_inside_figure(line_polygon, figure_polygons):
                 continue
 
-            if is_line_in_captions(line_spans, captionsSpans):
+            if is_line_in_captions(line_spans, caption_spans):
                 line_is_caption = True
 
             line_confidence = get_confidence(line_spans, words[page_idx])
