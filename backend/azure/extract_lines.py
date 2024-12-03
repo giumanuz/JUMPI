@@ -1,11 +1,7 @@
 import json
 from functools import cache
 
-from dotenv import load_dotenv
-
 from commons import Polygon, Line
-
-load_dotenv()
 
 
 def compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
