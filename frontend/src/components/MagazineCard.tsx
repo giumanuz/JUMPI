@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const ResultCard = ({ data }: { data: any }) => {
   const { name, year, publisher, genre, articles } = data;
-  const article = articles?.[0]; // Show only the first article
+  const article = articles?.[0]; 
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded((prev) => !prev);
+  };
 
   return (
     <div className="card mb-3">
@@ -17,7 +22,17 @@ const ResultCard = ({ data }: { data: any }) => {
           <>
             <h6 className="card-title">{article.title}</h6>
             <p className="card-subtitle text-muted mb-3">Author: {article.author}</p>
-            <p className="card-text">{article.content || 'No content available.'}</p>
+
+            <p className="card-text">
+              {isExpanded ? article.content : `${article.content?.substring(0, 400)}...`}
+            </p>
+
+            <button
+              className="btn btn-link p-0"
+              onClick={toggleExpand}
+            >
+              {isExpanded ? 'Collapse' : 'Read more'}
+            </button>
           </>
         ) : (
           <p className="text-muted">No articles available.</p>
