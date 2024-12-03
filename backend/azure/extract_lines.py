@@ -28,7 +28,7 @@ def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon]
 
 @cache
 def get_correction_system_prompt() -> str:
-    with open("gpt/prompts/is_caption.md", "r") as f:
+    with open("gpt_prompts/is_caption.md", "r") as f:
         return f.read()
     
 def gpt_is_caption(paragraph: str) -> bool:

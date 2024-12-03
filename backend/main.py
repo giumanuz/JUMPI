@@ -17,7 +17,7 @@ client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
 
 @cache
 def get_correction_system_prompt() -> str:
-    with open("gpt/prompts/two-tools.md", "r") as f:
+    with open("gpt_prompts/two-tools.md", "r") as f:
         return f.read()
 
 def call_api(prompt: str) -> str:
