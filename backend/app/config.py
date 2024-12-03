@@ -28,3 +28,9 @@ class Config:
         ]
         for folder in folders:
             Path(folder).mkdir(parents=True, exist_ok=True)
+
+    @classmethod
+    def flush_temp_dirs(cls):
+        import shutil
+        shutil.rmtree(cls.TEMP_FOLDER)
+        cls.create_temp_dirs()

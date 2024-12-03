@@ -1,4 +1,3 @@
-import shutil
 from base64 import b64encode
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -36,10 +35,7 @@ def process_files(files):
                 image_data = image_file.read()
                 image_base64_list.append(b64encode(image_data).decode('utf-8'))
 
-        temp_folder = Path(Config.TEMP_FOLDER)
-        if temp_folder.exists() and temp_folder.is_dir():
-            shutil.rmtree(temp_folder)
-            temp_folder.mkdir()
+        Config.flush_temp_dirs()
 
     combined_text = "\n".join(combined_text)
     return combined_text, offsets, image_base64_list
