@@ -3,7 +3,7 @@ import logging
 from flask import Blueprint
 from werkzeug.exceptions import InternalServerError
 
-from database_utils.database import Database
+from app.services.database.database import Database
 
 validate_bp = Blueprint('validate', __name__)
 

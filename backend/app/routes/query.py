@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 
-from database_utils.classes import Magazine, Article
-from database_utils.database import Database
+from app.utils.classes import Magazine, Article
+from app.services.database.database import Database
 
 query_bp = Blueprint('query', __name__)
 

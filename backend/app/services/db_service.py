@@ -1,8 +1,8 @@
 import logging
 import os
 
-from database_utils.database import Database
-from database_utils.elastic import ElasticsearchDb
+from app.services.database.database import Database
+from app.services.database.elastic import ElasticsearchDb
 
 
 def setup_db(debug=False):

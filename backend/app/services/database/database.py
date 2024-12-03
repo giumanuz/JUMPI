@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from database_utils.classes import Article, Magazine
+from app.utils.classes import Article, Magazine
 
 
 class Database(ABC):

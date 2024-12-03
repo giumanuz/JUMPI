@@ -2,9 +2,9 @@ import json
 
 from flask import Blueprint, request
 
+from app.services.database.database import Database
 from app.services.file_processor import process_files
-from database_utils.classes import Magazine, Article
-from database_utils.database import Database
+from app.utils.classes import Magazine, Article
 
 analyze_bp = Blueprint('analyze', __name__)
 
@@ -33,7 +33,7 @@ def analyze_documents():
         if field not in metadata:
             return {"error": f"Missing required field: {field}"}, 400
 
-    combined_text, offsets, image_base64_list = process_files(files, metadata)
+    combined_text, offsets, image_base64_list = process_files(files)
 
     magazine = Magazine(
         name=metadata["name_magazine"],
