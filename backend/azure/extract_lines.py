@@ -1,5 +1,4 @@
 import json
-from functools import cache
 
 from commons import Polygon, Line
 
@@ -21,12 +20,6 @@ def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon]
     for figure_polygon in figures_polygons:
         overlap_percentage += compute_overlap_percentage(line_polygon, figure_polygon)
     return overlap_percentage >= threshold
-
-
-@cache
-def get_correction_system_prompt() -> str:
-    with open("gpt_prompts/is_caption.md", "r") as f:
-        return f.read()
 
 
 def gpt_is_caption(paragraph: str) -> bool:
