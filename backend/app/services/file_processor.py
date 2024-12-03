@@ -7,9 +7,9 @@ from threading import Lock
 from werkzeug.utils import secure_filename
 
 from app.config import Config
+from app.utils.matching_utils import process_file
 from aws.call_api import analyze_document as aws_analyze_document
 from azure.call_api import analyze_document as azure_analyze_document
-from app.utils.matching_utils import process_file
 
 file_processing_lock = Lock()
 
