@@ -1,70 +1,72 @@
-from elasticsearch import Elasticsearch
+import logging
 from dataclasses import asdict
+
+from elasticsearch import Elasticsearch
+from flask import g
 
 from database_utils.classes import Article, Magazine
 from database_utils.database import Database
 
-import logging
 
 class ElasticsearchDb(Database):
-    def __init__(self, url, api_key: str):
+    def __init__(self, url):
         self.url = url
-        self.api_key = api_key
-        self.es = None
+        self.__es_base: Elasticsearch = None
 
     def connect(self) -> dict:
-        self.es = Elasticsearch(
-            [self.url],
-            api_key=self.api_key,
-        )
-        return self.es.info()
-    
+        self.__es_base = Elasticsearch([self.url])
+        return self.__es_base.info().body
+
     def is_connected(self) -> bool:
-        return self.es.ping()
+        return self.__es_base.ping()
+
+    @property
+    def es(self):
+        return self.__es_base.options(api_key=g.api_key)
 
     def add_magazine(self, magazine: Magazine) -> str:
         if self.magazine_exists(magazine):
             raise MagazineExistsError
         return self._add_magazine_without_check(magazine)
-    
+
     def _add_magazine_without_check(self, magazine: Magazine) -> str:
         magazine_dict = asdict(magazine)
         res = self.es.index(index='magazines', document=magazine_dict)
         return res['_id']
-    
+
     def add_article(self, magazine: Magazine, article: Article) -> dict:
         try:
             magazine_id = self.get_magazine_id(magazine)
         except MagazineNotFoundError:
             magazine_id = self.add_magazine(magazine)
         article_dict = asdict(article)
-        
+
         return self.es.update(
             index="magazines",
             id=magazine_id,
             body={"script": {
                 "source": "ctx._source.articles.add(params.new_article);",
-                "params": { "new_article": article_dict }
+                "params": {"new_article": article_dict}
             }}
-        )
-    
+        ).body
+
     def get_magazine_id(self, magazine: Magazine) -> str:
         query = self._build_magazine_search_query(magazine)
         res = self.es.search(index='magazines', body=query)
-        if res['hits']['total']['value'] == 0: 
+        if res['hits']['total']['value'] == 0:
             raise MagazineNotFoundError
         return res['hits']['hits'][0]['_id']
-    
+
     def magazine_exists(self, magazine: Magazine) -> bool:
         try:
             self.get_magazine_id(magazine)
             return True
         except MagazineNotFoundError:
             return False
-    
+
     def _build_magazine_search_query(self, magazine: Magazine) -> dict:
         return {
-            "query": { "bool": { "must": [
+            "query": {"bool": {"must": [
                 {"term": {"name": magazine.name}},
                 {"range": {"year": {
                     "gte": magazine.year,

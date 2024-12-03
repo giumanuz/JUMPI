@@ -7,13 +7,13 @@ import shutil
 from pathlib import Path
 from threading import Lock
 
+from aws.call_api import analyze_document as aws_analyze_document
+from azure.call_api import analyze_document as azure_analyze_document
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-from aws.call_api import analyze_document as aws_analyze_document
-from azure.call_api import analyze_document as azure_analyze_document
 from database_utils.classes import Article, Magazine
 from database_utils.database import Database
 from database_utils.elastic import ElasticsearchDb
@@ -51,6 +51,13 @@ def process_single_file(file):
     process_file(json_file, AZURE_FOLDER, AWS_FOLDER, GPT_FOLDER, REPORT_FOLDER, IMAGE_FOLDER, IMAGE_COMPARISON_FOLDER,
                  file_path)
     return filename
+
+
+@app.before_request
+def load_user_api_key():
+    g.api_key = request.headers.get('X-API-KEY')
+    if not g.api_key:
+        return {"error": "API key is required"}, 401
 
 
 @app.route('/analyze-documents', methods=['POST'])
