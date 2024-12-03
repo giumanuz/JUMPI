@@ -1,8 +1,9 @@
-import boto3
 import json
-from dotenv import load_dotenv
-from pathlib import Path
 import os
+from pathlib import Path
+
+import boto3
+from dotenv import load_dotenv
 
 PATH_TO_IMAGE = "../images/2.jpg"
 PATH_OUTPUT_FOLDER = "json"
@@ -26,14 +27,10 @@ def analyze_document(file_path=PATH_TO_IMAGE, output_path=PATH_OUTPUT_FOLDER):
             FeatureTypes=['LAYOUT']
         )
 
-        output_file = Path(output_path) / (Path(file_path).stem + ".json")        
+        output_file = Path(output_path) / (Path(file_path).stem + ".json")
         with open(output_file, 'w') as f:
             json.dump(response, f, indent=4)
 
         print(f"Result saved in: {output_file}")
     except Exception as e:
         print(f"Error during document analysis: {e}")
-
-
-if __name__ == "__main__":
-    analyze_document()

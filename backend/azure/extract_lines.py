@@ -1,12 +1,18 @@
-import json, os, sys, openai
+import json
+import openai
+import os
+import sys
 from functools import cache
+
 from dotenv import load_dotenv
+
 from commons import Polygon, Line
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 load_dotenv()
 
-client = openai.Client(api_key=os.getenv("OPENAI_API_KEY")) 
+client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
@@ -20,17 +26,20 @@ def compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
         return 0
     return intersection_area / poly1_area
 
+
 def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon], threshold: float = 0.9) -> bool:
     overlap_percentage = 0
     for figure_polygon in figures_polygons:
         overlap_percentage += compute_overlap_percentage(line_polygon, figure_polygon)
     return overlap_percentage >= threshold
 
+
 @cache
 def get_correction_system_prompt() -> str:
     with open("gpt_prompts/is_caption.md", "r") as f:
         return f.read()
-    
+
+
 def gpt_is_caption(paragraph: str) -> bool:
     # TODO: Only for testing purposes
     return False
@@ -54,6 +63,7 @@ def gpt_is_caption(paragraph: str) -> bool:
         print(f"Error in API request: {e}")
         return None
 
+
 def is_line_in_captions(line_spans: list[dict], captions_spans: list[tuple]) -> bool:
     line_start = min(span["offset"] for span in line_spans)
     line_end = max(span["offset"] + span["length"] for span in line_spans)
@@ -63,6 +73,7 @@ def is_line_in_captions(line_spans: list[dict], captions_spans: list[tuple]) -> 
         if (line_start < caption_end) and (line_end > caption_start):
             return True
     return False
+
 
 def get_confidence(line_spans: list[dict], words: list[dict]) -> float:
     line_start = min(span["offset"] for span in line_spans)
@@ -76,7 +87,7 @@ def get_confidence(line_spans: list[dict], words: list[dict]) -> float:
             low = mid
         else:
             high = mid
-    
+
     confidence = 0
     word_cnt = 0
     for i in range(low, len(words)):
@@ -89,19 +100,20 @@ def get_confidence(line_spans: list[dict], words: list[dict]) -> float:
         if (line_start <= word_offset) and (word_end <= line_end):
             confidence += word["confidence"]
             word_cnt += 1
-        
+
         if line_end < word_end:
             break
 
     return confidence / word_cnt if word_cnt > 0 else 0
 
+
 def extract_lines(file_path: str) -> list[Line]:
     with open(file_path, 'r') as file:
         data = json.load(file)
 
-    figuresPolygons = [] # if the polygon of a line is inside a figure, the text will be skipped
-    captionsSpans = [] # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
-    offsetPageNumber = [] # in this way I can idenfy the page number and skip it
+    figuresPolygons = []  # if the polygon of a line is inside a figure, the text will be skipped
+    captionsSpans = []  # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
+    offsetPageNumber = []  # in this way I can idenfy the page number and skip it
 
     for figure in data.get("figures", []):
         for boundingRegion in figure.get("boundingRegions", []):
@@ -150,17 +162,3 @@ def extract_lines(file_path: str) -> list[Line]:
             ))
 
     return lines
-
-if __name__ == "__main__":
-    input_folder = "json"
-    output_folder = "tmp"
-    os.makedirs(output_folder, exist_ok=True)
-    
-    for filename in os.listdir(input_folder):
-        if filename.endswith(".json"):
-            input_path = os.path.join(input_folder, filename)
-            lines = extract_lines(input_path)
-
-            output_path = os.path.join(output_folder, f"{os.path.splitext(filename)[0]}.txt")
-            with open(output_path, "w", encoding="utf-8") as output_file:
-                output_file.write("\n".join(line.content for line in lines))
