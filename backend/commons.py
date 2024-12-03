@@ -21,7 +21,7 @@ class Polygon:
         return ShapelyPolygon([(p.x, p.y) for p in self.points])
 
 class Line:
-    '''
+    """
     TODO: I'm using polygons ans spans as lists because maybe in the future we will merge different lines like in the following example:
     "lines": [
         {
@@ -35,7 +35,7 @@ class Line:
             "spans": [...]
         }
     ]
-    '''    
+    """
     def __init__(self, polygons: list[Polygon], content: str, confidence: float, spans: list = [], is_caption: bool = False):
         self.polygons = polygons
         self.spans = spans
