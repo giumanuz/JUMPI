@@ -22,7 +22,7 @@ from main import process_file
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": os.getenv('CORS_ORIGIN', 'http://localhost:5173')}})
+CORS(app, resources={r"/*": {"origins": os.getenv('CORS_ORIGIN', 'http://localhost:5173')}}, allow_headers='X-API-KEY')
 
 file_processing_lock = Lock()
 
@@ -56,6 +56,9 @@ def process_single_file(file):
 
 @app.before_request
 def load_user_api_key():
+    if request.method == 'OPTIONS':
+        return '', 200
+    logging.warning(request.headers)
     g.api_key = request.headers.get('X-API-KEY')
     if not g.api_key:
         return {"error": "API key is required"}, 401
@@ -63,9 +66,6 @@ def load_user_api_key():
 
 @app.route('/analyze-documents', methods=['POST'])
 def analyze_documents_endpoint():
-    if request.method == 'OPTIONS':
-        return '', 200
-
     if 'files' not in request.files:
         return {"error": "No files provided"}, 400
 
