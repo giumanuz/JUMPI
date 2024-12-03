@@ -1,8 +1,9 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import {ChangeEvent, FormEvent, useState} from 'react';
 import InputField from '../components/InputField';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import FormTemplate from './FormTemplate.tsx';
+import axiosInstance from "../axiosInstance.ts";
+import {AxiosError} from "axios";
 
 const UploadPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const UploadPage = () => {
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id, value, files } = e.target;
+    const {id, value, files} = e.target;
 
     setFormData((prevData) => ({
       ...prevData,
@@ -56,15 +57,17 @@ const UploadPage = () => {
         uploadData.append('files', file);
       });
 
-      const url = import.meta.env.VITE_API_ENDPOINT;
-      const response = await axios.post(`${url}/analyze-documents`, uploadData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axiosInstance.post(`/analyze-documents`, uploadData, {
+        headers: {'Content-Type': 'multipart/form-data'},
       });
 
-      navigate('/result', { state: response.data });
+      navigate('/result', {state: response.data});
     } catch (error) {
+      const axiosError = error as AxiosError;
       console.error('Error uploading documents:', error);
-      alert('Failed to analyze documents. Please try again.');
+      const data = axiosError?.response?.data as {error?: string};
+      const text = data.error;
+      alert(`Failed to upload documents: ${text}`);
     } finally {
       setLoading(false);
     }

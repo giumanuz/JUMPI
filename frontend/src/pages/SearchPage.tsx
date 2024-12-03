@@ -2,8 +2,9 @@ import {ChangeEvent, FormEvent, useState} from 'react';
 import InputField from '../components/InputField';
 import TextAreaField from '../components/TextAreaField';
 import FormTemplate from "./FormTemplate.tsx";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import axiosInstance from "../axiosInstance.ts";
+import {AxiosError} from "axios";
 
 const SearchPage = () => {
   const [params, setParams] = useState({
@@ -31,13 +32,16 @@ const SearchPage = () => {
     setLoading(true);
 
     try {
-      const url = import.meta.env.VITE_API_ENDPOINT;
-      const response = await axios.get(`${url}/query`, {params});
+      const response = await axiosInstance.get(`/query`, {params});
       navigate('/queryResults', {state: {results: response.data}});
       console.log(response)
     } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error('Error uploading documents:', error);
+      const data = axiosError?.response?.data as {error?: string};
+      const text = data.error;
       console.error('Error uploading document:', error);
-      alert('Failed to analyze document. Please try again.');
+      alert(`Failed to analyze document: ${text}`);
     } finally {
       setLoading(false); // Stop loading
     }
