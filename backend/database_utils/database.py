@@ -4,7 +4,7 @@ from database_utils.classes import Article, Magazine
 
 class Database(ABC):
     @classmethod
-    def set_instance(cls, instance) -> 'Database':
+    def set_instance(cls, instance):
         cls.instance = instance
     
     @classmethod
