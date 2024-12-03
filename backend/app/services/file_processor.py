@@ -7,9 +7,9 @@ from threading import Lock
 from werkzeug.utils import secure_filename
 
 from app.config import Config
+from app.services.ocr_readers.aws_reader import AwsTextractReader
+from app.services.ocr_readers.azure_reader import AzureDiReader
 from app.utils.matching_utils import process_file
-from aws.call_api import analyze_document as aws_analyze_document
-from azure.call_api import analyze_document as azure_analyze_document
 
 file_processing_lock = Lock()
 
@@ -49,8 +49,9 @@ def _process_file(file):
     filename = secure_filename(file.filename)
     file_path = Path(Config.IMAGE_FOLDER) / filename
     file.save(file_path)
-    aws_analyze_document(file_path, Config.AWS_FOLDER)
-    azure_analyze_document(file_path, Config.AZURE_FOLDER)
+    AwsTextractReader(file_path).read_to_file(Config.AWS_FOLDER)
+    AzureDiReader(file_path).read_to_file(Config.AZURE_FOLDER)
+
     json_file = Path(filename).with_suffix('.json').name
     process_file(json_file, str(file_path))
     return filename
