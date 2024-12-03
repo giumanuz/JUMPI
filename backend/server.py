@@ -10,7 +10,7 @@ from threading import Lock
 from aws.call_api import analyze_document as aws_analyze_document
 from azure.call_api import analyze_document as azure_analyze_document
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, g
 from flask_cors import CORS
 from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import secure_filename
@@ -67,26 +67,26 @@ def analyze_documents_endpoint():
         return '', 200
 
     if 'files' not in request.files:
-        return jsonify({"error": "No files provided"}), 400
+        return {"error": "No files provided"}, 400
 
     files = request.files.getlist('files')
     if not files:
-        return jsonify({"error": "No files selected"}), 400
+        return {"error": "No files selected"}, 400
 
     metadata = request.form.get('metadata')
     if not metadata:
-        return jsonify({"error": "Missing metadata"}), 400
+        return {"error": "Missing metadata"}, 400
 
     try:
         metadata = json.loads(metadata)
     except json.JSONDecodeError:
-        return jsonify({"error": "Invalid metadata format"}), 400
+        return {"error": "Invalid metadata format"}, 400
 
     required_fields = ["name_magazine", "year", "publisher", "genre", "article_title", "article_author",
                        "article_page_range"]
     for field in required_fields:
         if field not in metadata:
-            return jsonify({"error": f"Missing required field: {field}"}), 400
+            return {"error": f"Missing required field: {field}"}, 400
 
     with file_processing_lock:
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -142,12 +142,10 @@ def analyze_documents_endpoint():
     res = Database.get_instance().add_article(magazine, article)
     print(res)
 
-    response = {
+    return {
         "extracted_text": "\n".join(response_text),
         "image_comparisons": image_base64_list
     }
-
-    return jsonify(response)
 
 
 @app.route('/query', methods=['GET'])
@@ -174,8 +172,7 @@ def query_documents():
         page_range=None
     )
 
-    res = Database.get_instance().query(magazine, article)
-    return jsonify(res)
+    return Database.get_instance().query(magazine, article)
 
 
 def setup_db(debug=False):
