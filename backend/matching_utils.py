@@ -1,24 +1,28 @@
 import os
+import re
 from difflib import SequenceMatcher
 from functools import cache
-from PIL import Image, ImageDraw
 from typing import Tuple, List
-from commons import Line
+
+import openai
+from PIL import Image, ImageDraw
+from dotenv import load_dotenv
+from tqdm import tqdm
+
 from aws.extract_lines import extract_lines as extract_lines_aws
 from azure.extract_lines import extract_lines as extract_lines_azure
-from dotenv import load_dotenv
-import openai
-from tqdm import tqdm
-import re
+from commons import Line
 
 load_dotenv()
 
 client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 @cache
 def get_correction_system_prompt() -> str:
     with open("gpt_prompts/two-tools.md", "r") as f:
         return f.read()
+
 
 def call_api(prompt: str) -> str:
     try:
@@ -40,6 +44,7 @@ def call_api(prompt: str) -> str:
         print(f"Error in API request: {e}")
         return ""
 
+
 def custom_matcher(source_line_content: str, target_lines: set[str], threshold=80):
     best_match = None
     best_score = 0
@@ -53,11 +58,12 @@ def custom_matcher(source_line_content: str, target_lines: set[str], threshold=8
 
     return (best_match, best_score) if best_match else None
 
+
 def fuzzy_match_lines(
-    matched_pairs: List[Tuple[Line, str, float]],
-    source_lines: List[Line],
-    target_lines: set[str],
-    threshold=80
+        matched_pairs: List[Tuple[Line, str, float]],
+        source_lines: List[Line],
+        target_lines: set[str],
+        threshold=80
 ):
     for idx, source_line in enumerate(source_lines):
         best_match = custom_matcher(source_line.content, target_lines, threshold)
@@ -68,12 +74,13 @@ def fuzzy_match_lines(
             matched_pairs[idx] = (source_line, '<Line not found>', 0)
     return matched_pairs
 
+
 def iterative_fuzzy_matching(
-    source_lines: List[Line],
-    target_lines: List[str],
-    initial_threshold=100,
-    penalty_step=1,
-    max_threshold=50
+        source_lines: List[Line],
+        target_lines: List[str],
+        initial_threshold=100,
+        penalty_step=1,
+        max_threshold=50
 ) -> List[Tuple[Line, str, float]]:
     matches: List[Tuple[Line, str, float]] = [None] * len(source_lines)
     set_target_lines = set(target_lines)
@@ -85,17 +92,18 @@ def iterative_fuzzy_matching(
 
     return matches
 
+
 def process_file(
-    azure_file: str,
-    azure_dir: str,
-    aws_dir: str,
-    output_dir_merged_gpt_lines: str,
-    output_dir: str,
-    images_dir_input: str,
-    images_out_input: str,
-    image_path: str,
-    threshold_high=95,
-    threshold_low=90,
+        azure_file: str,
+        azure_dir: str,
+        aws_dir: str,
+        output_dir_merged_gpt_lines: str,
+        output_dir: str,
+        images_dir_input: str,
+        images_out_input: str,
+        image_path: str,
+        threshold_high=95,
+        threshold_low=90,
 ):
     azure_file_path = os.path.join(azure_dir, azure_file)
     aws_file_path = os.path.join(aws_dir, azure_file)
@@ -132,16 +140,17 @@ def process_file(
         threshold_low,
     )
 
+
 def create_output_and_visuals(
-    azure_file: str,
-    matches_azure_aws: List[Tuple[Line, str, float]],
-    matches_azure_gpt: List[Tuple[Line, str, float]],
-    images_dir_input: str,
-    images_out_input: str,
-    output_dir: str,
-    image_path: str,
-    threshold_high=95,
-    threshold_low=90,
+        azure_file: str,
+        matches_azure_aws: List[Tuple[Line, str, float]],
+        matches_azure_gpt: List[Tuple[Line, str, float]],
+        images_dir_input: str,
+        images_out_input: str,
+        output_dir: str,
+        image_path: str,
+        threshold_high=95,
+        threshold_low=90,
 ):
     comparison_image_path = os.path.join(images_out_input, os.path.basename(image_path))
     output_file_path = os.path.join(output_dir, f'{azure_file}.txt').replace('.json', '')
@@ -160,6 +169,7 @@ def create_output_and_visuals(
                 output_file.write(f"{azure.content} \n{aws}\n{gpt_line}\n\n\n")
             img.save(comparison_image_path)
 
+
 def draw_polygon(draw, polygon, color):
     colors = {
         'yellow': (255, 230, 0, 40),
@@ -168,15 +178,16 @@ def draw_polygon(draw, polygon, color):
     polygon_points = [(point.x, point.y) for point in polygon.points]
     draw.polygon(polygon_points, outline=color, width=0, fill=colors[color])
 
+
 def main(
-    azure_dir='azure/json',
-    aws_dir='aws/json',
-    output_dir='compare-aws-azure-gpt',
-    output_dir_merged_gpt_lines='gpt/lines',
-    images_dir_input='images',
-    images_out_input='images-comparison',
-    threshold_high=95,
-    threshold_low=90,
+        azure_dir='azure/json',
+        aws_dir='aws/json',
+        output_dir='compare-aws-azure-gpt',
+        output_dir_merged_gpt_lines='gpt/lines',
+        images_dir_input='images',
+        images_out_input='images-comparison',
+        threshold_high=95,
+        threshold_low=90,
 ):
     ensure_directories([output_dir, output_dir_merged_gpt_lines, images_out_input])
     for azure_file in tqdm(os.listdir(azure_dir)):
@@ -193,9 +204,7 @@ def main(
             threshold_low,
         )
 
+
 def ensure_directories(directories: List[str]):
     for directory in directories:
         os.makedirs(directory, exist_ok=True)
-
-if __name__ == "__main__":
-    main()

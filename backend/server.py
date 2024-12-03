@@ -19,7 +19,7 @@ from werkzeug.utils import secure_filename
 from database_utils.classes import Article, Magazine
 from database_utils.database import Database
 from database_utils.elastic import ElasticsearchDb
-from main import process_file
+from matching_utils import process_file
 
 app = Flask(__name__)
 
