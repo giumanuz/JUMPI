@@ -3,14 +3,19 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
+from .services.db_service import setup_db
 from .utils.before_request import setup_before_request
 from .utils.error_handler import setup_error_handlers
-from .services.db_service import setup_db
+
 
 def create_app():
     app = Flask(__name__)
 
-    CORS(app, resources={r"/*": {"origins": os.getenv('CORS_ORIGIN', 'http://localhost:5173')}}, allow_headers='X-API-KEY')
+    CORS(
+        app,
+        resources={r"/*": {"origins": os.getenv('CORS_ORIGIN', 'http://localhost:5173')}},
+        allow_headers='X-API-KEY'
+    )
 
     debug = os.getenv('DEBUG', 'False').lower() == 'true'
     setup_db(debug)
