@@ -180,6 +180,7 @@ def setup_db(debug=False):
     db = ElasticsearchDb(url=elastic_url)
     db.logger.setLevel(logging.DEBUG if debug else logging.INFO)
     Database.set_instance(db)
+    db.connect()
     if not db.is_connected():
         raise InternalServerError("Could not connect to the database")
 
