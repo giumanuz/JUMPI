@@ -8,6 +8,7 @@ import openai
 from PIL import Image, ImageDraw
 from dotenv import load_dotenv
 
+from app.config import Config
 from aws.extract_lines import extract_lines as extract_lines_aws
 from azure.extract_lines import extract_lines as extract_lines_azure
 from commons import Line
@@ -94,18 +95,12 @@ def iterative_fuzzy_matching(
 
 def process_file(
         azure_file: str,
-        azure_dir: str,
-        aws_dir: str,
-        output_dir_merged_gpt_lines: str,
-        output_dir: str,
-        images_dir_input: str,
-        images_out_input: str,
         image_path: str,
         threshold_high=95,
         threshold_low=90,
 ):
-    azure_file_path = os.path.join(azure_dir, azure_file)
-    aws_file_path = os.path.join(aws_dir, azure_file)
+    azure_file_path = os.path.join(Config.AZURE_FOLDER, azure_file)
+    aws_file_path = os.path.join(Config.AWS_FOLDER, azure_file)
 
     if not (os.path.isfile(azure_file_path) and os.path.isfile(aws_file_path)):
         return
@@ -120,7 +115,7 @@ def process_file(
     prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
     corrected_lines = call_api(prompt)
 
-    output_path = os.path.join(output_dir_merged_gpt_lines, azure_file).replace('.json', '.txt')
+    output_path = os.path.join(Config.GPT_FOLDER, azure_file).replace('.json', '.txt')
     with open(output_path, 'w') as f:
         f.write(corrected_lines)
 
@@ -131,9 +126,6 @@ def process_file(
         azure_file,
         matches_azure_aws,
         matches_azure_gpt,
-        images_dir_input,
-        images_out_input,
-        output_dir,
         image_path,
         threshold_high,
         threshold_low,
@@ -144,15 +136,12 @@ def create_output_and_visuals(
         azure_file: str,
         matches_azure_aws: List[Tuple[Line, str, float]],
         matches_azure_gpt: List[Tuple[Line, str, float]],
-        images_dir_input: str,
-        images_out_input: str,
-        output_dir: str,
         image_path: str,
         threshold_high=95,
         threshold_low=90,
 ):
-    comparison_image_path = os.path.join(images_out_input, os.path.basename(image_path))
-    output_file_path = os.path.join(output_dir, f'{azure_file}.txt').replace('.json', '')
+    comparison_image_path = os.path.join(Config.IMAGE_COMPARISON_FOLDER, os.path.basename(image_path))
+    output_file_path = os.path.join(Config.REPORT_FOLDER, f'{azure_file}.txt').replace('.json', '')
 
     with open(output_file_path, 'w') as output_file:
         with Image.open(image_path) as img:
@@ -176,32 +165,6 @@ def draw_polygon(draw, polygon, color):
     }
     polygon_points = [(point.x, point.y) for point in polygon.points]
     draw.polygon(polygon_points, outline=color, width=0, fill=colors[color])
-
-
-def main(
-        azure_dir='azure/json',
-        aws_dir='aws/json',
-        output_dir='compare-aws-azure-gpt',
-        output_dir_merged_gpt_lines='gpt/lines',
-        images_dir_input='images',
-        images_out_input='images-comparison',
-        threshold_high=95,
-        threshold_low=90,
-):
-    ensure_directories([output_dir, output_dir_merged_gpt_lines, images_out_input])
-    for azure_file in os.listdir(azure_dir):
-        print(f'Processing {azure_file}')
-        process_file(
-            azure_file,
-            azure_dir,
-            aws_dir,
-            output_dir_merged_gpt_lines,
-            output_dir,
-            images_dir_input,
-            images_out_input,
-            threshold_high,
-            threshold_low,
-        )
 
 
 def ensure_directories(directories: List[str]):

@@ -9,12 +9,12 @@ from werkzeug.utils import secure_filename
 from app.config import Config
 from aws.call_api import analyze_document as aws_analyze_document
 from azure.call_api import analyze_document as azure_analyze_document
-from matching_utils import process_file
+from app.utils.matching_utils import process_file
 
 file_processing_lock = Lock()
 
 
-def process_files(files, metadata):
+def process_files(files):
     with file_processing_lock:
         with ThreadPoolExecutor() as executor:
             filenames = executor.map(_process_file, files)
@@ -52,13 +52,5 @@ def _process_file(file):
     aws_analyze_document(file_path, Config.AWS_FOLDER)
     azure_analyze_document(file_path, Config.AZURE_FOLDER)
     json_file = Path(filename).with_suffix('.json').name
-    process_file(
-        json_file,
-        Config.AZURE_FOLDER,
-        Config.AWS_FOLDER,
-        Config.GPT_FOLDER,
-        Config.REPORT_FOLDER,
-        Config.IMAGE_FOLDER,
-        Config.IMAGE_COMPARISON_FOLDER,
-        str(file_path))
+    process_file(json_file, str(file_path))
     return filename
