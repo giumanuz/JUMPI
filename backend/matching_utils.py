@@ -7,7 +7,6 @@ from typing import Tuple, List
 import openai
 from PIL import Image, ImageDraw
 from dotenv import load_dotenv
-from tqdm import tqdm
 
 from aws.extract_lines import extract_lines as extract_lines_aws
 from azure.extract_lines import extract_lines as extract_lines_azure
@@ -190,7 +189,7 @@ def main(
         threshold_low=90,
 ):
     ensure_directories([output_dir, output_dir_merged_gpt_lines, images_out_input])
-    for azure_file in tqdm(os.listdir(azure_dir)):
+    for azure_file in os.listdir(azure_dir):
         print(f'Processing {azure_file}')
         process_file(
             azure_file,
