@@ -43,25 +43,25 @@ def get_correction_system_prompt() -> str:
 def gpt_is_caption(paragraph: str) -> bool:
     # TODO: Only for testing purposes
     return False
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": get_correction_system_prompt()},
-                {"role": "user", "content": paragraph}
-            ],
-            max_tokens=16384,
-            temperature=0.2
-        )
-        content = response.choices[0].message.content
-        if 'yes' in content:
-            return True
-        else:
-            return False
-
-    except Exception as e:
-        print(f"Error in API request: {e}")
-        return None
+    # try:
+    #     response = client.chat.completions.create(
+    #         model="gpt-4o",
+    #         messages=[
+    #             {"role": "system", "content": get_correction_system_prompt()},
+    #             {"role": "user", "content": paragraph}
+    #         ],
+    #         max_tokens=16384,
+    #         temperature=0.2
+    #     )
+    #     content = response.choices[0].message.content
+    #     if 'yes' in content:
+    #         return True
+    #     else:
+    #         return False
+    #
+    # except Exception as e:
+    #     print(f"Error in API request: {e}")
+    #     return None
 
 
 def is_line_in_captions(line_spans: list[dict], captions_spans: list[tuple]) -> bool:
