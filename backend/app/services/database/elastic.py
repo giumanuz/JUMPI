@@ -4,8 +4,8 @@ from dataclasses import asdict
 from elasticsearch import Elasticsearch
 from flask import g
 
-from app.utils.classes import Article, Magazine
 from app.services.database.database import Database
+from app.utils.classes import Article, Magazine
 
 
 def _build_magazine_search_query(magazine: Magazine) -> dict:
