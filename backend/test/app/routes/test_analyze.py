@@ -13,13 +13,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 load_dotenv()
 
-api_key = os.getenv('DOCUMENTINTELLIGENCE_API_KEY')
-if api_key:
-    logging.debug(f'DOCUMENTINTELLIGENCE_API_KEY: {api_key}')
-else:
-    logging.debug('DOCUMENTINTELLIGENCE_API_KEY non è stato caricato correttamente!')
-
-
 @pytest.fixture
 def app():
     """Fixture to create a Flask application for testing."""
@@ -58,7 +51,7 @@ def test_analyze_documents_empty_files(client):
     files = {}
     response = client.post('/analyze-documents', data=files)
     assert response.status_code == 400
-    assert response.json == {"error": "No files selected"}
+    assert response.json == {"error": "No files provided"}
 
 def test_analyze_documents_no_metadata(client):
     """Test case when metadata is missing."""
@@ -124,26 +117,20 @@ def test_analyze_documents_success(
         'metadata': json.dumps(metadata)
     }
     
-    # Perform the request
     response = client.post('/analyze-documents', data={**files, **data})
     
-    # Assertions
     assert response.status_code == 200
     
-    # Check response content
     response_json = response.json
     assert 'extracted_text' in response_json
     assert 'image_comparisons' in response_json
     assert response_json['extracted_text'] == "mocked extracted text"
     assert response_json['image_comparisons'] == []
     
-    # Verify process_files was called with files
     mock_process_files.assert_called_once()
     
-    # Verify database interaction
     mock_database.add_article.assert_called_once()
 
-    # Optional: Verify the arguments passed to add_article
     args = mock_database.add_article.call_args[0]
     assert args[0].name == 'Test Magazine'
     assert args[0].year == 2024

@@ -58,24 +58,20 @@ def _compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
 class AzureDiReader(OcrReader):
     logger = logging.getLogger(__name__)
 
-    AZURE_DI_ENDPOINT = 'https://mdp-test.cognitiveservices.azure.com/'
-    AZURE_DI_API_KEY = os.getenv('DOCUMENTINTELLIGENCE_API_KEY')
-    if not AZURE_DI_API_KEY:
-        raise ValueError("DOCUMENTINTELLIGENCE_API_KEY is not set in the environment variables")
-    if not isinstance(AZURE_DI_API_KEY, str):
-        raise TypeError(f"DOCUMENTINTELLIGENCE_API_KEY must be a string, got {type(AZURE_DI_API_KEY)}")
-
-    client = DocumentIntelligenceClient(
-        endpoint=AZURE_DI_ENDPOINT,
-        credential=AzureKeyCredential(AZURE_DI_API_KEY)
-    )
-
     def __init__(self, image_path):
         super().__init__(image_path)
         self.json_result_filename = Path(self.image_path).stem + ".json"
         self.__figure_polygons = []
         self.__caption_spans = []
         self.__page_offsets = []
+        AZURE_DI_ENDPOINT = 'https://mdp-test.cognitiveservices.azure.com/'
+        AZURE_DI_API_KEY = os.getenv('DOCUMENTINTELLIGENCE_API_KEY')
+
+        self.client = DocumentIntelligenceClient(
+            endpoint=AZURE_DI_ENDPOINT,
+            credential=AzureKeyCredential(AZURE_DI_API_KEY)
+        )
+
 
     def read_to_file(self, output_dir: str):
         result = self.__analyze_document()
