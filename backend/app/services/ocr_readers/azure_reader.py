@@ -60,6 +60,10 @@ class AzureDiReader(OcrReader):
 
     AZURE_DI_ENDPOINT = 'https://mdp-test.cognitiveservices.azure.com/'
     AZURE_DI_API_KEY = os.getenv('DOCUMENTINTELLIGENCE_API_KEY')
+    if not AZURE_DI_API_KEY:
+        raise ValueError("DOCUMENTINTELLIGENCE_API_KEY is not set in the environment variables")
+    if not isinstance(AZURE_DI_API_KEY, str):
+        raise TypeError(f"DOCUMENTINTELLIGENCE_API_KEY must be a string, got {type(AZURE_DI_API_KEY)}")
 
     client = DocumentIntelligenceClient(
         endpoint=AZURE_DI_ENDPOINT,
