@@ -36,7 +36,8 @@ class Line:
         }
     ]
     """
-    def __init__(self, polygons: list[Polygon], content: str, confidence: float, spans: list = [], is_caption: bool = False):
+    def __init__(self, polygons: list[Polygon], content: str, confidence: float, spans: list = None, is_caption: bool = False):
+        spans = spans or []
         self.polygons = polygons
         self.spans = spans
         self.content = content
