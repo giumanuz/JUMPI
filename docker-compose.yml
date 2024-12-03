@@ -17,6 +17,6 @@ services:
     volumes:
       - "./backend:/app"
     working_dir: /app
-    command: python server.py
+    command: python main.py
     ports:
       - "5123:5123"
