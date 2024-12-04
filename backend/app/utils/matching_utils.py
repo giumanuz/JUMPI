@@ -1,6 +1,6 @@
 import os
 import re
-from difflib import SequenceMatcher
+from Levenshtein import ratio
 from functools import cache
 
 import openai
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from app.config import Config
 from aws.extract_lines import extract_lines as extract_lines_aws
 from azure.extract_lines import extract_lines as extract_lines_azure
-from commons import Line
+from commons import MatchedLine, LINE_NOT_FOUND
 
 load_dotenv()
 
@@ -44,87 +44,78 @@ def _call_api(prompt: str) -> str:
         return ""
 
 
-def _custom_matcher(source_line_content: str, target_lines: set[str], threshold=80):
-    best_match = None
-    best_score = 0
+def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt: bool=False, threshold: float=0.8):
+    import heapq
 
-    for target_line in target_lines:
-        score = SequenceMatcher(None, source_line_content, target_line).ratio() * 100
+    # Set to store the indexes of the strings_to_match that have already been matched
+    selected_lines = set()
+    # Heap of (-similarity, azure_idx, idx_to_match). Heap is a min heap, so we negate similarity to get better matches first
+    heap = []
+    for idx_to_match, string_to_match in enumerate(strings_to_match):
+        for azure_idx, matched_line in enumerate(matched_lines):
+            similarity = ratio(matched_line.azure_line.content, string_to_match)
+            if similarity >= threshold:
+                heapq.heappush(heap, (-similarity, azure_idx, idx_to_match))
+    
+    while heap:
+        similarity, azure_idx, idx_to_match = heapq.heappop(heap)
+        similarity = -similarity
 
-        if score > best_score and score >= threshold:
-            best_match = target_line
-            best_score = score
+        # Azure line already matched
+        if is_gpt and matched_lines[azure_idx].gpt_string:
+            continue
+        if not is_gpt and matched_lines[azure_idx].aws_string:
+            continue
 
-    return (best_match, best_score) if best_match else None
-
-
-def _fuzzy_match_lines(
-        matched_pairs: list[tuple[Line, str, float]],
-        source_lines: list[Line],
-        target_lines: set[str],
-        threshold=80
-):
-    for idx, source_line in enumerate(source_lines):
-        best_match = _custom_matcher(source_line.content, target_lines, threshold)
-        if best_match:
-            matched_pairs[idx] = (source_line, best_match[0], best_match[1])
-            target_lines.remove(best_match[0])
-        elif matched_pairs[idx] is None:
-            matched_pairs[idx] = (source_line, '<Line not found>', 0)
-    return matched_pairs
-
-
-def _iterative_fuzzy_matching(
-        source_lines: list[Line],
-        target_lines: list[str],
-        initial_threshold=100,
-        penalty_step=1,
-        max_threshold=50
-) -> list[tuple[Line, str, float]]:
-    matches: list[tuple[Line, str, float]] = [None] * len(source_lines)
-    set_target_lines = set(target_lines)
-    threshold = initial_threshold
-
-    while threshold >= max_threshold:
-        matches = _fuzzy_match_lines(matches, source_lines, set_target_lines, threshold=threshold)
-        threshold -= penalty_step
-
-    return matches
+        # String to match already matched
+        if idx_to_match in selected_lines:
+            continue
+        
+        selected_lines.add(idx_to_match)
+        if is_gpt:
+            matched_lines[azure_idx].gpt_string = strings_to_match[idx_to_match]
+        else:
+            matched_lines[azure_idx].aws_string = strings_to_match[idx_to_match]
 
 
 def process_file(
-        azure_file: str,
+        filename: str,
         image_path: str,
         threshold_high=95,
         threshold_low=90,
 ):
-    azure_file_path = os.path.join(Config.AZURE_FOLDER, azure_file)
-    aws_file_path = os.path.join(Config.AWS_FOLDER, azure_file)
+    azure_file_path = os.path.join(Config.AZURE_FOLDER, filename)
+    aws_file_path = os.path.join(Config.AWS_FOLDER, filename)
 
     if not (os.path.isfile(azure_file_path) and os.path.isfile(aws_file_path)):
         return
 
     azure_lines = extract_lines_azure(azure_file_path)
-    aws_lines = extract_lines_aws(aws_file_path)
+    aws_strings = extract_lines_aws(aws_file_path)
 
-    matches_azure_aws = _iterative_fuzzy_matching(azure_lines, aws_lines)
-    azure_lines_content = "\n".join([line.content for line, _, _ in matches_azure_aws])
-    aws_lines_content = "\n".join([line for _, line, _ in matches_azure_aws])
+    matched_lines = [MatchedLine(azure_line) for azure_line in azure_lines]
+
+    _match(matched_lines, aws_strings)
+
+    azure_lines_content = ""
+    aws_lines_content = ""
+    for matched_line in matched_lines:
+        azure_lines_content += matched_line.azure_line.content + "\n"
+        aws_lines_content += (matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND) + "\n"
 
     prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
-    corrected_lines = _call_api(prompt)
+    gpt_ans = _call_api(prompt)
 
-    output_path = os.path.join(Config.GPT_FOLDER, azure_file).replace('.json', '.txt')
+    output_path = os.path.join(Config.GPT_FOLDER, filename).replace('.json', '.txt')
     with open(output_path, 'w') as f:
-        f.write(corrected_lines)
+        f.write(gpt_ans)
 
-    gpt_lines = corrected_lines.split("\n")
-    matches_azure_gpt = _iterative_fuzzy_matching(azure_lines, gpt_lines)
+    gpt_strings = gpt_ans.split("\n")
+    _match(matched_lines, gpt_strings, is_gpt=True)
 
     _create_output_and_visuals(
-        azure_file,
-        matches_azure_aws,
-        matches_azure_gpt,
+        filename,
+        matched_lines,
         image_path,
         threshold_high,
         threshold_low,
@@ -133,8 +124,7 @@ def process_file(
 
 def _create_output_and_visuals(
         azure_file: str,
-        matches_azure_aws: list[tuple[Line, str, float]],
-        matches_azure_gpt: list[tuple[Line, str, float]],
+        matched_lines: list[MatchedLine],
         image_path: str,
         threshold_high=95,
         threshold_low=90,
@@ -146,14 +136,19 @@ def _create_output_and_visuals(
         with Image.open(image_path) as img:
             img = img.convert("RGB")
             draw = ImageDraw.Draw(img, 'RGBA')
-            for idx, (azure, aws, score) in enumerate(matches_azure_aws):
-                polygon = azure.polygons[0]
-                gpt_line = matches_azure_gpt[idx][1]
-                if score < threshold_low:
+            for idx, matched_line in enumerate(matched_lines):
+                polygon = matched_line.azure_line.polygons[0] # See why [0] in the definition of Line class
+                similarity = matched_line.get_similarity()
+                if similarity < threshold_low:
                     _draw_polygon(draw, polygon, 'red')
-                elif score < threshold_high:
+                elif similarity < threshold_high:
                     _draw_polygon(draw, polygon, 'yellow')
-                output_file.write(f"{azure.content} \n{aws}\n{gpt_line}\n\n\n")
+                
+                output_file.write(f"Azure: {matched_line.azure_line.content}\n")
+                output_file.write(f"AWS:   {matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND}\n")
+                output_file.write(f"GPT:   {matched_line.gpt_string if matched_line.gpt_string else LINE_NOT_FOUND}\n")
+                output_file.write("\n" + "-"*50 + "\n\n")
+                
             img.save(comparison_image_path)
 
 
