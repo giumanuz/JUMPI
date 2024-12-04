@@ -1,8 +1,9 @@
 import pytest
-from flask import Flask, jsonify
+from flask import Flask
+from pytest_mock import MockerFixture
+
 from app.routes.query import query_bp
-from app.services.database.database import Database
-from unittest.mock import MagicMock
+
 
 @pytest.fixture
 def app():
@@ -12,17 +13,20 @@ def app():
     app.config['TESTING'] = True
     return app
 
+
 @pytest.fixture
 def client(app):
     """Fixture to provide a test client for the Flask app."""
     return app.test_client()
 
+
 @pytest.fixture
-def mock_database_query(mocker):
+def mock_database_query(mocker: MockerFixture):
     """Fixture to mock the Database query method."""
     mock_db_instance = mocker.MagicMock()
     mocker.patch('app.services.database.database.Database.get_instance', return_value=mock_db_instance)
     return mock_db_instance
+
 
 def test_query_documents_success(client, mock_database_query):
     """Test case when query parameters are passed and query is successful."""
@@ -39,7 +43,7 @@ def test_query_documents_success(client, mock_database_query):
     }
 
     response = client.get('/query', query_string=query_params)
-    
+
     assert response.status_code == 200
 
     response_json = response.json
@@ -62,6 +66,7 @@ def test_query_documents_success(client, mock_database_query):
     assert article_arg.title == 'Test Article'
     assert article_arg.author == 'Test Author'
     assert article_arg.content == 'Test content'
+
 
 def test_query_documents_no_params(client, mock_database_query):
     """Test case when no query parameters are provided."""
@@ -91,4 +96,3 @@ def test_query_documents_no_params(client, mock_database_query):
     assert article_arg.title is None
     assert article_arg.author is None
     assert article_arg.content is None
-

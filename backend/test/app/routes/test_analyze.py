@@ -1,17 +1,18 @@
-import pytest
-from io import BytesIO
-from flask import Flask
-from flask.testing import FlaskClient
-from app.services.database.database import Database
-from app.routes.analyze import analyze_bp
 import json
-from dotenv import load_dotenv
-import os
 import logging
+from io import BytesIO
+
+import pytest
+from dotenv import load_dotenv
+from flask import Flask
+from pytest_mock import MockerFixture
+
+from app.routes.analyze import analyze_bp
 
 logging.basicConfig(level=logging.DEBUG)
 
 load_dotenv()
+
 
 @pytest.fixture
 def app():
@@ -21,24 +22,28 @@ def app():
     app.config['TESTING'] = True
     return app
 
+
 @pytest.fixture
 def client(app):
     """Fixture to provide a test client for the Flask app."""
     return app.test_client()
 
-@pytest.fixture
-def mock_process_files(mocker):
-    """Fixture to mock the process_files function."""
-    return mocker.patch('app.routes.analyze.process_files', 
-                        return_value=("mocked extracted text", [], []))
 
 @pytest.fixture
-def mock_database(mocker):
+def mock_process_files(mocker: MockerFixture):
+    """Fixture to mock the process_files function."""
+    return mocker.patch('app.routes.analyze.process_files',
+                        return_value=("mocked extracted text", [], []))
+
+
+@pytest.fixture
+def mock_database(mocker: MockerFixture):
     """Fixture to mock the Database interactions."""
     mock_db_instance = mocker.MagicMock()
-    mocker.patch('app.routes.analyze.Database.get_instance', 
+    mocker.patch('app.routes.analyze.Database.get_instance',
                  return_value=mock_db_instance)
     return mock_db_instance
+
 
 def test_analyze_documents_no_files(client):
     """Test case when no files are uploaded."""
@@ -46,12 +51,14 @@ def test_analyze_documents_no_files(client):
     assert response.status_code == 400
     assert response.json == {"error": "No files provided"}
 
+
 def test_analyze_documents_empty_files(client):
     """Test case when files list is empty."""
     files = {}
     response = client.post('/analyze-documents', data=files)
     assert response.status_code == 400
     assert response.json == {"error": "No files provided"}
+
 
 def test_analyze_documents_no_metadata(client):
     """Test case when metadata is missing."""
@@ -61,6 +68,7 @@ def test_analyze_documents_no_metadata(client):
     response = client.post('/analyze-documents', data=files)
     assert response.status_code == 400
     assert response.json == {"error": "Missing metadata"}
+
 
 def test_analyze_documents_invalid_metadata_format(client):
     """Test case when the metadata JSON is malformed."""
@@ -73,6 +81,7 @@ def test_analyze_documents_invalid_metadata_format(client):
     response = client.post('/analyze-documents', data={**files, **data})
     assert response.status_code == 400
     assert response.json == {"error": "Invalid metadata format"}
+
 
 def test_analyze_documents_missing_metadata_field(client):
     """Test case when a required metadata field is missing."""
@@ -95,10 +104,11 @@ def test_analyze_documents_missing_metadata_field(client):
     assert response.status_code == 400
     assert response.json == {"error": "Missing required field: article_page_range"}
 
+
 def test_analyze_documents_success(
-    client, 
-    mock_process_files, 
-    mock_database
+        client,
+        mock_process_files,
+        mock_database
 ):
     """Test case when all inputs are correct and processing is successful."""
     files = {
@@ -116,19 +126,19 @@ def test_analyze_documents_success(
     data = {
         'metadata': json.dumps(metadata)
     }
-    
+
     response = client.post('/analyze-documents', data={**files, **data})
-    
+
     assert response.status_code == 200
-    
+
     response_json = response.json
     assert 'extracted_text' in response_json
     assert 'image_comparisons' in response_json
     assert response_json['extracted_text'] == "mocked extracted text"
     assert response_json['image_comparisons'] == []
-    
+
     mock_process_files.assert_called_once()
-    
+
     mock_database.add_article.assert_called_once()
 
     args = mock_database.add_article.call_args[0]
