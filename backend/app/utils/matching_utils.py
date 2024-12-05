@@ -1,9 +1,9 @@
 import os
 import re
-from Levenshtein import ratio
 from functools import cache
 
 import openai
+from Levenshtein import ratio
 from PIL import Image, ImageDraw
 from dotenv import load_dotenv
 
@@ -44,7 +44,7 @@ def _call_api(prompt: str) -> str:
         return ""
 
 
-def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt: bool=False, threshold: float=0.8):
+def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt: bool = False, threshold: float = 0.8):
     import heapq
 
     # Set to store the indexes of the strings_to_match that have already been matched
@@ -56,7 +56,7 @@ def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt
             similarity = ratio(matched_line.azure_line.content, string_to_match)
             if similarity >= threshold:
                 heapq.heappush(heap, (-similarity, azure_idx, idx_to_match))
-    
+
     while heap:
         similarity, azure_idx, idx_to_match = heapq.heappop(heap)
         similarity = -similarity
@@ -70,7 +70,7 @@ def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt
         # String to match already matched
         if idx_to_match in selected_lines:
             continue
-        
+
         selected_lines.add(idx_to_match)
         if is_gpt:
             matched_lines[azure_idx].gpt_string = strings_to_match[idx_to_match]
@@ -137,18 +137,18 @@ def _create_output_and_visuals(
             img = img.convert("RGB")
             draw = ImageDraw.Draw(img, 'RGBA')
             for idx, matched_line in enumerate(matched_lines):
-                polygon = matched_line.azure_line.polygons[0] # See why [0] in the definition of Line class
+                polygon = matched_line.azure_line.polygons[0]  # See why [0] in the definition of Line class
                 similarity = matched_line.get_similarity()
                 if similarity < threshold_low:
                     _draw_polygon(draw, polygon, 'red')
                 elif similarity < threshold_high:
                     _draw_polygon(draw, polygon, 'yellow')
-                
+
                 output_file.write(f"Azure: {matched_line.azure_line.content}\n")
                 output_file.write(f"AWS:   {matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND}\n")
                 output_file.write(f"GPT:   {matched_line.gpt_string if matched_line.gpt_string else LINE_NOT_FOUND}\n")
-                output_file.write("\n" + "-"*50 + "\n\n")
-                
+                output_file.write("\n" + "-" * 50 + "\n\n")
+
             img.save(comparison_image_path)
 
 
