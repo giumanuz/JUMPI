@@ -17,8 +17,7 @@ def create_app():
         allow_headers='X-API-KEY'
     )
 
-    debug = os.getenv('DEBUG', 'False').lower() == 'true'
-    setup_db(debug)
+    setup_db()
 
     from .routes.analyze import analyze_bp
     from .routes.query import query_bp
