@@ -31,20 +31,21 @@ class Article:
     created_on: datetime = field(default_factory=lambda: datetime.now())
     edited_on: datetime = field(default_factory=lambda: datetime.now())
 
+    # noinspection PyTypeChecker
     @classmethod
-    def placeholder_with(cls, **kwargs):
+    def blank_with(cls, **kwargs):
         return cls(
-            id=kwargs.get('id', ''),
-            magazine_id=kwargs.get('magazine_id', ''),
-            title=kwargs.get('title', ''),
-            author=kwargs.get('author', ''),
-            content=kwargs.get('content', ''),
-            page_offsets=kwargs.get('page_offsets', []),
-            page_range=kwargs.get('page_range', []),
-            page_scans=kwargs.get('page_scans', []),
-            figures=kwargs.get('figures', []),
-            created_on=kwargs.get('created_on', datetime.now()),
-            edited_on=kwargs.get('updated_on', datetime.now())
+            id=kwargs.get('id', None),
+            magazine_id=kwargs.get('magazine_id', None),
+            title=kwargs.get('title', None),
+            author=kwargs.get('author', None),
+            content=kwargs.get('content', None),
+            page_offsets=kwargs.get('page_offsets', None),
+            page_range=kwargs.get('page_range', None),
+            page_scans=kwargs.get('page_scans', None),
+            figures=kwargs.get('figures', None),
+            created_on=kwargs.get('created_on', None),
+            edited_on=kwargs.get('updated_on', None)
         )
 
 
@@ -61,17 +62,18 @@ class Magazine:
     created_on: datetime = field(default_factory=lambda: datetime.now())
     edited_on: datetime = field(default_factory=lambda: datetime.now())
 
+    # noinspection PyTypeChecker
     @classmethod
-    def placeholder_with(cls, **kwargs):
+    def blank_with(cls, **kwargs):
         return cls(
-            id=kwargs.get('id', ''),
-            name=kwargs.get('name', ''),
-            date=kwargs.get('date', datetime.now()),
-            publisher=kwargs.get('publisher', ''),
-            edition=kwargs.get('edition', ''),
-            abstract=kwargs.get('abstract', ''),
-            genres=kwargs.get('genres', []),
-            categories=kwargs.get('categories', []),
-            created_on=kwargs.get('created_on', datetime.now()),
-            edited_on=kwargs.get('updated_on', datetime.now())
+            id=kwargs.get('id', None),
+            name=kwargs.get('name', None),
+            date=kwargs.get('date', None),
+            publisher=kwargs.get('publisher', None),
+            edition=kwargs.get('edition', None),
+            abstract=kwargs.get('abstract', None),
+            genres=kwargs.get('genres', None),
+            categories=kwargs.get('categories', None),
+            created_on=kwargs.get('created_on', None),
+            edited_on=kwargs.get('updated_on', None)
         )
