@@ -84,13 +84,16 @@ def _get_correction_system_prompt() -> str:
 def _call_api(prompt: str) -> str:
     try:
         content = _get_openai_client().get_completion(prompt)
-        all_lines = "\n".join((l.strip() for l in content.split("\n")))
+        all_lines = _strip_all_lines(content)
         match = re.search(r"AZURE:\s*(.*?)(?=\s*AWS:|\s*-{2,})", all_lines, re.DOTALL)
 
         return match.group(1) if match else all_lines
     except openai.OpenAIError as e:
         logger.error(f"Error in API request", exc_info=e)
         return ""
+
+def _strip_all_lines(text: str) -> str:
+    return "\n".join((l.strip() for l in text.split("\n")))
 
 
 def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt: bool = False, threshold: float = 0.8):
