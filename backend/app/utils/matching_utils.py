@@ -1,81 +1,18 @@
 import os
 import re
 from functools import cache
+from typing import Optional
 
-import openai
 from Levenshtein import ratio
 from PIL import Image, ImageDraw
-from dotenv import load_dotenv
 
 from app.config import Config
+from app.services.openai_client import OpenaiClient
 from aws.extract_lines import extract_lines as extract_lines_aws
 from azure.extract_lines import extract_lines as extract_lines_azure
 from commons import MatchedLine, LINE_NOT_FOUND
 
-load_dotenv()
-
-client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
-
-
-@cache
-def _get_correction_system_prompt() -> str:
-    with open("gpt_prompts/two-tools.md", "r") as f:
-        return f.read()
-
-
-def _call_api(prompt: str) -> str:
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": _get_correction_system_prompt()},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=16384,
-            temperature=0.2
-        )
-        content = response.choices[0].message.content
-        all_lines = "\n".join((l.strip() for l in content.split("\n")))
-        match = re.search(r"AZURE:\s*(.*?)(?=\s*AWS:|\s*-{2,})", all_lines, re.DOTALL)
-
-        return match.group(1) if match else all_lines
-    except Exception as e:
-        print(f"Error in API request: {e}")
-        return ""
-
-
-def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt: bool = False, threshold: float = 0.8):
-    import heapq
-
-    # Set to store the indexes of the strings_to_match that have already been matched
-    selected_lines = set()
-    # Heap of (-similarity, azure_idx, idx_to_match). Heap is a min heap, so we negate similarity to get better matches first
-    heap = []
-    for idx_to_match, string_to_match in enumerate(strings_to_match):
-        for azure_idx, matched_line in enumerate(matched_lines):
-            similarity = ratio(matched_line.azure_line.content, string_to_match)
-            if similarity >= threshold:
-                heapq.heappush(heap, (-similarity, azure_idx, idx_to_match))
-
-    while heap:
-        similarity, azure_idx, idx_to_match = heapq.heappop(heap)
-        similarity = -similarity
-
-        # Azure line already matched
-        if is_gpt and matched_lines[azure_idx].gpt_string:
-            continue
-        if not is_gpt and matched_lines[azure_idx].aws_string:
-            continue
-
-        # String to match already matched
-        if idx_to_match in selected_lines:
-            continue
-
-        selected_lines.add(idx_to_match)
-        if is_gpt:
-            matched_lines[azure_idx].gpt_string = strings_to_match[idx_to_match]
-        else:
-            matched_lines[azure_idx].aws_string = strings_to_match[idx_to_match]
+__openai_client: Optional[OpenaiClient] = None
 
 
 def process_file(
@@ -120,6 +57,70 @@ def process_file(
         threshold_high,
         threshold_low,
     )
+
+
+def _get_openai_client():
+    global __openai_client
+    if __openai_client is None:
+        __openai_client = OpenaiClient(
+            system_prompt=_get_correction_system_prompt(),
+            max_tokens=16384,
+            temperature=0.2,
+            model="gpt-4o"
+        )
+    return __openai_client
+
+
+@cache
+def _get_correction_system_prompt() -> str:
+    with open("gpt_prompts/two-tools.md", "r") as f:
+        return f.read()
+
+
+def _call_api(prompt: str) -> str:
+    try:
+        content = _get_openai_client().get_completion(prompt)
+        all_lines = "\n".join((l.strip() for l in content.split("\n")))
+        match = re.search(r"AZURE:\s*(.*?)(?=\s*AWS:|\s*-{2,})", all_lines, re.DOTALL)
+
+        return match.group(1) if match else all_lines
+    except Exception as e:
+        print(f"Error in API request: {e}")
+        return ""
+
+
+def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt: bool = False, threshold: float = 0.8):
+    import heapq
+
+    # Set to store the indexes of the strings_to_match that have already been matched
+    selected_lines = set()
+    # Heap of (-similarity, azure_idx, idx_to_match). Heap is a min heap, so we negate similarity to get better matches first
+    heap = []
+    for idx_to_match, string_to_match in enumerate(strings_to_match):
+        for azure_idx, matched_line in enumerate(matched_lines):
+            similarity = ratio(matched_line.azure_line.content, string_to_match)
+            if similarity >= threshold:
+                heapq.heappush(heap, (-similarity, azure_idx, idx_to_match))
+
+    while heap:
+        similarity, azure_idx, idx_to_match = heapq.heappop(heap)
+        similarity = -similarity
+
+        # Azure line already matched
+        if is_gpt and matched_lines[azure_idx].gpt_string:
+            continue
+        if not is_gpt and matched_lines[azure_idx].aws_string:
+            continue
+
+        # String to match already matched
+        if idx_to_match in selected_lines:
+            continue
+
+        selected_lines.add(idx_to_match)
+        if is_gpt:
+            matched_lines[azure_idx].gpt_string = strings_to_match[idx_to_match]
+        else:
+            matched_lines[azure_idx].aws_string = strings_to_match[idx_to_match]
 
 
 def _create_output_and_visuals(

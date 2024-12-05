@@ -22,6 +22,7 @@ def main():
 def setup_config(debug=False):
     config.APP_CONFIG = config.Config(
         ELASTIC_URL=os.getenv('ELASTIC_URL'),
+        OPENAI_API_KEY=os.getenv('OPENAI_API_KEY'),
         DEBUG=debug
     )
 

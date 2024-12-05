@@ -5,6 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class Config:
     ELASTIC_URL: str
+    OPENAI_API_KEY: str
     TEMP_FOLDER: str = './temp'
     DEBUG: bool = False
 
