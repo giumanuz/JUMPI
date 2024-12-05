@@ -1,16 +1,17 @@
-import pytest
 from unittest.mock import MagicMock
 
+import pytest
+from flask import Flask
 from pytest_mock import MockerFixture
 
 from app.services.database.elastic import ElasticsearchDb, Magazine, Article, MagazineNotFoundError, MagazineExistsError
-from app import create_app
+
 
 @pytest.fixture
 def es_db(mocker: MockerFixture):
     """Fixture to create an instance of ElasticsearchDb with application context."""
-    
-    app = create_app()
+
+    app = Flask(__name__)
     with app.app_context():
         es_db = ElasticsearchDb(url="http://localhost:9200")
         mock_es = MagicMock()
@@ -58,9 +59,9 @@ def test_add_magazine_exists(es_db):
         }
     }
     es_db.es.search.return_value = search_mock
-    
+
     magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    
+
     with pytest.raises(MagazineExistsError):
         es_db.add_magazine(magazine)
 
@@ -78,9 +79,9 @@ def test_get_magazine_id(es_db):
     es_db.es.search.return_value = search_mock
 
     magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    
+
     magazine_id = es_db.get_magazine_id(magazine)
-    
+
     assert magazine_id == '12345'
 
 
@@ -92,7 +93,7 @@ def test_magazine_not_found_error(es_db):
     es_db.es.search.return_value = search_mock
 
     magazine = Magazine(name="Non Existent Magazine", year=2024, publisher="Unknown Publisher")
-    
+
     with pytest.raises(MagazineNotFoundError):
         es_db.get_magazine_id(magazine)
 
@@ -107,10 +108,10 @@ def test_query(es_db):
         }
     }
     es_db.es.search.return_value = search_mock
-    
+
     magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
     article = Article(title="AI Innovations", author="John Doe", content="Content of the article.", page_offsets=[])
-    
+
     response = es_db.query(magazine, article)
-    
+
     assert response['hits']['hits'][0]['_id'] == '12345'
