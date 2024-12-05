@@ -45,7 +45,7 @@ def process_file(
         aws_lines_content += (matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND) + "\n"
 
     prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
-    gpt_ans = _call_api(prompt)
+    gpt_ans = _get_gpt_merged_text(prompt)
 
     output_path = os.path.join(Config.GPT_FOLDER, filename).replace('.json', '.txt')
     with open(output_path, 'w') as f:
@@ -81,9 +81,9 @@ def _get_correction_system_prompt() -> str:
         return f.read()
 
 
-def _call_api(prompt: str) -> str:
+def _get_gpt_merged_text(user_prompt: str) -> str:
     try:
-        content = _get_openai_client().get_completion(prompt)
+        content = _get_openai_client().get_completion(user_prompt)
         return _strip_all_lines(content)
     except openai.OpenAIError as e:
         logger.error(f"Error in API request", exc_info=e)
