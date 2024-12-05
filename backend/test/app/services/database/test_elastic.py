@@ -6,6 +6,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from app.services.database.elastic import ElasticsearchDb
+from app.utils.classes import Magazine, Article
 
 
 @pytest.fixture
@@ -140,6 +141,43 @@ def test_search_magazines(mock_es, mock_magazine_response, mock_magazine):
     assert len(results) == 1
     assert results[0].id == "1"
     assert results[0].name == "Test Magazine"
+
+
+def test_search_magazines_with_missing_fields(mock_es, mock_magazine_response, mock_magazine):
+    mock_search_res = MagicMock()
+    mock_search_res.body = mock_magazine_response
+    mock_es.search.return_value = mock_search_res
+
+    db = ElasticsearchDb(url="http://localhost")
+    results = db.search_magazines(Magazine.blank_with(id="1"))
+
+    # Verify the search query is passed to Elasticsearch
+    query = {'query': {'bool': {'must': [{'term': {'id': '1'}}]}}}
+    mock_es.search.assert_called_once_with(index="magazines", body=query)
+
+    # Verify that the search result is correctly parsed into Magazine objects
+    assert len(results) == 1
+    assert results[0].id == "1"
+    assert results[0].name == "Test Magazine"
+
+
+def test_search_articles_with_missing_fields(mock_es, mock_article_response, mock_article):
+    mock_search_res = MagicMock()
+    mock_search_res.body = mock_article_response
+    mock_es.search.return_value = mock_search_res
+
+    db = ElasticsearchDb(url="http://localhost")
+    results = db.search_articles(Article.blank_with(id="2", magazine_id="1"))
+
+    # Verify the search query is passed to Elasticsearch
+    query = {'query': {'bool': {'must': [{'term': {'id': '2'}},
+                                         {'term': {'magazine_id': '1'}}]}}}
+    mock_es.search.assert_called_once_with(index="articles", body=query)
+
+    # Verify that the search result is correctly parsed into Article objects
+    assert len(results) == 1
+    assert results[0].id == "1"
+    assert results[0].title == "Test Article"
 
 
 # Test the search_articles method
