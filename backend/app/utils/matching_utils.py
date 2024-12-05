@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from functools import cache
@@ -13,6 +14,8 @@ from azure.extract_lines import extract_lines as extract_lines_azure
 from commons import MatchedLine, LINE_NOT_FOUND
 
 __openai_client: Optional[OpenaiClient] = None
+
+logger = logging.getLogger(__name__)
 
 
 def process_file(
@@ -85,7 +88,7 @@ def _call_api(prompt: str) -> str:
 
         return match.group(1) if match else all_lines
     except Exception as e:
-        print(f"Error in API request: {e}")
+        logger.error(f"Error in API request", exc_info=e)
         return ""
 
 
