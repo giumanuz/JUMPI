@@ -29,7 +29,7 @@ class Article:
     page_scans: list[ArticlePageScan]
     figures: list[ArticleFigure] = field(default_factory=list)
     created_on: datetime = field(default_factory=lambda: datetime.now())
-    updated_on: datetime = field(default_factory=lambda: datetime.now())
+    edited_on: datetime = field(default_factory=lambda: datetime.now())
 
     @classmethod
     def placeholder_with(cls, **kwargs):
@@ -44,7 +44,7 @@ class Article:
             page_scans=kwargs.get('page_scans', []),
             figures=kwargs.get('figures', []),
             created_on=kwargs.get('created_on', datetime.now()),
-            updated_on=kwargs.get('updated_on', datetime.now())
+            edited_on=kwargs.get('updated_on', datetime.now())
         )
 
 
@@ -59,7 +59,7 @@ class Magazine:
     genres: list[str] = field(default_factory=list)
     categories: list[str] = field(default_factory=list)
     created_on: datetime = field(default_factory=lambda: datetime.now())
-    updated_on: datetime = field(default_factory=lambda: datetime.now())
+    edited_on: datetime = field(default_factory=lambda: datetime.now())
 
     @classmethod
     def placeholder_with(cls, **kwargs):
@@ -73,5 +73,5 @@ class Magazine:
             genres=kwargs.get('genres', []),
             categories=kwargs.get('categories', []),
             created_on=kwargs.get('created_on', datetime.now()),
-            updated_on=kwargs.get('updated_on', datetime.now())
+            edited_on=kwargs.get('updated_on', datetime.now())
         )
