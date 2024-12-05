@@ -8,18 +8,20 @@ import UploadPage from './pages/UploadPage';
 import ResultPage from './pages/ResultPage';
 import QueryResultsPage from "./pages/QueryResultsPage.tsx";
 import EditPage from './pages/EditPage';
+import UploadArticlePage from './pages/UploadArticlePage';
+import AddMagazinePage from './pages/AddMagazinePage';
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/upload" element={<UploadPage />} />
-      <Route path="/result" element={<ResultPage />} />
-      <Route path="/queryResults" element={<QueryResultsPage />} />
-      <Route path="/edit/:id" element={<EditPage />} />
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/search" element={<SearchPage/>}/>
+        <Route path="/upload" element={<UploadPage/>}/>
+        <Route path="/resultPage" element={<ResultPage/>}/>
+        <Route path="/addNewMagazine" element={<AddMagazinePage />} />
+        <Route path="/uploadArticle" element={<UploadArticlePage />} />
     </Routes>
     </BrowserRouter>
   </StrictMode>,

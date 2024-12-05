@@ -1,4 +1,6 @@
-import { useLocation } from 'react-router-dom';
+// src/pages/ResultPage.tsx
+
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/ResultPage.scss';
 
 interface ResultPageState {
@@ -8,7 +10,27 @@ interface ResultPageState {
 
 const ResultPage = () => {
   const location = useLocation();
-  const { extracted_text, image_comparisons } = location.state as ResultPageState;
+  const navigate = useNavigate();
+
+  // Type guard to ensure state exists
+  const state = location.state as ResultPageState | undefined;
+
+  if (!state) {
+    // If state is undefined, redirect back or show an error
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="card bg-body-secondary p-4 shadow-sm text-center">
+          <h3 className="mb-4">No Data Available</h3>
+          <p>It seems you navigated to this page without submitting an article.</p>
+          <button className="btn btn-primary mt-3" onClick={() => navigate('/')}>
+            Go Back to Upload
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { extracted_text, image_comparisons } = state;
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
