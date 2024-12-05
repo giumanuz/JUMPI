@@ -1,20 +1,20 @@
 import pytest
 from unittest.mock import MagicMock
+
+from pytest_mock import MockerFixture
+
 from app.services.database.elastic import ElasticsearchDb, Magazine, Article, MagazineNotFoundError, MagazineExistsError
 from app import create_app
 
 @pytest.fixture
-def es_db(mocker):
+def es_db(mocker: MockerFixture):
     """Fixture to create an instance of ElasticsearchDb with application context."""
     
     app = create_app()
     with app.app_context():
         es_db = ElasticsearchDb(url="http://localhost:9200")
-        
         mock_es = MagicMock()
-        
         mocker.patch.object(ElasticsearchDb, 'es', mock_es)
-        
         yield es_db
 
 
