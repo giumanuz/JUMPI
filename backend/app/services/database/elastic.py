@@ -37,22 +37,21 @@ class ElasticsearchDb(Database):
         return res
 
     def get_all_magazines(self) -> list[Magazine]:
-        res = self.es.search(index='magazines').body
-        self.__debug_log_query({}, res)
-        return res
+        res = self.__search_object('magazines', {})
+        return _parse_magazine_search_result(res)
 
     def search_magazines(self, magazine: Magazine) -> list[Magazine]:
         query = _get_search_magazine_query(magazine)
-        res = self.__search_object(magazine, 'magazines', query)
+        res = self.__search_object('magazines', query)
         return _parse_magazine_search_result(res)
 
 
     def search_articles(self, article: Article) -> list[Article]:
         query = _get_search_article_query(article)
-        res = self.__search_object(article, 'articles', query)
+        res = self.__search_object('articles', query)
         return _parse_article_search_result(res)
 
-    def __search_object(self, obj, index, query):
+    def __search_object(self, index, query):
         res = self.es.search(index=index, body=query).body
         self.__debug_log_query(query, res)
         return res
@@ -61,13 +60,13 @@ class ElasticsearchDb(Database):
         update_query = _get_update_magazine_query(magazine)
         res = self.es.update(index="magazines", id=magazine.id, body=update_query).body
         self.__debug_log_query(update_query, res)
-        return res
+        return res["result"] == "updated"
 
     def update_article(self, article: Article) -> bool:
         update_query = _get_update_article_query(article)
         res = self.es.update(index="articles", id=article.id, body=update_query).body
         self.__debug_log_query(update_query, res)
-        return res
+        return res["result"] == "updated"
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(
@@ -95,7 +94,7 @@ def _parse_magazine_search_result(search_res: dict) -> list[Magazine]:
             genres=source.get("genres", []),
             categories=source.get("categories", []),
             created_on=datetime.fromisoformat(source["created_on"]),
-            updated_on=datetime.fromisoformat(source["edited_on"])
+            edited_on=datetime.fromisoformat(source["edited_on"])
         )
         magazines.append(magazine)
     return magazines
@@ -133,7 +132,7 @@ def _parse_article_search_result(search_res: dict) -> list[Article]:
             page_scans=page_scans,
             figures=figures,
             created_on=datetime.fromisoformat(source["created_on"]),
-            updated_on=datetime.fromisoformat(source["edited_on"])
+            edited_on=datetime.fromisoformat(source["edited_on"])
         )
         articles.append(article)
 
