@@ -38,4 +38,4 @@ class Config:
         shutil.rmtree(cls.TEMP_FOLDER)
         cls.create_temp_dirs()
 
-APP_CONFIG: Config
+APP_CONFIG: Config = None
