@@ -5,7 +5,7 @@ from app.utils.classes import Article, Magazine
 
 class Database(ABC):
     @classmethod
-    def set_instance(cls, instance):
+    def set_instance(cls, instance) -> None:
         cls.instance = instance
 
     @classmethod
@@ -14,28 +14,32 @@ class Database(ABC):
 
     @abstractmethod
     def ping(self) -> bool:
-        pass
+        ...
 
     @abstractmethod
-    def add_magazine(self, magazine) -> str:
-        pass
+    def add_magazine(self, magazine: Magazine) -> str:
+        ...
 
     @abstractmethod
-    def add_article(self, magazine, article) -> dict:
-        pass
+    def add_article(self, article: Article) -> str:
+        ...
 
     @abstractmethod
-    def get_magazine_id(self, magazine) -> str:
-        pass
+    def get_all_magazines(self) -> list[Magazine]:
+        ...
 
     @abstractmethod
-    def magazine_exists(self, magazine) -> bool:
-        pass
+    def search_magazines(self, magazine: Magazine) -> list[Magazine]:
+        ...
 
     @abstractmethod
-    def query(self, magazine: Magazine, article: Article) -> dict:
-        pass
+    def search_articles(self, article: Article) -> list[Article]:
+        ...
 
     @abstractmethod
-    def update_magazine(self, magazine_id: str, magazine: Magazine) -> dict:
-        pass
+    def update_magazine(self, magazine: Magazine) -> None:
+        ...
+
+    @abstractmethod
+    def update_article(self, article: Article) -> None:
+        ...
