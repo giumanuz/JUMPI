@@ -1,26 +1,13 @@
 import logging
 from dataclasses import asdict
+from datetime import datetime
+from typing import Iterable
 
 from elasticsearch import Elasticsearch
 from flask import g
 
 from app.services.database.database import Database
-from app.utils.classes import Article, Magazine
-
-
-def _build_magazine_search_query(magazine: Magazine) -> dict:
-    return {
-        "query": {"bool": {"must": [
-            {"term": {"name": magazine.name}},
-            {"range": {"year": {
-                "gte": magazine.year,
-                "lte": magazine.year
-            }}},
-            {"term": {"publisher": magazine.publisher}}
-        ]}},
-        "fields": ["_id"],
-        "_source": False
-    }
+from app.utils.classes import Article, Magazine, ArticlePageScan, ArticleFigure
 
 
 class ElasticsearchDb(Database):
@@ -38,105 +25,48 @@ class ElasticsearchDb(Database):
         return self.es.ping()
 
     def add_magazine(self, magazine: Magazine) -> str:
-        if self.magazine_exists(magazine):
-            raise MagazineExistsError
-        return self._add_magazine_without_check(magazine)
+        return self.__add_object(magazine, 'magazines')['_id']
 
-    def _add_magazine_without_check(self, magazine: Magazine) -> str:
-        magazine_dict = asdict(magazine)
-        res = self.es.index(index='magazines', document=magazine_dict)
-        res_body = res.body
-        self.__debug_log_query(magazine_dict, res_body)
-        return res_body['_id']
+    def add_article(self, article: Article) -> str:
+        return self.__add_object(article, 'articles')['_id']
 
-    def add_article(self, magazine: Magazine, article: Article) -> dict:
-        try:
-            magazine_id = self.get_magazine_id(magazine)
-        except MagazineNotFoundError:
-            magazine_id = self.add_magazine(magazine)
-        res = self.__create_article(magazine_id, article)
+    def __add_object(self, obj, index):
+        obj_dict = asdict(obj)
+        res = self.es.index(index=index, document=obj_dict).body
+        self.__debug_log_query(obj_dict, res)
         return res
 
-    def get_magazine_id(self, magazine: Magazine) -> str:
-        res = self.__search_magazine(magazine)
-        if res['hits']['total']['value'] == 0:
-            raise MagazineNotFoundError
-        return res['hits']['hits'][0]['_id']
+    def get_all_magazines(self) -> list[Magazine]:
+        res = self.es.search(index='magazines').body
+        self.__debug_log_query({}, res)
+        return res
 
-    def magazine_exists(self, magazine: Magazine) -> bool:
-        try:
-            self.get_magazine_id(magazine)
-            return True
-        except MagazineNotFoundError:
-            return False
+    def search_magazines(self, magazine: Magazine) -> list[Magazine]:
+        query = _get_search_magazine_query(magazine)
+        res = self.__search_object(magazine, 'magazines', query)
+        return _parse_magazine_search_result(res)
 
-    def query(self, magazine: Magazine, article: Article) -> dict:
-        query = {
-            "query": {
-                "bool": {
-                    "filter": [],
-                    "must": []
-                }
-            }
-        }
 
-        # Add optional filters for magazine-level fields
-        for field in ("name", "year", "publisher", "genre"):
-            value = getattr(magazine, field)
-            if value:
-                query["query"]["bool"]["filter"].append({"term": {field: value}})
+    def search_articles(self, article: Article) -> list[Article]:
+        query = _get_search_article_query(article)
+        res = self.__search_object(article, 'articles', query)
+        return _parse_article_search_result(res)
 
-        # Add nested article-level conditions if provided
-        nested_conditions = {"filter": [], "must": []}
+    def __search_object(self, obj, index, query):
+        res = self.es.search(index=index, body=query).body
+        self.__debug_log_query(query, res)
+        return res
 
-        if article.title:
-            nested_conditions["filter"].append({"term": {"articles.title": article.title}})
-        if article.author:
-            nested_conditions["filter"].append({"term": {"articles.author": article.author}})
-        if article.content:
-            nested_conditions["must"].append({"match": {"articles.content": article.content}})
-
-        # Add nested query only if there are conditions for articles
-        if nested_conditions["filter"] or nested_conditions["must"]:
-            query["query"]["bool"]["must"].append({
-                "nested": {
-                    "path": "articles",
-                    "query": {
-                        "bool": nested_conditions
-                    }
-                }
-            })
-        response = self.es.search(index="magazines", body=query)
-        self.__debug_log_query(query, response.body)
-        return response.body
-
-    def update_magazine(self, magazine_id: str, magazine: Magazine) -> dict:
-        update_query = {
-            "doc": {
-                "name": magazine.name,
-                "year": magazine.year,
-                "publisher": magazine.publisher,
-                "genre": magazine.genre,
-            }
-        }
-
-        res = self.es.update(index="magazines", id=magazine_id, body=update_query).body
+    def update_magazine(self, magazine: Magazine) -> bool:
+        update_query = _get_update_magazine_query(magazine)
+        res = self.es.update(index="magazines", id=magazine.id, body=update_query).body
         self.__debug_log_query(update_query, res)
         return res
 
-    def __search_magazine(self, magazine: Magazine) -> dict:
-        query = _build_magazine_search_query(magazine)
-        res = self.es.search(index='magazines', body=query).body
-        return res
-
-    def __create_article(self, magazine_id: str, article: Article) -> dict:
-        article_dict = asdict(article)
-        query = {"script": {
-            "source": "ctx._source.articles.add(params.new_article);",
-            "params": {"new_article": article_dict}
-        }}
-        res = self.es.update(index="magazines", id=magazine_id, body=query).body
-        self.__debug_log_query(query, res)
+    def update_article(self, article: Article) -> bool:
+        update_query = _get_update_article_query(article)
+        res = self.es.update(index="articles", id=article.id, body=update_query).body
+        self.__debug_log_query(update_query, res)
         return res
 
     def __debug_log_query(self, query: dict, res: dict):
@@ -149,6 +79,124 @@ class ElasticsearchDb(Database):
             ----------------
             """
         )
+
+
+def _parse_magazine_search_result(search_res: dict) -> list[Magazine]:
+    magazines = []
+    for hit in search_res["hits"]["hits"]:
+        source = hit["_source"]
+        magazine = Magazine(
+            id=hit["_id"],
+            name=source["name"],
+            date=datetime.fromisoformat(source["date"]),
+            publisher=source["publisher"],
+            edition=source.get("edition"),
+            abstract=source.get("abstract"),
+            genres=source.get("genres", []),
+            categories=source.get("categories", []),
+            created_on=datetime.fromisoformat(source["created_on"]),
+            updated_on=datetime.fromisoformat(source["edited_on"])
+        )
+        magazines.append(magazine)
+    return magazines
+
+
+def _parse_article_search_result(search_res: dict) -> list[Article]:
+    articles = []
+    for hit in search_res["hits"]["hits"]:
+        source = hit["_source"]
+
+        page_scans = [
+            ArticlePageScan(
+                page=page_scan["page"],
+                image_data=page_scan["image_data"],
+                uploaded_on=datetime.fromisoformat(page_scan["uploaded_on"])
+            ) for page_scan in source.get("page_scans", [])
+        ]
+
+        figures = [
+            ArticleFigure(
+                page=figure["page"],
+                caption=figure["caption"],
+                image_data=figure["image_data"]
+            ) for figure in source.get("figures", [])
+        ]
+
+        article = Article(
+            id=hit["_id"],
+            magazine_id=source["magazine_id"],
+            title=source["title"],
+            author=source["author"],
+            content=source["content"],
+            page_offsets=source.get("page_offsets", []),
+            page_range=source.get("page_range", []),
+            page_scans=page_scans,
+            figures=figures,
+            created_on=datetime.fromisoformat(source["created_on"]),
+            updated_on=datetime.fromisoformat(source["edited_on"])
+        )
+        articles.append(article)
+
+    return articles
+
+def __get_search_query_with(obj_dict: dict, ignore_fields: Iterable[str], text_fields: Iterable[str]) -> dict:
+    query = {}
+    for field, value in obj_dict.items():
+        if value is None or field in ignore_fields:
+            continue
+        elif field in text_fields:
+            query[field] = {"match": {field: value}}
+        elif isinstance(value, list):
+            query[field] = {"terms": {field: value}}
+        elif isinstance(value, datetime):
+            # TODO: Check if this is the correct way to handle dates.
+            query[field] = {"term": {field: value.isoformat()}}
+        else:
+            query[field] = {"term": {field: value}}
+    return {"query": {"bool": {"must": list(query.values())}}}
+
+
+def __get_update_query_with(obj_dict: dict, ignore_fields: Iterable[str]) -> dict:
+    update_fields = {}
+    for field, value in obj_dict.items():
+        if value is None or field in ignore_fields:
+            continue
+        if isinstance(value, datetime):
+            update_fields[field] = value.isoformat()
+        else:
+            update_fields[field] = value
+    return {"doc": update_fields}
+
+
+_MAGAZINE_UPDATE_IGNORE_FIELDS = ("created_on", "updated_on")
+_ARTICLE_UPDATE_IGNORE_FIELDS = ("created_on", "updated_on")
+
+
+def _get_update_magazine_query(magazine: Magazine) -> dict:
+    magazine_dict = asdict(magazine)
+    return __get_update_query_with(magazine_dict, _MAGAZINE_UPDATE_IGNORE_FIELDS)
+
+
+def _get_update_article_query(article: Article) -> dict:
+    article_dict = asdict(article)
+    return __get_update_query_with(article_dict, _ARTICLE_UPDATE_IGNORE_FIELDS)
+
+
+_MAGAZINE_IGNORE_FIELDS = ("created_on", "updated_on")
+_MAGAZINE_TEXT_FIELDS = ("abstract",)
+
+_ARTICLE_IGNORE_FIELDS = ("page_scans", "figures", "page_offsets", "page_range", "created_on", "updated_on")
+_ARTICLE_TEXT_FIELDS = ("content",)
+
+
+def _get_search_magazine_query(magazine: Magazine) -> dict:
+    magazine_dict = asdict(magazine)
+    return __get_search_query_with(magazine_dict, _MAGAZINE_IGNORE_FIELDS, _MAGAZINE_TEXT_FIELDS)
+
+
+def _get_search_article_query(article: Article) -> dict:
+    article_dict = asdict(article)
+    return __get_search_query_with(article_dict, _ARTICLE_IGNORE_FIELDS, _ARTICLE_TEXT_FIELDS)
 
 
 class MagazineNotFoundError(Exception):
