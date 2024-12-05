@@ -4,7 +4,10 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-    TEMP_FOLDER = './temp'
+    ELASTIC_URL: str
+    TEMP_FOLDER: str = './temp'
+    DEBUG: bool = False
+
     IMAGE_FOLDER = f'{TEMP_FOLDER}/images'
     IMAGE_COMPARISON_FOLDER = f'{TEMP_FOLDER}/images_comparison'
     AWS_FOLDER = f'{TEMP_FOLDER}/aws'
@@ -12,7 +15,6 @@ class Config:
     REPORT_FOLDER = f'{TEMP_FOLDER}/reports'
     GPT_FOLDER = f'{TEMP_FOLDER}/gpt'
 
-    ELASTIC_URL = os.getenv('ELASTIC_URL')
 
     @classmethod
     def create_temp_dirs(cls):
@@ -34,3 +36,5 @@ class Config:
         import shutil
         shutil.rmtree(cls.TEMP_FOLDER)
         cls.create_temp_dirs()
+
+APP_CONFIG: Config
