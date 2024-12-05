@@ -54,25 +54,14 @@ class ElasticsearchDb(Database):
             magazine_id = self.get_magazine_id(magazine)
         except MagazineNotFoundError:
             magazine_id = self.add_magazine(magazine)
-        article_dict = asdict(article)
-
-        query = {"script": {
-            "source": "ctx._source.articles.add(params.new_article);",
-            "params": {"new_article": article_dict}
-        }}
-        res = self.es.update(index="magazines", id=magazine_id, body=query)
-        res_body = res.body
-        self.__debug_log_query(query, res_body)
-        return res_body
+        res = self.__create_article(magazine_id, article)
+        return res
 
     def get_magazine_id(self, magazine: Magazine) -> str:
-        query = _build_magazine_search_query(magazine)
-        res = self.es.search(index='magazines', body=query)
-        res_body = res.body
-        self.__debug_log_query(query, res_body)
-        if res_body['hits']['total']['value'] == 0:
+        res = self.__search_magazine(magazine)
+        if res['hits']['total']['value'] == 0:
             raise MagazineNotFoundError
-        return res_body['hits']['hits'][0]['_id']
+        return res['hits']['hits'][0]['_id']
 
     def magazine_exists(self, magazine: Magazine) -> bool:
         try:
@@ -120,6 +109,21 @@ class ElasticsearchDb(Database):
         response = self.es.search(index="magazines", body=query)
         self.__debug_log_query(query, response.body)
         return response.body
+
+    def __search_magazine(self, magazine: Magazine) -> dict:
+        query = _build_magazine_search_query(magazine)
+        res = self.es.search(index='magazines', body=query).body
+        return res
+
+    def __create_article(self, magazine_id: str, article: Article) -> dict:
+        article_dict = asdict(article)
+        query = {"script": {
+            "source": "ctx._source.articles.add(params.new_article);",
+            "params": {"new_article": article_dict}
+        }}
+        res = self.es.update(index="magazines", id=magazine_id, body=query).body
+        self.__debug_log_query(query, res)
+        return res
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(
