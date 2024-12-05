@@ -1,25 +1,98 @@
+from dataclasses import asdict
+from datetime import datetime
 from unittest.mock import MagicMock
 
 import pytest
-from flask import Flask
 from pytest_mock import MockerFixture
 
-from app.services.database.elastic import ElasticsearchDb, Magazine, Article, MagazineNotFoundError, MagazineExistsError
+from app.services.database.elastic import ElasticsearchDb
+from app.utils.classes import Magazine, Article, ArticlePageScan, ArticleFigure
 
 
 @pytest.fixture
-def es_db(mocker: MockerFixture):
-    """Fixture to create an instance of ElasticsearchDb with application context."""
-    app = Flask(__name__)
-    with app.app_context():
-        es_db = ElasticsearchDb(url="http://localhost:9200")
-        mock_es = MagicMock()
-        mocker.patch.object(ElasticsearchDb, 'es', mock_es)
-        yield es_db
+def mock_es(mocker: MockerFixture):
+    mock_es = MagicMock()
+    mocker.patch('app.services.database.elastic.ElasticsearchDb.es', mock_es)
+    return mock_es
 
 
-def test_ping(es_db):
-    """Test the ping method of ElasticsearchDb to ensure it correctly reflects Elasticsearch's availability."""
+@pytest.fixture
+def mock_magazine():
+    return Magazine(
+        id="1",
+        name="Test Magazine",
+        date=datetime(2024, 1, 1),
+        publisher="Publisher A",
+        edition="First Edition",
+        abstract="Test abstract",
+        genres=["genre1"],
+        categories=["cat1"],
+        created_on=datetime(2024, 1, 1),
+        edited_on=datetime(2024, 1, 2)
+    )
+
+
+@pytest.fixture
+def mock_magazine_response(mock_magazine):
+    mock_magazine_dict = asdict(mock_magazine)
+    mock_magazine_dict["date"] = mock_magazine.date.isoformat()
+    mock_magazine_dict["created_on"] = mock_magazine.created_on.isoformat()
+    mock_magazine_dict["edited_on"] = mock_magazine.edited_on.isoformat()
+    return {
+        "hits": {
+            "hits": [{
+                "_id": "1",
+                "_source": mock_magazine_dict
+            }]
+        }
+    }
+
+
+@pytest.fixture
+def mock_article():
+    return Article(
+        id="1",
+        magazine_id="1",
+        title="Test Article",
+        author="John Doe",
+        content="Some content",
+        page_offsets=[1, 2],
+        page_range=[3, 4],
+        page_scans=[ArticlePageScan(1, "image_data_1", datetime(2024, 1, 1))],
+        figures=[ArticleFigure(1, "Caption 1", "image_data_2")],
+        created_on=datetime(2024, 1, 1),
+        edited_on=datetime(2024, 1, 2)
+    )
+
+
+@pytest.fixture
+def mock_article_response(mock_article):
+    mock_article_dict = asdict(mock_article)
+
+    mock_page_scan_dict = asdict(mock_article.page_scans[0])
+    mock_page_scan_dict["uploaded_on"] = mock_article.page_scans[0].uploaded_on.isoformat()
+
+    mock_figure_dict = asdict(mock_article.figures[0])
+
+    mock_article_dict["created_on"] = mock_article.created_on.isoformat()
+    mock_article_dict["edited_on"] = mock_article.edited_on.isoformat()
+    mock_article_dict["page_scans"] = [mock_page_scan_dict]
+    mock_article_dict["figures"] = [mock_figure_dict]
+    return {
+        "hits": {
+            "hits": [{
+                "_id": "1",
+                "_source": mock_article_dict
+            }]
+        }
+    }
+
+
+def test_ping(mocker: MockerFixture):
+    es_db = ElasticsearchDb(url="http://localhost:9200")
+    mock_es = MagicMock()
+    mocker.patch.object(ElasticsearchDb, 'es', mock_es)
+
     es_db.es.ping.return_value = True
     assert es_db.ping() is True
 
@@ -27,150 +100,156 @@ def test_ping(es_db):
     assert es_db.ping() is False
 
 
-def test_add_magazine(es_db):
-    """Test adding a magazine to ElasticsearchDb and ensure it returns the correct ID."""
-    search_mock = MagicMock()
-    search_mock.body = {'hits': {'total': {'value': 0}, 'hits': []}}
-    es_db.es.search.return_value = search_mock
+def test_get_all_magazines(mock_es, mock_magazine_response, mock_magazine):
+    mock_search_res = MagicMock()
+    mock_search_res.body = mock_magazine_response
+    mock_es.search.return_value = mock_search_res
 
-    index_mock = MagicMock()
-    index_mock.body = {'_id': '12345', 'result': 'created'}
-    es_db.es.index.return_value = index_mock
+    db = ElasticsearchDb(url="http://localhost")
+    results = db.get_all_magazines()
 
-    es_db.magazine_exists = MagicMock(return_value=False)
+    # Verify that Elasticsearch's search method is called
+    mock_es.search.assert_called_once_with(index="magazines", body={})
 
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    magazine_id = es_db.add_magazine(magazine)
-
-    assert magazine_id == '12345'
-    es_db.es.index.assert_called_once_with(index='magazines', document=vars(magazine))
-    assert index_mock.body['_id'] == '12345'
+    # Verify that the search result is correctly parsed into Magazine objects
+    assert len(results) == 1
+    assert results[0].id == "1"
+    assert results[0].name == "Test Magazine"
 
 
-def test_add_magazine_exists(es_db):
-    """Test that adding a magazine that already exists raises a MagazineExistsError."""
-    search_mock = MagicMock()
-    search_mock.body = {
-        'hits': {
-            'total': {'value': 1},
-            'hits': [{'_id': '12345'}]
-        }
-    }
-    es_db.es.search.return_value = search_mock
+# Test the add_magazine method
+def test_add_magazine(mock_es, mock_magazine):
+    mock_index_res = MagicMock()
+    mock_index_res.body = {'_id': '1'}
+    mock_es.index.return_value = mock_index_res
 
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
+    db = ElasticsearchDb(url="http://localhost")
+    magazine_id = db.add_magazine(mock_magazine)
 
-    with pytest.raises(MagazineExistsError):
-        es_db.add_magazine(magazine)
+    # Verify that Elasticsearch's index method is called
+    mock_es.index.assert_called_once_with(index="magazines", document=asdict(mock_magazine))
 
-
-def test_get_magazine_id(es_db):
-    """Test retrieving the ID of an existing magazine in ElasticsearchDb."""
-    search_mock = MagicMock()
-    search_mock.body = {
-        'hits': {
-            'total': {'value': 1},
-            'hits': [{'_id': '12345'}]
-        }
-    }
-    es_db.es.search.return_value = search_mock
-
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    magazine_id = es_db.get_magazine_id(magazine)
-
-    assert magazine_id == '12345'
+    # Verify that the returned magazine ID is correct
+    assert magazine_id == '1'
 
 
-def test_magazine_not_found_error(es_db):
-    """Test that trying to retrieve a non-existent magazine raises a MagazineNotFoundError."""
-    search_mock = MagicMock()
-    search_mock.body = {'hits': {'total': {'value': 0}, 'hits': []}}
-    es_db.es.search.return_value = search_mock
+# Test the add_article method
+def test_add_article(mock_es, mock_article):
+    mock_index_res = MagicMock()
+    mock_index_res.body = {'_id': '1'}
+    mock_es.index.return_value = mock_index_res
 
-    magazine = Magazine(name="Non Existent Magazine", year=2024, publisher="Unknown Publisher")
+    db = ElasticsearchDb(url="http://localhost")
+    article_id = db.add_article(mock_article)
 
-    with pytest.raises(MagazineNotFoundError):
-        es_db.get_magazine_id(magazine)
+    # Verify that Elasticsearch's index method is called
+    mock_es.index.assert_called_once_with(index="articles", document=asdict(mock_article))
 
-
-def test_query(es_db):
-    """Test querying ElasticsearchDb with specific magazine and article filters."""
-    search_mock = MagicMock()
-    search_mock.body = {
-        'hits': {
-            'total': {'value': 1},
-            'hits': [{'_id': '12345', '_source': {'name': 'Tech Monthly'}}]
-        }
-    }
-    es_db.es.search.return_value = search_mock
-
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    article = Article(title="AI Innovations", author="John Doe", content="Content of the article.", page_offsets=[])
-
-    response = es_db.query(magazine, article)
-
-    assert response['hits']['hits'][0]['_id'] == '12345'
+    # Verify that the returned article ID is correct
+    assert article_id == '1'
 
 
-def test_add_article_existing_magazine(es_db, mocker: MockerFixture):
-    """Test adding an article to an existing magazine."""
-    # Mocking get_magazine_id to simulate existing magazine
-    es_db.get_magazine_id = MagicMock(return_value='12345')
-    create_article_mock = mocker.patch.object(ElasticsearchDb,
-                                              '_ElasticsearchDb__create_article',
-                                              return_value={"result": "updated"})
+# Test the search_magazines method
+def test_search_magazines(mock_es, mock_magazine_response, mock_magazine):
+    mock_search_res = MagicMock()
+    mock_search_res.body = mock_magazine_response
+    mock_es.search.return_value = mock_search_res
 
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    article = Article(title="AI Innovations", author="John Doe", content="Exploring AI.", page_offsets=[])
+    db = ElasticsearchDb(url="http://localhost")
+    results = db.search_magazines(mock_magazine)
 
-    response = es_db.add_article(magazine, article)
+    # Verify the search query is passed to Elasticsearch
+    query = {'query': {'bool': {'must': [{'term': {'id': '1'}},
+                                         {'term': {'name': 'Test Magazine'}},
+                                         {'term': {'date': '2024-01-01T00:00:00'}},
+                                         {'term': {'publisher': 'Publisher A'}},
+                                         {'term': {'edition': 'First Edition'}},
+                                         {'match': {'abstract': 'Test abstract'}},
+                                         {'terms': {'genres': ['genre1']}},
+                                         {'terms': {'categories': ['cat1']}},
+                                         {'term': {'edited_on': '2024-01-02T00:00:00'}}]}}}
+    mock_es.search.assert_called_once_with(index="magazines", body=query)
 
-    es_db.get_magazine_id.assert_called_once_with(magazine)
-    create_article_mock.assert_called_once_with('12345', article)
-    assert response["result"] == "updated"
-
-
-def test_add_article_new_magazine(es_db, mocker: MockerFixture):
-    """Test adding an article to a new magazine when the magazine does not exist."""
-    # Mocking get_magazine_id to raise MagazineNotFoundError
-    es_db.get_magazine_id = MagicMock(side_effect=MagazineNotFoundError)
-    es_db.add_magazine = MagicMock(return_value='12345')
-    create_article_mock = mocker.patch.object(ElasticsearchDb,
-                                              '_ElasticsearchDb__create_article',
-                                              return_value={"result": "created"})
-
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    article = Article(title="AI Innovations", author="John Doe", content="Exploring AI.", page_offsets=[])
-
-    response = es_db.add_article(magazine, article)
-
-    es_db.get_magazine_id.assert_called_once_with(magazine)
-    es_db.add_magazine.assert_called_once_with(magazine)
-    create_article_mock.assert_called_once_with('12345', article)
-    assert response["result"] == "created"
+    # Verify that the search result is correctly parsed into Magazine objects
+    assert len(results) == 1
+    assert results[0].id == "1"
+    assert results[0].name == "Test Magazine"
 
 
-def test_add_article_creation_error(es_db):
-    """Test adding an article when creating a new magazine fails."""
-    # Mocking get_magazine_id to raise MagazineNotFoundError
-    es_db.get_magazine_id = MagicMock(side_effect=MagazineNotFoundError)
-    es_db.add_magazine = MagicMock(side_effect=Exception("Failed to create magazine"))
+# Test the search_articles method
+def test_search_articles(mock_es, mock_article, mock_article_response):
+    mock_search_res = MagicMock()
+    mock_search_res.body = mock_article_response
+    mock_es.search.return_value = mock_search_res
 
-    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-    article = Article(title="AI Innovations", author="John Doe", content="Exploring AI.", page_offsets=[])
+    db = ElasticsearchDb(url="http://localhost")
+    results = db.search_articles(mock_article)
 
-    with pytest.raises(Exception, match="Failed to create magazine"):
-        es_db.add_article(magazine, article)
+    # Verify the search query is passed to Elasticsearch
+    query = {'query': {'bool': {'must': [{'term': {'id': '1'}},
+                                         {'term': {'magazine_id': '1'}},
+                                         {'term': {'title': 'Test Article'}},
+                                         {'term': {'author': 'John Doe'}},
+                                         {'match': {'content': 'Some content'}},
+                                         {'term': {'edited_on': '2024-01-02T00:00:00'}}]}}}
+    mock_es.search.assert_called_once_with(index="articles", body=query)
 
-    es_db.get_magazine_id.assert_called_once_with(magazine)
-    es_db.add_magazine.assert_called_once_with(magazine)
+    # Verify that the search result is correctly parsed into Article objects
+    assert len(results) == 1
+    assert results[0].id == "1"
+    assert results[0].title == "Test Article"
 
 
-def test_magazine_not_exists(es_db):
-    """Test checking if a magazine exists in ElasticsearchDb."""
-    search_mock = MagicMock()
-    search_mock.body = {'hits': {'total': {'value': 0}, 'hits': []}}
-    es_db.es.search.return_value = search_mock
+# Test the update_magazine method
+def test_update_magazine(mock_es, mock_magazine):
+    mock_update_res = MagicMock()
+    mock_update_res.body = {"result": "updated"}
+    mock_es.update.return_value = mock_update_res
 
-    magazine = Magazine(name="Non Existent Magazine", year=2024, publisher="Unknown Publisher")
-    assert es_db.magazine_exists(magazine) is False
+    db = ElasticsearchDb(url="http://localhost")
+    success = db.update_magazine(mock_magazine)
+
+    # Verify that the update query is correctly formed and passed to Elasticsearch
+    update_query = {'doc': {'abstract': 'Test abstract',
+                            'categories': ['cat1'],
+                            'date': '2024-01-01T00:00:00',
+                            'edited_on': '2024-01-02T00:00:00',
+                            'edition': 'First Edition',
+                            'genres': ['genre1'],
+                            'id': '1',
+                            'name': 'Test Magazine',
+                            'publisher': 'Publisher A'}}
+    mock_es.update.assert_called_once_with(index="magazines", id="1", body=update_query)
+
+    # Verify that the method returns True when successful
+    assert success is True
+
+
+# Test the update_article method
+def test_update_article(mock_es, mock_article):
+    mock_update_res = MagicMock()
+    mock_update_res.body = {"result": "updated"}
+    mock_es.update.return_value = mock_update_res
+
+    db = ElasticsearchDb(url="http://localhost")
+    success = db.update_article(mock_article)
+
+    # Verify that the update query is correctly formed and passed to Elasticsearch
+    update_query = {'doc': {'author': 'John Doe',
+                            'content': 'Some content',
+                            'edited_on': '2024-01-02T00:00:00',
+                            'figures': [{'caption': 'Caption 1',
+                                         'image_data': 'image_data_2',
+                                         'page': 1}],
+                            'id': '1',
+                            'magazine_id': '1',
+                            'page_offsets': [1, 2],
+                            'page_range': [3, 4],
+                            'page_scans': [{'image_data': 'image_data_1',
+                                            'page': 1,
+                                            'uploaded_on': datetime(2024, 1, 1, 0, 0)}],
+                            'title': 'Test Article'}}
+    mock_es.update.assert_called_once_with(index="articles", id="1", body=update_query)
+
+    # Verify that the method returns True when successful
+    assert success is True
