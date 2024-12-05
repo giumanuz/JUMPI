@@ -2,12 +2,12 @@ from openai import OpenAI
 from openai.types import ChatModel
 from openai.types.chat.chat_completion import ChatCompletion
 
-from app.config import APP_CONFIG
+import app.config as config
 
 
 class _OpenaiClient:
     def __init__(self):
-        self._client = OpenAI(api_key=APP_CONFIG.OPENAI_API_KEY)
+        self._client = OpenAI(api_key=config.APP_CONFIG.OPENAI_API_KEY)
 
 
 class OpenaiClient(_OpenaiClient):
