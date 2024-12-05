@@ -110,3 +110,67 @@ def test_query(es_db):
     response = es_db.query(magazine, article)
 
     assert response['hits']['hits'][0]['_id'] == '12345'
+
+
+def test_add_article_existing_magazine(es_db, mocker: MockerFixture):
+    """Test adding an article to an existing magazine."""
+    # Mocking get_magazine_id to simulate existing magazine
+    es_db.get_magazine_id = MagicMock(return_value='12345')
+    create_article_mock = mocker.patch.object(ElasticsearchDb,
+                                              '_ElasticsearchDb__create_article',
+                                              return_value={"result": "updated"})
+
+    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
+    article = Article(title="AI Innovations", author="John Doe", content="Exploring AI.", page_offsets=[])
+
+    response = es_db.add_article(magazine, article)
+
+    es_db.get_magazine_id.assert_called_once_with(magazine)
+    create_article_mock.assert_called_once_with('12345', article)
+    assert response["result"] == "updated"
+
+
+def test_add_article_new_magazine(es_db, mocker: MockerFixture):
+    """Test adding an article to a new magazine when the magazine does not exist."""
+    # Mocking get_magazine_id to raise MagazineNotFoundError
+    es_db.get_magazine_id = MagicMock(side_effect=MagazineNotFoundError)
+    es_db.add_magazine = MagicMock(return_value='12345')
+    create_article_mock = mocker.patch.object(ElasticsearchDb,
+                                              '_ElasticsearchDb__create_article',
+                                              return_value={"result": "created"})
+
+    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
+    article = Article(title="AI Innovations", author="John Doe", content="Exploring AI.", page_offsets=[])
+
+    response = es_db.add_article(magazine, article)
+
+    es_db.get_magazine_id.assert_called_once_with(magazine)
+    es_db.add_magazine.assert_called_once_with(magazine)
+    create_article_mock.assert_called_once_with('12345', article)
+    assert response["result"] == "created"
+
+
+def test_add_article_creation_error(es_db):
+    """Test adding an article when creating a new magazine fails."""
+    # Mocking get_magazine_id to raise MagazineNotFoundError
+    es_db.get_magazine_id = MagicMock(side_effect=MagazineNotFoundError)
+    es_db.add_magazine = MagicMock(side_effect=Exception("Failed to create magazine"))
+
+    magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
+    article = Article(title="AI Innovations", author="John Doe", content="Exploring AI.", page_offsets=[])
+
+    with pytest.raises(Exception, match="Failed to create magazine"):
+        es_db.add_article(magazine, article)
+
+    es_db.get_magazine_id.assert_called_once_with(magazine)
+    es_db.add_magazine.assert_called_once_with(magazine)
+
+
+def test_magazine_not_exists(es_db):
+    """Test checking if a magazine exists in ElasticsearchDb."""
+    search_mock = MagicMock()
+    search_mock.body = {'hits': {'total': {'value': 0}, 'hits': []}}
+    es_db.es.search.return_value = search_mock
+
+    magazine = Magazine(name="Non Existent Magazine", year=2024, publisher="Unknown Publisher")
+    assert es_db.magazine_exists(magazine) is False
