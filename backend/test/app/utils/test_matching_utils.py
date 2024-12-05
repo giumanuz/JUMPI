@@ -1,3 +1,4 @@
+# noinspection PyProtectedMember
 from app.utils.matching_utils import _match, MatchedLine
 from commons import Line
 
