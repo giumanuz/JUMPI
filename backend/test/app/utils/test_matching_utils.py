@@ -5,9 +5,9 @@ from commons import Line, MatchedLine
 
 def test_match_typical_case():
     azure_lines = [
-        Line(polygons=[], content="hello everyone", confidence=1.0, spans=[]),
-        Line(polygons=[], content="I love you so much", confidence=1.0, spans=[]),
-        Line(polygons=[], content="bye bye", confidence=1.0, spans=[])
+        Line.from_content("hello everyone"),
+        Line.from_content("I love you so much"),
+        Line.from_content("bye bye"),
     ]
     matched_lines = [MatchedLine(azure_line) for azure_line in azure_lines]
     aws_strings = [

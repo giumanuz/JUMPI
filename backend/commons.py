@@ -50,7 +50,7 @@ class Line:
 
     @classmethod
     def from_content(cls, content: str):
-        return cls([], content, 0.0)
+        return cls([], content, 0.0, [])
 
 LINE_NOT_FOUND = "<Line not found>"
 
