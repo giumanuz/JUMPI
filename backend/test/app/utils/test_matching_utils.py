@@ -1,4 +1,6 @@
-from app.utils.matching_utils import _match, Line, MatchedLine
+from app.utils.matching_utils import _match, MatchedLine
+from commons import Line
+
 
 def test_match_typical_case():
     azure_lines = [
@@ -26,6 +28,7 @@ def test_match_typical_case():
     )
     assert unmatched_aws_strings == {"meow meow meow", "bye ble"}
 
+
 def test_match_partial_match():
     azure_lines = [
         Line(polygons=[], content="hello everyone", confidence=1.0, spans=[]),
@@ -45,6 +48,7 @@ def test_match_partial_match():
         matched_line.aws_string for matched_line in matched_lines if matched_line.aws_string
     )
     assert unmatched_aws_strings == set()
+
 
 def test_match_no_match():
     azure_lines = [
