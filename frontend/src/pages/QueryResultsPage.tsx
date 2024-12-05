@@ -1,7 +1,8 @@
-import {useLocation} from 'react-router-dom';
-import MagazineCard from "../components/MagazineCard.tsx";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import MagazineCard from '../components/MagazineCard';
 
-const ResultsPage = () => {
+const QueryResultPage = () => {
   const location = useLocation();
   const results = location.state?.results?.hits?.hits || [];
 
@@ -12,11 +13,17 @@ const ResultsPage = () => {
         <p>No results found.</p>
       ) : (
         results.map((result: any) => (
-          <MagazineCard key={result._id} data={result._source}/>
+          <MagazineCard
+            key={result._id}
+            data={{
+              ...result._source,
+              _id: result._id,
+            }}
+          />
         ))
       )}
     </div>
   );
 };
 
-export default ResultsPage;
+export default QueryResultPage;
