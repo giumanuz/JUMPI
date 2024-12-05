@@ -45,8 +45,9 @@ class ElasticsearchDb(Database):
     def _add_magazine_without_check(self, magazine: Magazine) -> str:
         magazine_dict = asdict(magazine)
         res = self.es.index(index='magazines', document=magazine_dict)
-        self.__debug_log_query(magazine_dict, res.body)
-        return res['_id']
+        res_body = res.body
+        self.__debug_log_query(magazine_dict, res_body)
+        return res_body['_id']
 
     def add_article(self, magazine: Magazine, article: Article) -> dict:
         try:
@@ -60,16 +61,18 @@ class ElasticsearchDb(Database):
             "params": {"new_article": article_dict}
         }}
         res = self.es.update(index="magazines", id=magazine_id, body=query)
-        self.__debug_log_query(query, res.body)
-        return res.body
+        res_body = res.body
+        self.__debug_log_query(query, res_body)
+        return res_body
 
     def get_magazine_id(self, magazine: Magazine) -> str:
         query = _build_magazine_search_query(magazine)
         res = self.es.search(index='magazines', body=query)
-        self.__debug_log_query(query, res.body)
-        if res['hits']['total']['value'] == 0:
+        res_body = res.body
+        self.__debug_log_query(query, res_body)
+        if res_body['hits']['total']['value'] == 0:
             raise MagazineNotFoundError
-        return res['hits']['hits'][0]['_id']
+        return res_body['hits']['hits'][0]['_id']
 
     def magazine_exists(self, magazine: Magazine) -> bool:
         try:

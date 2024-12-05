@@ -10,7 +10,6 @@ from app.services.database.elastic import ElasticsearchDb, Magazine, Article, Ma
 @pytest.fixture
 def es_db(mocker: MockerFixture):
     """Fixture to create an instance of ElasticsearchDb with application context."""
-
     app = Flask(__name__)
     with app.app_context():
         es_db = ElasticsearchDb(url="http://localhost:9200")
@@ -36,7 +35,6 @@ def test_add_magazine(es_db):
 
     index_mock = MagicMock()
     index_mock.body = {'_id': '12345', 'result': 'created'}
-    index_mock.__getitem__.side_effect = lambda key: index_mock.body[key]
     es_db.es.index.return_value = index_mock
 
     es_db.magazine_exists = MagicMock(return_value=False)
@@ -75,11 +73,9 @@ def test_get_magazine_id(es_db):
             'hits': [{'_id': '12345'}]
         }
     }
-    search_mock.__getitem__.side_effect = lambda key: search_mock.body[key]
     es_db.es.search.return_value = search_mock
 
     magazine = Magazine(name="Tech Monthly", year=2024, publisher="Tech Publisher")
-
     magazine_id = es_db.get_magazine_id(magazine)
 
     assert magazine_id == '12345'
@@ -89,7 +85,6 @@ def test_magazine_not_found_error(es_db):
     """Test that trying to retrieve a non-existent magazine raises a MagazineNotFoundError."""
     search_mock = MagicMock()
     search_mock.body = {'hits': {'total': {'value': 0}, 'hits': []}}
-    search_mock.__getitem__.side_effect = lambda key: search_mock.body[key]
     es_db.es.search.return_value = search_mock
 
     magazine = Magazine(name="Non Existent Magazine", year=2024, publisher="Unknown Publisher")
