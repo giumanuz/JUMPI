@@ -35,3 +35,7 @@ class Database(ABC):
     @abstractmethod
     def query(self, magazine: Magazine, article: Article) -> dict:
         pass
+
+    @abstractmethod
+    def update_magazine(self, magazine_id: str, magazine: Magazine) -> dict:
+        pass

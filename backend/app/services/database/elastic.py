@@ -110,6 +110,20 @@ class ElasticsearchDb(Database):
         self.__debug_log_query(query, response.body)
         return response.body
 
+    def update_magazine(self, magazine_id: str, magazine: Magazine) -> dict:
+        update_query = {
+            "doc": {
+                "name": magazine.name,
+                "year": magazine.year,
+                "publisher": magazine.publisher,
+                "genre": magazine.genre,
+            }
+        }
+
+        res = self.es.update(index="magazines", id=magazine_id, body=update_query).body
+        self.__debug_log_query(update_query, res)
+        return res
+
     def __search_magazine(self, magazine: Magazine) -> dict:
         query = _build_magazine_search_query(magazine)
         res = self.es.search(index='magazines', body=query).body

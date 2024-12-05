@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import FormTemplate from './FormTemplate';
+import axiosInstance from "../axiosInstance.ts";
 
 const EditPage = () => {
   const location = useLocation();
@@ -8,6 +10,8 @@ const EditPage = () => {
   const initialData = location.state?.data || {};
 
   const [formData, setFormData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -24,20 +28,43 @@ const EditPage = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Updated Data:', formData);
-    navigate(-1); // Torna alla pagina precedente
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axiosInstance.post('/edit', {
+        magazine: {
+          id: formData._id,
+          name: formData.name,
+          year: formData.year,
+          publisher: formData.publisher,
+          genre: formData.genre,
+        },
+        article: formData.articles?.[0] || null,
+        image: formData.image,
+      });
+      console.log('Server response:', response.data);
+      navigate(-1);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'An unexpected error occurred');
+      console.error('Error updating data:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <FormTemplate
       title="Edit Magazine"
       onSubmit={handleSubmit}
-      button={<button type="submit" className="btn btn-primary w-100">Save</button>}
+      loading={loading}
+      loadingDescription="Saving changes..."
+      button={<button type="submit" className="btn btn-primary w-100" disabled={loading}>Save</button>}
     >
       {[
-        <div className="mb-3">
+        <div key="name" className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>
           <input
             id="name"
@@ -46,7 +73,7 @@ const EditPage = () => {
             onChange={(e) => handleChange('name', e.target.value)}
           />
         </div>,
-        <div className="mb-3">
+        <div key="year" className="mb-3">
           <label htmlFor="year" className="form-label">Year</label>
           <input
             id="year"
@@ -56,7 +83,7 @@ const EditPage = () => {
             onChange={(e) => handleChange('year', e.target.value)}
           />
         </div>,
-        <div className="mb-3">
+        <div key="publisher" className="mb-3">
           <label htmlFor="publisher" className="form-label">Publisher</label>
           <input
             id="publisher"
@@ -65,7 +92,7 @@ const EditPage = () => {
             onChange={(e) => handleChange('publisher', e.target.value)}
           />
         </div>,
-        <div className="mb-3">
+        <div key="genre" className="mb-3">
           <label htmlFor="genre" className="form-label">Genre</label>
           <input
             id="genre"
@@ -74,7 +101,7 @@ const EditPage = () => {
             onChange={(e) => handleChange('genre', e.target.value)}
           />
         </div>,
-        <div className="mb-3">
+        <div key="articleTitle" className="mb-3">
           <label htmlFor="articleTitle" className="form-label">First Article Title</label>
           <input
             id="articleTitle"
@@ -87,7 +114,7 @@ const EditPage = () => {
             }
           />
         </div>,
-        <div className="mb-3">
+        <div key="image" className="mb-3">
           <label htmlFor="image" className="form-label">Image</label>
           <div className="mb-2">
             <img
@@ -97,8 +124,16 @@ const EditPage = () => {
               style={{ maxHeight: '150px' }}
             />
           </div>
-        </div>
+          <input
+            id="image"
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </div>,
       ]}
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
     </FormTemplate>
   );
 };

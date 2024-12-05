@@ -14,7 +14,13 @@ def create_app():
     CORS(
         app,
         resources={r"/*": {"origins": os.getenv('CORS_ORIGIN', 'http://localhost:5173')}},
-        allow_headers='X-API-KEY'
+        allow_headers=[
+            'Content-Type',
+            'X-API-KEY',
+            'Authorization',
+            'Access-Control-Allow-Headers',
+            'Access-Control-Allow-Origin'
+        ],
     )
 
     setup_db()
@@ -22,12 +28,14 @@ def create_app():
     from .routes.analyze import analyze_bp
     from .routes.query import query_bp
     from .routes.validate import validate_bp
+    from .routes.edit import edit_bp
 
     setup_before_request(app)
 
     app.register_blueprint(analyze_bp)
     app.register_blueprint(query_bp)
     app.register_blueprint(validate_bp)
+    app.register_blueprint(edit_bp)
 
     setup_error_handlers(app)
 
