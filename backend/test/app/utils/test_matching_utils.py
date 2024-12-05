@@ -1,6 +1,6 @@
 # noinspection PyProtectedMember
-from app.utils.matching_utils import _match, MatchedLine
-from commons import Line
+from app.utils.matching_utils import _match
+from commons import Line, MatchedLine
 
 
 def test_match_typical_case():
