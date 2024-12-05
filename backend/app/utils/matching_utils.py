@@ -4,6 +4,7 @@ import re
 from functools import cache
 from typing import Optional
 
+import openai
 from Levenshtein import ratio
 from PIL import Image, ImageDraw
 
@@ -87,7 +88,7 @@ def _call_api(prompt: str) -> str:
         match = re.search(r"AZURE:\s*(.*?)(?=\s*AWS:|\s*-{2,})", all_lines, re.DOTALL)
 
         return match.group(1) if match else all_lines
-    except Exception as e:
+    except openai.OpenAIError as e:
         logger.error(f"Error in API request", exc_info=e)
         return ""
 
