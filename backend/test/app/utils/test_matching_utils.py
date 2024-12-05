@@ -41,7 +41,7 @@ def test_match_partial_match():
 
     _match(matched_lines, aws_strings)
 
-    assert matched_lines[0].aws_string == None
+    assert matched_lines[0].aws_string is None
     assert matched_lines[1].aws_string == "hello e"
 
     unmatched_aws_strings = set(aws_strings) - set(
@@ -62,7 +62,7 @@ def test_match_no_match():
 
     _match(matched_lines, aws_strings, is_gpt=True)
 
-    assert matched_lines[0].aws_string == None
+    assert matched_lines[0].aws_string is None
 
     unmatched_aws_strings = set(aws_strings) - set(
         matched_line.aws_string for matched_line in matched_lines if matched_line.aws_string
