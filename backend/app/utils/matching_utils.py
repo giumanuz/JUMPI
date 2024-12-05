@@ -102,9 +102,8 @@ def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt
             if similarity >= threshold:
                 heapq.heappush(heap, (-similarity, azure_idx, idx_to_match))
 
-    while heap:
-        similarity, azure_idx, idx_to_match = heapq.heappop(heap)
-        similarity = -similarity
+    while len(heap) > 0:
+        _, azure_idx, idx_to_match = heapq.heappop(heap)
 
         # Azure line already matched
         if is_gpt and matched_lines[azure_idx].gpt_string:
