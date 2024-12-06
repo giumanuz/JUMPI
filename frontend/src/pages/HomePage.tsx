@@ -9,7 +9,7 @@ const DUMMY_API_KEY = "api-key";
 
 function HomePage() {
   const [apiKey, setApiKey] = useState(
-    (localStorage.getItem("apiKey") && DUMMY_API_KEY) || "",
+    (localStorage.getItem("apiKey") && DUMMY_API_KEY) ?? "",
   );
   const [keyValidationStatus, setKeyValidationStatus] =
     useState<ApiKeyValidationStatus>("none");

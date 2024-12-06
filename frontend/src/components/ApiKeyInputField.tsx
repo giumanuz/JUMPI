@@ -18,7 +18,7 @@ export function ApiKeyInputField({
   validationStatus,
   onKeyUpdate,
 }: ApiKeyInputFieldProps) {
-  const [text, setText] = useState(initialValue || "");
+  const [text, setText] = useState(initialValue ?? "");
   const [inputTimeoutId, setInputTimeoutId] = useState<number>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

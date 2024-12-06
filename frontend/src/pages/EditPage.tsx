@@ -6,7 +6,7 @@ import axiosInstance from "../axiosInstance.ts";
 const EditPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const initialData = location.state?.data || {};
+  const initialData = location.state?.data ?? {};
 
   const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ const EditPage = () => {
           publisher: formData.publisher,
           genre: formData.genre,
         },
-        article: formData.articles?.[0] || null,
+        article: formData.articles?.[0] ?? null,
         image: formData.image,
       });
       console.log("Server response:", response.data);
@@ -78,7 +78,7 @@ const EditPage = () => {
           <input
             id="name"
             className="form-control"
-            value={formData.name || ""}
+            value={formData.name ?? ""}
             onChange={(e) => handleChange("name", e.target.value)}
           />
         </div>,
@@ -90,7 +90,7 @@ const EditPage = () => {
             id="year"
             type="number"
             className="form-control"
-            value={formData.year || ""}
+            value={formData.year ?? ""}
             onChange={(e) => handleChange("year", e.target.value)}
           />
         </div>,
@@ -101,7 +101,7 @@ const EditPage = () => {
           <input
             id="publisher"
             className="form-control"
-            value={formData.publisher || ""}
+            value={formData.publisher ?? ""}
             onChange={(e) => handleChange("publisher", e.target.value)}
           />
         </div>,
@@ -112,7 +112,7 @@ const EditPage = () => {
           <input
             id="genre"
             className="form-control"
-            value={formData.genre || ""}
+            value={formData.genre ?? ""}
             onChange={(e) => handleChange("genre", e.target.value)}
           />
         </div>,
@@ -123,7 +123,7 @@ const EditPage = () => {
           <input
             id="articleTitle"
             className="form-control"
-            value={formData.articles?.[0]?.title || ""}
+            value={formData.articles?.[0]?.title ?? ""}
             onChange={(e) =>
               handleChange("articles", [
                 { ...formData.articles?.[0], title: e.target.value },

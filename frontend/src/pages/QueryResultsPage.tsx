@@ -4,7 +4,7 @@ import MagazineCard from "../components/MagazineCard";
 
 const QueryResultPage = () => {
   const location = useLocation();
-  const results = location.state?.results?.hits?.hits || [];
+  const results = location.state?.results?.hits?.hits ?? [];
 
   return (
     <div className="container mt-4">
