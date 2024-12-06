@@ -1,4 +1,4 @@
-import { FormEventHandler, ReactNode } from 'react';
+import { FormEventHandler, ReactNode } from "react";
 
 type FormTemplateProps = {
   title: string;
@@ -22,14 +22,13 @@ const FormTemplate = ({
   preFormContent,
 }: FormTemplateProps) => (
   <div className="d-flex justify-content-center align-items-center vh-100">
-    <div className="card bg-body-secondary p-4 shadow-sm" style={{ width: '50rem' }}>
+    <div
+      className="card bg-body-secondary p-4 shadow-sm"
+      style={{ width: "50rem" }}
+    >
       <h3 className="text-center mb-4">{title}</h3>
       <form onSubmit={onSubmit}>
-        {preFormContent && (
-          <div className="mb-3">
-            {preFormContent}
-          </div>
-        )}
+        {preFormContent && <div className="mb-3">{preFormContent}</div>}
         <div className={`row row-cols-${columns} g-3`}>
           {children.map((child, index) => (
             <div className="col" key={index}>
@@ -37,9 +36,7 @@ const FormTemplate = ({
             </div>
           ))}
         </div>
-        <div className="d-flex justify-content-end mt-4">
-          {button}
-        </div>
+        <div className="d-flex justify-content-end mt-4">{button}</div>
       </form>
 
       {loading && (
@@ -47,7 +44,7 @@ const FormTemplate = ({
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-          <p>{loadingDescription || 'Processing...'}</p>
+          <p>{loadingDescription || "Processing..."}</p>
         </div>
       )}
     </div>

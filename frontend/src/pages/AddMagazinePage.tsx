@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import axiosInstance from '../axiosInstance';
-import { useNavigate } from 'react-router-dom';
-import FormTemplate from '../pages/FormTemplate';
+import React, { useState } from "react";
+import axiosInstance from "../axiosInstance";
+import { useNavigate } from "react-router-dom";
+import FormTemplate from "../pages/FormTemplate";
 
 type Magazine = {
   id: string;
@@ -22,17 +22,21 @@ function AddMagazinePage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleNewMagazineSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleNewMagazineSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     try {
-      const res = await axiosInstance.post('/addNewMagazine', newMagazineData);
+      const res = await axiosInstance.post("/addNewMagazine", newMagazineData);
       const newMagazine = res.data.magazine;
       navigate(`/uploadArticle?magazine_id=${newMagazine.id}`);
     } catch (err: any) {
-      console.error('Error adding new magazine:', err);
-      const errorMessage = err.response?.data?.error || 'Failed to add the magazine. Please try again.';
+      console.error("Error adding new magazine:", err);
+      const errorMessage =
+        err.response?.data?.error ||
+        "Failed to add the magazine. Please try again.";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -72,8 +76,8 @@ function AddMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={newMagazineData.name || ''}
-          onChange={e =>
+          value={newMagazineData.name || ""}
+          onChange={(e) =>
             setNewMagazineData({ ...newMagazineData, name: e.target.value })
           }
           required
@@ -84,9 +88,12 @@ function AddMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={newMagazineData.publisher || ''}
-          onChange={e =>
-            setNewMagazineData({ ...newMagazineData, publisher: e.target.value })
+          value={newMagazineData.publisher || ""}
+          onChange={(e) =>
+            setNewMagazineData({
+              ...newMagazineData,
+              publisher: e.target.value,
+            })
           }
           required
         />
@@ -96,8 +103,8 @@ function AddMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={newMagazineData.edition || ''}
-          onChange={e =>
+          value={newMagazineData.edition || ""}
+          onChange={(e) =>
             setNewMagazineData({ ...newMagazineData, edition: e.target.value })
           }
           required
@@ -108,14 +115,14 @@ function AddMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={newMagazineData.categories?.join(', ') || ''}
-          onChange={e =>
+          value={newMagazineData.categories?.join(", ") || ""}
+          onChange={(e) =>
             setNewMagazineData({
               ...newMagazineData,
               categories: e.target.value
-                .split(',')
-                .map(cat => cat.trim())
-                .filter(cat => cat !== ''),
+                .split(",")
+                .map((cat) => cat.trim())
+                .filter((cat) => cat !== ""),
             })
           }
         />
@@ -125,14 +132,14 @@ function AddMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={newMagazineData.genres?.join(', ') || ''}
-          onChange={e =>
+          value={newMagazineData.genres?.join(", ") || ""}
+          onChange={(e) =>
             setNewMagazineData({
               ...newMagazineData,
               genres: e.target.value
-                .split(',')
-                .map(genre => genre.trim())
-                .filter(genre => genre !== ''),
+                .split(",")
+                .map((genre) => genre.trim())
+                .filter((genre) => genre !== ""),
             })
           }
         />
@@ -142,8 +149,8 @@ function AddMagazinePage() {
         <input
           type="date"
           className="form-control"
-          value={newMagazineData.date ? newMagazineData.date.split('T')[0] : ''}
-          onChange={e =>
+          value={newMagazineData.date ? newMagazineData.date.split("T")[0] : ""}
+          onChange={(e) =>
             setNewMagazineData({
               ...newMagazineData,
               date: new Date(e.target.value).toISOString(),
@@ -156,8 +163,8 @@ function AddMagazinePage() {
         <label className="form-label">Abstract</label>
         <textarea
           className="form-control"
-          value={newMagazineData.abstract || ''}
-          onChange={e =>
+          value={newMagazineData.abstract || ""}
+          onChange={(e) =>
             setNewMagazineData({ ...newMagazineData, abstract: e.target.value })
           }
           required

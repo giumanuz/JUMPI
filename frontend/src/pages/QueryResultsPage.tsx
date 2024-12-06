@@ -1,6 +1,6 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import MagazineCard from '../components/MagazineCard';
+import React from "react";
+import { useLocation } from "react-router-dom";
+import MagazineCard from "../components/MagazineCard";
 
 const QueryResultPage = () => {
   const location = useLocation();

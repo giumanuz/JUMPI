@@ -1,26 +1,26 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
-import InputField from '../components/InputField';
-import TextAreaField from '../components/TextAreaField';
+import { ChangeEvent, FormEvent, useState } from "react";
+import InputField from "../components/InputField";
+import TextAreaField from "../components/TextAreaField";
 import FormTemplate from "./FormTemplate.tsx";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance.ts";
-import {AxiosError} from "axios";
+import { AxiosError } from "axios";
 
 const SearchPage = () => {
   const [params, setParams] = useState({
-    name_magazine: '',
-    year: '',
-    publisher: '',
-    genre: '',
-    article_title: '',
-    article_author: '',
-    content: '',
+    name_magazine: "",
+    year: "",
+    publisher: "",
+    genre: "",
+    article_title: "",
+    article_author: "",
+    content: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {id, value} = e.target;
+    const { id, value } = e.target;
     setParams((prevData) => ({
       ...prevData,
       [id]: value,
@@ -32,15 +32,15 @@ const SearchPage = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.get(`/query`, {params});
-      navigate('/queryResults', {state: {results: response.data}});
-      console.log(response)
+      const response = await axiosInstance.get(`/query`, { params });
+      navigate("/queryResults", { state: { results: response.data } });
+      console.log(response);
     } catch (error) {
       const axiosError = error as AxiosError;
-      console.error('Error uploading documents:', error);
-      const data = axiosError?.response?.data as {error?: string};
+      console.error("Error uploading documents:", error);
+      const data = axiosError?.response?.data as { error?: string };
       const text = data.error;
-      console.error('Error uploading document:', error);
+      console.error("Error uploading document:", error);
       alert(`Failed to analyze document: ${text}`);
     } finally {
       setLoading(false); // Stop loading
@@ -109,7 +109,7 @@ const SearchPage = () => {
         onChange={onChange}
       />
     </FormTemplate>
-  )
+  );
 };
 
 export default SearchPage;

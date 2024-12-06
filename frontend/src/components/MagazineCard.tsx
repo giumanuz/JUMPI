@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MagazineCard = ({ data }: { data: any }) => {
   const navigate = useNavigate();
 
   if (!data || !data._id) {
-    console.error('Missing _id in data passed to MagazineCard:', data);
+    console.error("Missing _id in data passed to MagazineCard:", data);
     return null;
   }
 
@@ -40,12 +40,16 @@ const MagazineCard = ({ data }: { data: any }) => {
         {article ? (
           <>
             <h6 className="card-title">{article.title}</h6>
-            <p className="card-subtitle text-muted mb-3">Author: {article.author}</p>
+            <p className="card-subtitle text-muted mb-3">
+              Author: {article.author}
+            </p>
             <p className="card-text">
-              {isExpanded ? article.content : `${article.content?.substring(0, 400)}...`}
+              {isExpanded
+                ? article.content
+                : `${article.content?.substring(0, 400)}...`}
             </p>
             <button className="btn btn-link p-0" onClick={toggleExpand}>
-              {isExpanded ? 'Collapse' : 'Read more'}
+              {isExpanded ? "Collapse" : "Read more"}
             </button>
           </>
         ) : (

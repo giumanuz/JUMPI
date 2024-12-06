@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import axiosInstance from '../axiosInstance';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import axiosInstance from "../axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 type Magazine = {
   id: string;
@@ -21,15 +21,15 @@ function UploadPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Fetching magazines...');
+    console.log("Fetching magazines...");
     axiosInstance
-      .get('/getAllMagazines')
-      .then(res => {
-        console.log('Magazines received:', res.data.magazines);
+      .get("/getAllMagazines")
+      .then((res) => {
+        console.log("Magazines received:", res.data.magazines);
         setMagazines(res.data.magazines);
       })
-      .catch(err => {
-        console.error('Error fetching magazines:', err);
+      .catch((err) => {
+        console.error("Error fetching magazines:", err);
       });
   }, []);
 
@@ -44,12 +44,15 @@ function UploadPage() {
   return (
     <div className="container mt-4">
       <h1>Upload Magazines</h1>
-      <button className="btn btn-success mb-3" onClick={() => navigate('/addNewMagazine')}>
+      <button
+        className="btn btn-success mb-3"
+        onClick={() => navigate("/addNewMagazine")}
+      >
         +
       </button>
 
       <div className="row">
-        {magazines.map(m => (
+        {magazines.map((m) => (
           <div className="col-4 mb-3" key={m.id}>
             <div className="card p-3">
               <h5>{m.name}</h5>
@@ -59,8 +62,11 @@ function UploadPage() {
               <p>
                 <strong>Edition:</strong> {m.edition}
               </p>
-              <button className="btn btn-link p-0" onClick={() => toggleExpansion(m.id)}>
-                {expandedId === m.id ? 'Hide Details' : 'Show Details'}
+              <button
+                className="btn btn-link p-0"
+                onClick={() => toggleExpansion(m.id)}
+              >
+                {expandedId === m.id ? "Hide Details" : "Show Details"}
               </button>
               {expandedId === m.id && (
                 <div className="mt-2">
@@ -68,10 +74,10 @@ function UploadPage() {
                     <strong>Abstract:</strong> {m.abstract}
                   </p>
                   <p>
-                    <strong>Categories:</strong> {m.categories.join(', ')}
+                    <strong>Categories:</strong> {m.categories.join(", ")}
                   </p>
                   <p>
-                    <strong>Genres:</strong> {m.genres.join(', ')}
+                    <strong>Genres:</strong> {m.genres.join(", ")}
                   </p>
                   <p>
                     <strong>Created On:</strong> {m.created_on}
@@ -84,7 +90,10 @@ function UploadPage() {
                   </p>
                 </div>
               )}
-              <button className="btn btn-primary mt-2" onClick={() => handleMagazineClick(m.id)}>
+              <button
+                className="btn btn-primary mt-2"
+                onClick={() => handleMagazineClick(m.id)}
+              >
                 Upload Article
               </button>
             </div>

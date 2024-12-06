@@ -1,4 +1,4 @@
-import {ChangeEvent, FC} from 'react';
+import { ChangeEvent, FC } from "react";
 
 export type TextAreaFieldProps = {
   id: string;
@@ -7,9 +7,16 @@ export type TextAreaFieldProps = {
   value: string;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   rows?: number;
-}
+};
 
-const TextAreaField: FC<TextAreaFieldProps> = ({id, label, placeholder, value, onChange, rows = 3}) => (
+const TextAreaField: FC<TextAreaFieldProps> = ({
+  id,
+  label,
+  placeholder,
+  value,
+  onChange,
+  rows = 3,
+}) => (
   <div className="mb-3">
     <label htmlFor={id} className="form-label">
       {label}

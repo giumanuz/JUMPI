@@ -1,18 +1,18 @@
 // src/pages/UploadArticlePage.tsx
 
-import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosInstance';
-import FormTemplate from '../pages/FormTemplate';
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import axiosInstance from "../axiosInstance";
+import FormTemplate from "../pages/FormTemplate";
 
 function UploadArticlePage() {
   const [searchParams] = useSearchParams();
-  const magazine_id = searchParams.get('magazine_id');
+  const magazine_id = searchParams.get("magazine_id");
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [pageRange, setPageRange] = useState('');
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [pageRange, setPageRange] = useState("");
   const [images, setImages] = useState<FileList | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -27,7 +27,7 @@ function UploadArticlePage() {
     e.preventDefault();
 
     if (!magazine_id) {
-      setError('Magazine ID is missing.');
+      setError("Magazine ID is missing.");
       return;
     }
 
@@ -38,33 +38,35 @@ function UploadArticlePage() {
     }
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('author', author);
-    formData.append('page_range', pageRange);
-    formData.append('magazine_id', magazine_id);
+    formData.append("title", title);
+    formData.append("author", author);
+    formData.append("page_range", pageRange);
+    formData.append("magazine_id", magazine_id);
 
     if (images) {
       Array.from(images).forEach((image) => {
-        formData.append('images', image);
+        formData.append("images", image);
       });
     }
 
     try {
-      const res = await axiosInstance.post('/uploadArticle', formData, {
+      const res = await axiosInstance.post("/uploadArticle", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      if (res.data.status === 'ok') {
+      if (res.data.status === "ok") {
         const { extracted_text, image_comparisons } = res.data.article;
-        navigate('/resultPage', { state: { extracted_text, image_comparisons } });
+        navigate("/resultPage", {
+          state: { extracted_text, image_comparisons },
+        });
       } else {
-        setError('Failed to upload the article. Please try again.');
+        setError("Failed to upload the article. Please try again.");
       }
     } catch (err) {
-      console.error('Error uploading article:', err);
-      setError('Failed to upload the article. Please try again.');
+      console.error("Error uploading article:", err);
+      setError("Failed to upload the article. Please try again.");
     }
   };
 
@@ -79,7 +81,9 @@ function UploadArticlePage() {
       }
     >
       {error && <div className="alert alert-danger">{error}</div>}
-      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+      {successMessage && (
+        <div className="alert alert-success">{successMessage}</div>
+      )}
       <div className="mb-3">
         <label className="form-label">Title</label>
         <input

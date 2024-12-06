@@ -1,7 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {FaCheckCircle, FaTimesCircle} from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
-export type ApiKeyValidationStatus = 'none' | 'validating' | 'success' | 'error';
+export type ApiKeyValidationStatus =
+  | "none"
+  | "validating"
+  | "success"
+  | "error";
 
 type ApiKeyInputFieldProps = {
   initialValue: string;
@@ -10,10 +14,10 @@ type ApiKeyInputFieldProps = {
 };
 
 export function ApiKeyInputField({
-                                   initialValue,
-                                   validationStatus,
-                                   onKeyUpdate,
-                                 }: ApiKeyInputFieldProps) {
+  initialValue,
+  validationStatus,
+  onKeyUpdate,
+}: ApiKeyInputFieldProps) {
   const [text, setText] = useState(initialValue || "");
   const [inputTimeoutId, setInputTimeoutId] = useState<number>();
 
@@ -49,9 +53,13 @@ export function ApiKeyInputField({
         placeholder="Enter your API key"
       />
       <div className="ms-2 d-flex align-items-center">
-        {validationStatus === 'validating' && <Spinner/>}
-        {validationStatus === 'success' && <FaCheckCircle className={"text-success"} size="1.5rem"/>}
-        {validationStatus === 'error' && <FaTimesCircle className={"text-danger"} size="1.5rem"/>}
+        {validationStatus === "validating" && <Spinner />}
+        {validationStatus === "success" && (
+          <FaCheckCircle className={"text-success"} size="1.5rem" />
+        )}
+        {validationStatus === "error" && (
+          <FaTimesCircle className={"text-danger"} size="1.5rem" />
+        )}
       </div>
     </div>
   );
@@ -59,7 +67,10 @@ export function ApiKeyInputField({
 
 function Spinner() {
   return (
-    <div className="spinner-border text-primary spinner-border-sm" role="status">
+    <div
+      className="spinner-border text-primary spinner-border-sm"
+      role="status"
+    >
       <span className="visually-hidden">Loading...</span>
     </div>
   );

@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import FormTemplate from './FormTemplate';
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormTemplate from "./FormTemplate";
 import axiosInstance from "../axiosInstance.ts";
 
 const EditPage = () => {
@@ -34,7 +33,7 @@ const EditPage = () => {
     setError(null);
 
     try {
-      const response = await axiosInstance.post('/edit', {
+      const response = await axiosInstance.post("/edit", {
         magazine: {
           id: formData._id,
           name: formData.name,
@@ -45,11 +44,11 @@ const EditPage = () => {
         article: formData.articles?.[0] || null,
         image: formData.image,
       });
-      console.log('Server response:', response.data);
+      console.log("Server response:", response.data);
       navigate(-1);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'An unexpected error occurred');
-      console.error('Error updating data:', err);
+      setError(err.response?.data?.error || "An unexpected error occurred");
+      console.error("Error updating data:", err);
     } finally {
       setLoading(false);
     }
@@ -61,67 +60,87 @@ const EditPage = () => {
       onSubmit={handleSubmit}
       loading={loading}
       loadingDescription="Saving changes..."
-      button={<button type="submit" className="btn btn-primary w-100" disabled={loading}>Save</button>}
+      button={
+        <button
+          type="submit"
+          className="btn btn-primary w-100"
+          disabled={loading}
+        >
+          Save
+        </button>
+      }
     >
       {[
         <div key="name" className="mb-3">
-          <label htmlFor="name" className="form-label">Name</label>
+          <label htmlFor="name" className="form-label">
+            Name
+          </label>
           <input
             id="name"
             className="form-control"
-            value={formData.name || ''}
-            onChange={(e) => handleChange('name', e.target.value)}
+            value={formData.name || ""}
+            onChange={(e) => handleChange("name", e.target.value)}
           />
         </div>,
         <div key="year" className="mb-3">
-          <label htmlFor="year" className="form-label">Year</label>
+          <label htmlFor="year" className="form-label">
+            Year
+          </label>
           <input
             id="year"
             type="number"
             className="form-control"
-            value={formData.year || ''}
-            onChange={(e) => handleChange('year', e.target.value)}
+            value={formData.year || ""}
+            onChange={(e) => handleChange("year", e.target.value)}
           />
         </div>,
         <div key="publisher" className="mb-3">
-          <label htmlFor="publisher" className="form-label">Publisher</label>
+          <label htmlFor="publisher" className="form-label">
+            Publisher
+          </label>
           <input
             id="publisher"
             className="form-control"
-            value={formData.publisher || ''}
-            onChange={(e) => handleChange('publisher', e.target.value)}
+            value={formData.publisher || ""}
+            onChange={(e) => handleChange("publisher", e.target.value)}
           />
         </div>,
         <div key="genre" className="mb-3">
-          <label htmlFor="genre" className="form-label">Genre</label>
+          <label htmlFor="genre" className="form-label">
+            Genre
+          </label>
           <input
             id="genre"
             className="form-control"
-            value={formData.genre || ''}
-            onChange={(e) => handleChange('genre', e.target.value)}
+            value={formData.genre || ""}
+            onChange={(e) => handleChange("genre", e.target.value)}
           />
         </div>,
         <div key="articleTitle" className="mb-3">
-          <label htmlFor="articleTitle" className="form-label">First Article Title</label>
+          <label htmlFor="articleTitle" className="form-label">
+            First Article Title
+          </label>
           <input
             id="articleTitle"
             className="form-control"
-            value={formData.articles?.[0]?.title || ''}
+            value={formData.articles?.[0]?.title || ""}
             onChange={(e) =>
-              handleChange('articles', [
+              handleChange("articles", [
                 { ...formData.articles?.[0], title: e.target.value },
               ])
             }
           />
         </div>,
         <div key="image" className="mb-3">
-          <label htmlFor="image" className="form-label">Image</label>
+          <label htmlFor="image" className="form-label">
+            Image
+          </label>
           <div className="mb-2">
             <img
-              src={formData.image || 'https://via.placeholder.com/150'}
+              src={formData.image || "https://via.placeholder.com/150"}
               alt="Magazine"
               className="img-fluid rounded"
-              style={{ maxHeight: '150px' }}
+              style={{ maxHeight: "150px" }}
             />
           </div>
           <input

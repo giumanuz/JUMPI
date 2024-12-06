@@ -1,4 +1,4 @@
-import {ChangeEvent, FC} from 'react';
+import { ChangeEvent, FC } from "react";
 
 export type InputFieldProps = {
   id: string;
@@ -7,9 +7,16 @@ export type InputFieldProps = {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
-}
+};
 
-const InputField: FC<InputFieldProps> = ({id, label, placeholder, value, onChange, type = 'text'}) => (
+const InputField: FC<InputFieldProps> = ({
+  id,
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+}) => (
   <div className="mb-3">
     <label htmlFor={id} className="form-label">
       {label}

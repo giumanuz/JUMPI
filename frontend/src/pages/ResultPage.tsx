@@ -1,7 +1,7 @@
 // src/pages/ResultPage.tsx
 
-import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/ResultPage.scss';
+import { useLocation, useNavigate } from "react-router-dom";
+import "../styles/ResultPage.scss";
 
 interface ResultPageState {
   extracted_text: string;
@@ -21,8 +21,13 @@ const ResultPage = () => {
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="card bg-body-secondary p-4 shadow-sm text-center">
           <h3 className="mb-4">No Data Available</h3>
-          <p>It seems you navigated to this page without submitting an article.</p>
-          <button className="btn btn-primary mt-3" onClick={() => navigate('/')}>
+          <p>
+            It seems you navigated to this page without submitting an article.
+          </p>
+          <button
+            className="btn btn-primary mt-3"
+            onClick={() => navigate("/")}
+          >
             Go Back to Upload
           </button>
         </div>
@@ -34,7 +39,10 @@ const ResultPage = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="card bg-body-secondary p-4 shadow-sm" style={{ width: '50rem' }}>
+      <div
+        className="card bg-body-secondary p-4 shadow-sm"
+        style={{ width: "50rem" }}
+      >
         <h3 className="text-center mb-4">Document Analysis Results</h3>
 
         <div className="mb-4">
@@ -53,7 +61,11 @@ const ResultPage = () => {
                 src={`data:image/jpeg;base64,${image}`}
                 alt={`Image comparison ${index + 1}`}
                 className="img-fluid"
-                style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'contain' }}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "300px",
+                  objectFit: "contain",
+                }}
               />
             ))}
           </div>
