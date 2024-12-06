@@ -7,7 +7,7 @@ from typing import Optional
 class ArticlePageScan:
     page: int
     image_data: str
-    uploaded_on: datetime
+    uploaded_on: datetime = field(default_factory=lambda: datetime.now())
 
 
 @dataclass
@@ -17,8 +17,29 @@ class ArticleFigure:
     image_data: str
 
 
+class _BaseEntity:
+    # noinspection PyUnresolvedReferences,PyArgumentList
+    @classmethod
+    def __blank_with(cls, **kwargs):
+        """Generic blank creation with specified kwargs."""
+        blank_fields = {f.name: None for f in cls.__dataclass_fields__.values()}
+        init_kwargs = {**blank_fields, **kwargs}
+        return cls(**init_kwargs)
+
+    @classmethod
+    def query_blueprint_with(cls, **kwargs):
+        """Create an instance for query purposes."""
+        return cls.__blank_with(**kwargs)
+
+    @classmethod
+    def update_blueprint_with(cls, **kwargs):
+        """Create an instance for updates, setting `edited_on` to now."""
+        kwargs['edited_on'] = datetime.now()
+        return cls.__blank_with(**kwargs)
+
+
 @dataclass
-class Article:
+class Article(_BaseEntity):
     id: str
     magazine_id: str
     title: str
@@ -31,26 +52,9 @@ class Article:
     created_on: datetime = field(default_factory=lambda: datetime.now())
     edited_on: datetime = field(default_factory=lambda: datetime.now())
 
-    # noinspection PyTypeChecker
-    @classmethod
-    def blank_with(cls, **kwargs):
-        return cls(
-            id=kwargs.get('id', None),
-            magazine_id=kwargs.get('magazine_id', None),
-            title=kwargs.get('title', None),
-            author=kwargs.get('author', None),
-            content=kwargs.get('content', None),
-            page_offsets=kwargs.get('page_offsets', None),
-            page_range=kwargs.get('page_range', None),
-            page_scans=kwargs.get('page_scans', None),
-            figures=kwargs.get('figures', None),
-            created_on=kwargs.get('created_on', None),
-            edited_on=kwargs.get('updated_on', None)
-        )
-
 
 @dataclass
-class Magazine:
+class Magazine(_BaseEntity):
     id: str
     name: str
     date: datetime
@@ -61,19 +65,3 @@ class Magazine:
     categories: list[str] = field(default_factory=list)
     created_on: datetime = field(default_factory=lambda: datetime.now())
     edited_on: datetime = field(default_factory=lambda: datetime.now())
-
-    # noinspection PyTypeChecker
-    @classmethod
-    def blank_with(cls, **kwargs):
-        return cls(
-            id=kwargs.get('id', None),
-            name=kwargs.get('name', None),
-            date=kwargs.get('date', None),
-            publisher=kwargs.get('publisher', None),
-            edition=kwargs.get('edition', None),
-            abstract=kwargs.get('abstract', None),
-            genres=kwargs.get('genres', None),
-            categories=kwargs.get('categories', None),
-            created_on=kwargs.get('created_on', None),
-            edited_on=kwargs.get('updated_on', None)
-        )
