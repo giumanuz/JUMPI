@@ -7,6 +7,7 @@ export type InputFieldProps = {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  required?: boolean;
 };
 
 const InputField: FC<InputFieldProps> = ({
@@ -16,6 +17,7 @@ const InputField: FC<InputFieldProps> = ({
   value,
   onChange,
   type = "text",
+  required = false,
 }) => (
   <div className="mb-3">
     <label htmlFor={id} className="form-label">
@@ -28,6 +30,7 @@ const InputField: FC<InputFieldProps> = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      required={required}
     />
   </div>
 );

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import axiosInstance from "../axiosInstance";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../axiosInstance";
 import FormTemplate from "../pages/FormTemplate";
+import InputField from "../components/InputField";
+import TextAreaField from "../components/TextAreaField";
 
 function AddMagazinePage() {
-  const [newMagazineData, setNewMagazineData] = useState<Partial<Magazine>>({});
+  const [newMagazine, setNewMagazine] = useState<Partial<Magazine>>({});
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -16,9 +18,9 @@ function AddMagazinePage() {
     setLoading(true);
     setError(undefined);
     try {
-      const res = await axiosInstance.post("/addNewMagazine", newMagazineData);
-      const newMagazine = res.data.magazine;
-      navigate(`/uploadArticle?magazine_id=${newMagazine.id}`);
+      const { data } = await axiosInstance.post("/addNewMagazine", newMagazine);
+      const { id } = data.magazine as Magazine;
+      navigate(`/uploadArticle?magazine_id=${id}`);
     } catch (err: any) {
       console.error("Error adding new magazine:", err);
       const errorMessage =
@@ -30,24 +32,26 @@ function AddMagazinePage() {
     }
   };
 
+  const SaveButton = () => (
+    <button type="submit" className="btn btn-primary">
+      Save
+    </button>
+  );
+
+  const CancelButton = () => (
+    <button
+      type="button"
+      className="btn btn-secondary ms-2"
+      onClick={() => navigate(-1)}
+    >
+      Cancel
+    </button>
+  );
+
   return (
     <FormTemplate
       title="Add New Magazine"
       onSubmit={handleNewMagazineSubmit}
-      button={
-        <>
-          <button type="submit" className="btn btn-primary">
-            Save
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={() => navigate(-1)}
-          >
-            Cancel
-          </button>
-        </>
-      }
       loading={loading}
       loadingDescription="Saving the magazine. Please wait..."
       preFormContent={
@@ -57,106 +61,98 @@ function AddMagazinePage() {
           </div>
         )
       }
+      button={
+        <>
+          <SaveButton />
+          <CancelButton />
+        </>
+      }
     >
-      <div>
-        <label className="form-label">Name</label>
-        <input
-          type="text"
-          className="form-control"
-          value={newMagazineData.name ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({ ...newMagazineData, name: e.target.value })
-          }
-          required
-        />
-      </div>
-      <div>
-        <label className="form-label">Publisher</label>
-        <input
-          type="text"
-          className="form-control"
-          value={newMagazineData.publisher ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({
-              ...newMagazineData,
-              publisher: e.target.value,
-            })
-          }
-          required
-        />
-      </div>
-      <div>
-        <label className="form-label">Edition</label>
-        <input
-          type="text"
-          className="form-control"
-          value={newMagazineData.edition ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({ ...newMagazineData, edition: e.target.value })
-          }
-          required
-        />
-      </div>
-      <div>
-        <label className="form-label">Categories (separated by commas)</label>
-        <input
-          type="text"
-          className="form-control"
-          value={newMagazineData.categories?.join(", ") ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({
-              ...newMagazineData,
-              categories: e.target.value
-                .split(",")
-                .map((cat) => cat.trim())
-                .filter((cat) => cat !== ""),
-            })
-          }
-        />
-      </div>
-      <div>
-        <label className="form-label">Genres (separated by commas)</label>
-        <input
-          type="text"
-          className="form-control"
-          value={newMagazineData.genres?.join(", ") ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({
-              ...newMagazineData,
-              genres: e.target.value
-                .split(",")
-                .map((genre) => genre.trim())
-                .filter((genre) => genre !== ""),
-            })
-          }
-        />
-      </div>
-      <div>
-        <label className="form-label">Date</label>
-        <input
-          type="date"
-          className="form-control"
-          value={newMagazineData.date?.toISOString().split("T")[0] ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({
-              ...newMagazineData,
-              date: new Date(e.target.value),
-            })
-          }
-          required
-        />
-      </div>
-      <div>
-        <label className="form-label">Abstract</label>
-        <textarea
-          className="form-control"
-          value={newMagazineData.abstract ?? ""}
-          onChange={(e) =>
-            setNewMagazineData({ ...newMagazineData, abstract: e.target.value })
-          }
-          required
-        />
-      </div>
+      <InputField
+        id="name"
+        label="Name"
+        placeholder="Enter the name of the magazine"
+        value={newMagazine.name ?? ""}
+        required
+        onChange={(e) =>
+          setNewMagazine({ ...newMagazine, name: e.target.value })
+        }
+      />
+      <InputField
+        id="publisher"
+        label="Publisher"
+        placeholder="Enter the name of the publisher"
+        value={newMagazine.publisher ?? ""}
+        required
+        onChange={(e) =>
+          setNewMagazine({ ...newMagazine, publisher: e.target.value })
+        }
+      />
+      <InputField
+        id="edition"
+        label="Edition"
+        placeholder="Enter the edition of the magazine"
+        value={newMagazine.edition ?? ""}
+        onChange={(e) =>
+          setNewMagazine({ ...newMagazine, edition: e.target.value })
+        }
+      />
+      <InputField
+        id="categories"
+        label="Categories (separated by commas)"
+        placeholder="Enter the categories of the magazine"
+        value={newMagazine.categories?.join(", ") ?? ""}
+        required
+        onChange={(e) =>
+          setNewMagazine({
+            ...newMagazine,
+            categories: e.target.value
+              .split(",")
+              .map((cat) => cat.trim())
+              .filter((cat) => cat !== ""),
+          })
+        }
+      />
+      <InputField
+        id="genres"
+        label="Genres (separated by commas)"
+        placeholder="Enter the genres of the magazine"
+        value={newMagazine.genres?.join(", ") ?? ""}
+        required
+        onChange={(e) =>
+          setNewMagazine({
+            ...newMagazine,
+            genres: e.target.value
+              .split(",")
+              .map((genre) => genre.trim())
+              .filter((genre) => genre !== ""),
+          })
+        }
+      />
+      <InputField
+        id="date"
+        label="Date"
+        placeholder="Enter the date of the magazine"
+        value={newMagazine.date?.toISOString().split("T")[0] ?? ""}
+        required
+        onChange={(e) =>
+          setNewMagazine({
+            ...newMagazine,
+            date: new Date(e.target.value),
+          })
+        }
+        type="date"
+      />
+      <TextAreaField
+        id="abstract"
+        label="Abstract"
+        placeholder="Enter the abstract of the magazine"
+        value={newMagazine.abstract ?? ""}
+        required
+        onChange={(e) =>
+          setNewMagazine({ ...newMagazine, abstract: e.target.value })
+        }
+      />
     </FormTemplate>
   );
 }

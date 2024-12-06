@@ -7,6 +7,7 @@ export type TextAreaFieldProps = {
   value: string;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   rows?: number;
+  required?: boolean;
 };
 
 const TextAreaField: FC<TextAreaFieldProps> = ({
@@ -16,6 +17,7 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
   value,
   onChange,
   rows = 3,
+  required = false,
 }) => (
   <div className="mb-3">
     <label htmlFor={id} className="form-label">
@@ -28,6 +30,7 @@ const TextAreaField: FC<TextAreaFieldProps> = ({
       value={value}
       onChange={onChange}
       rows={rows}
+      required={required}
     ></textarea>
   </div>
 );
