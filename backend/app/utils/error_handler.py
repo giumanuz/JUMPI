@@ -6,6 +6,7 @@ import elasticsearch
 def setup_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_general_error(error):
+        logging.error("An error occurred", exc_info=error)
         return {"error": str(error)}, 500
 
     @app.errorhandler(elasticsearch.ApiError)

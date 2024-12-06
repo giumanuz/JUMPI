@@ -167,8 +167,8 @@ def __get_update_query_with(obj_dict: dict, ignore_fields: Iterable[str]) -> dic
     return {"doc": update_fields}
 
 
-_MAGAZINE_UPDATE_IGNORE_FIELDS = ("created_on", "updated_on")
-_ARTICLE_UPDATE_IGNORE_FIELDS = ("created_on", "updated_on")
+_MAGAZINE_UPDATE_IGNORE_FIELDS = ("created_on", "edited_on")
+_ARTICLE_UPDATE_IGNORE_FIELDS = ("created_on", "edited_on")
 
 
 def _get_update_magazine_query(magazine: Magazine) -> dict:
@@ -181,10 +181,10 @@ def _get_update_article_query(article: Article) -> dict:
     return __get_update_query_with(article_dict, _ARTICLE_UPDATE_IGNORE_FIELDS)
 
 
-_MAGAZINE_IGNORE_FIELDS = ("created_on", "updated_on")
+_MAGAZINE_IGNORE_FIELDS = ("created_on", "edited_on")
 _MAGAZINE_TEXT_FIELDS = ("abstract",)
 
-_ARTICLE_IGNORE_FIELDS = ("page_scans", "figures", "page_offsets", "page_range", "created_on", "updated_on")
+_ARTICLE_IGNORE_FIELDS = ("page_scans", "figures", "page_offsets", "page_range", "created_on", "edited_on")
 _ARTICLE_TEXT_FIELDS = ("content",)
 
 
@@ -197,10 +197,3 @@ def _get_search_article_query(article: Article) -> dict:
     article_dict = asdict(article)
     return __get_search_query_with(article_dict, _ARTICLE_IGNORE_FIELDS, _ARTICLE_TEXT_FIELDS)
 
-
-class MagazineNotFoundError(Exception):
-    pass
-
-
-class MagazineExistsError(Exception):
-    pass
