@@ -5,10 +5,19 @@ import FormTemplate from "../pages/FormTemplate";
 import InputField from "../components/InputField";
 import TextAreaField from "../components/TextAreaField";
 
+function splitStrings(input: string): string[] {
+  return input
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item !== "");
+}
+
 function AddMagazinePage() {
   const [newMagazine, setNewMagazine] = useState<Partial<Magazine>>({});
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [categoriesString, setCategoriesString] = useState<string>("");
+  const [genresString, setGenresString] = useState<string>("");
   const navigate = useNavigate();
 
   const handleNewMagazineSubmit = async (
@@ -18,8 +27,11 @@ function AddMagazinePage() {
     setLoading(true);
     setError(undefined);
     try {
-      const { data } = await axiosInstance.post("/addNewMagazine", newMagazine);
-      const { id } = data.magazine as Magazine;
+      newMagazine.categories = splitStrings(categoriesString);
+      newMagazine.genres = splitStrings(genresString);
+      console.log("Adding new magazine:", newMagazine);
+      const { data } = await axiosInstance.post("/uploadMagazine", newMagazine);
+      const { id } = data as { id: string };
       navigate(`/uploadArticle?magazine_id=${id}`);
     } catch (err: any) {
       console.error("Error adding new magazine:", err);
@@ -101,33 +113,17 @@ function AddMagazinePage() {
         id="categories"
         label="Categories (separated by commas)"
         placeholder="Enter the categories of the magazine"
-        value={newMagazine.categories?.join(", ") ?? ""}
+        value={categoriesString}
         required
-        onChange={(e) =>
-          setNewMagazine({
-            ...newMagazine,
-            categories: e.target.value
-              .split(",")
-              .map((cat) => cat.trim())
-              .filter((cat) => cat !== ""),
-          })
-        }
+        onChange={(e) => setCategoriesString(e.target.value)}
       />
       <InputField
         id="genres"
         label="Genres (separated by commas)"
         placeholder="Enter the genres of the magazine"
-        value={newMagazine.genres?.join(", ") ?? ""}
+        value={genresString}
         required
-        onChange={(e) =>
-          setNewMagazine({
-            ...newMagazine,
-            genres: e.target.value
-              .split(",")
-              .map((genre) => genre.trim())
-              .filter((genre) => genre !== ""),
-          })
-        }
+        onChange={(e) => setGenresString(e.target.value)}
       />
       <InputField
         id="date"

@@ -16,8 +16,8 @@ type Article = {
   title: string;
   author: string;
   content: string;
-  pageOffsets: number[];
   pageRange: number[];
+  pageOffsets: number[];
   pageScans: ArticlePageScan[];
   figures: ArticleFigure[];
   createdOn: Date;

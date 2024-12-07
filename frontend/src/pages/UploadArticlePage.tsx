@@ -7,7 +7,7 @@ import FormTemplate from "../pages/FormTemplate";
 
 function UploadArticlePage() {
   const [searchParams] = useSearchParams();
-  const magazine_id = searchParams.get("magazine_id");
+  const magazineId = searchParams.get("magazine_id");
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -26,7 +26,7 @@ function UploadArticlePage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!magazine_id) {
+    if (!magazineId) {
       setError("Magazine ID is missing.");
       return;
     }
@@ -40,8 +40,8 @@ function UploadArticlePage() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("author", author);
-    formData.append("page_range", pageRange);
-    formData.append("magazine_id", magazine_id);
+    formData.append("pageRange", pageRange);
+    formData.append("magazineId", magazineId);
 
     if (images) {
       Array.from(images).forEach((image) => {

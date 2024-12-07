@@ -2,20 +2,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate } from "react-router-dom";
 
-type Magazine = {
-  id: string;
-  name: string;
-  publisher: string;
-  edition: string;
-  categories: string[];
-  genres: string[];
-  abstract: string;
-  created_on: string;
-  edited_on: string;
-  date: string;
-};
-
-function UploadPage() {
+function MagazineListPage() {
   const [magazines, setMagazines] = useState<Magazine[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -23,7 +10,7 @@ function UploadPage() {
   useEffect(() => {
     console.log("Fetching magazines...");
     axiosInstance
-      .get("/getAllMagazines")
+      .get("/getMagazines")
       .then((res) => {
         console.log("Magazines received:", res.data.magazines);
         setMagazines(res.data.magazines);
@@ -80,13 +67,13 @@ function UploadPage() {
                     <strong>Genres:</strong> {m.genres.join(", ")}
                   </p>
                   <p>
-                    <strong>Created On:</strong> {m.created_on}
+                    <strong>Created On:</strong> {m.createdOn.toDateString()}
                   </p>
                   <p>
-                    <strong>Edited On:</strong> {m.edited_on}
+                    <strong>Edited On:</strong> {m.editedOn.toDateString()}
                   </p>
                   <p>
-                    <strong>Date:</strong> {m.date}
+                    <strong>Date:</strong> {m.date.toDateString()}
                   </p>
                 </div>
               )}
@@ -104,4 +91,4 @@ function UploadPage() {
   );
 }
 
-export default UploadPage;
+export default MagazineListPage;

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance.ts";
 import ApiKeyInputField, {
   ApiKeyValidationStatus,
@@ -8,11 +8,17 @@ import ApiKeyInputField, {
 const DUMMY_API_KEY = "api-key";
 
 function HomePage() {
-  const [apiKey, setApiKey] = useState(
-    (localStorage.getItem("apiKey") && DUMMY_API_KEY) ?? "",
-  );
+  const [apiKey, setApiKey] = useState("");
   const [keyValidationStatus, setKeyValidationStatus] =
     useState<ApiKeyValidationStatus>("none");
+
+  useEffect(() => {
+    const apiKey = localStorage.getItem("apiKey");
+    if (apiKey) {
+      axiosInstance.defaults.headers.common["X-API-KEY"] = apiKey;
+      setApiKey(DUMMY_API_KEY);
+    }
+  }, []);
 
   const isApiKeyValid = () => {
     return (
