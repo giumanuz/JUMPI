@@ -167,8 +167,8 @@ def __get_update_query_with(obj_dict: dict, ignore_fields: Iterable[str]) -> dic
     return {"doc": update_fields}
 
 
-_MAGAZINE_UPDATE_IGNORE_FIELDS = ("created_on", "edited_on")
-_ARTICLE_UPDATE_IGNORE_FIELDS = ("created_on", "edited_on")
+_MAGAZINE_UPDATE_IGNORE_FIELDS = ("created_on",)
+_ARTICLE_UPDATE_IGNORE_FIELDS = ("created_on",)
 
 
 def _get_update_magazine_query(magazine: Magazine) -> dict:

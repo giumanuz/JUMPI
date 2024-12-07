@@ -133,8 +133,7 @@ def test_search_magazines(mock_es, mock_magazine_response, mock_magazine):
                                          {'term': {'edition': 'First Edition'}},
                                          {'match': {'abstract': 'Test abstract'}},
                                          {'terms': {'genres': ['genre1']}},
-                                         {'terms': {'categories': ['cat1']}},
-                                         {'term': {'edited_on': '2024-01-02T00:00:00'}}]}}}
+                                         {'terms': {'categories': ['cat1']}}]}}}
     mock_es.search.assert_called_once_with(index="magazines", body=query)
 
     # Verify that the search result is correctly parsed into Magazine objects
@@ -194,8 +193,7 @@ def test_search_articles(mock_es, mock_article, mock_article_response):
                                          {'term': {'magazine_id': '1'}},
                                          {'term': {'title': 'Test Article'}},
                                          {'term': {'author': 'John Doe'}},
-                                         {'match': {'content': 'Some content'}},
-                                         {'term': {'edited_on': '2024-01-02T00:00:00'}}]}}}
+                                         {'match': {'content': 'Some content'}}]}}}
     mock_es.search.assert_called_once_with(index="articles", body=query)
 
     # Verify that the search result is correctly parsed into Article objects

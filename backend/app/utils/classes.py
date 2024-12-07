@@ -34,6 +34,7 @@ class _BaseEntity:
     @classmethod
     def update_blueprint_with(cls, **kwargs):
         """Create an instance for updates, setting `edited_on` to now."""
+        kwargs['created_on'] = None
         kwargs['edited_on'] = datetime.now()
         return cls.__blank_with(**kwargs)
 
