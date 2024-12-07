@@ -75,7 +75,7 @@ function EditMagazinePage() {
         setSuccessMessage("Magazine updated successfully!");
         setTimeout(() => {
           navigate("/manageMagazines");
-        }, 2000);
+        }, 600);
       } else {
         setError("Error updating the magazine.");
       }

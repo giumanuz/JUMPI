@@ -11,9 +11,10 @@ interface Article {
   page_range: number[];
   content: string;
   page_offsets: number[];
-  figures: any[]; // Definisci correttamente secondo necessità
+  figures: any[]; // Define it properly as needed
   created_on: string;
   edited_on: string;
+  page_scans?: { page: number; imageData: string; uploadedOn: string }[]; // Assuming the image is in this format
 }
 
 function EditArticlePage() {
@@ -25,7 +26,7 @@ function EditArticlePage() {
   const [author, setAuthor] = useState("");
   const [pageRange, setPageRange] = useState("");
   const [content, setContent] = useState("");
-  // Aggiungi altri campi se necessario
+  const [imageData, setImageData] = useState<string | null>(null); // State for the image
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -34,16 +35,20 @@ function EditArticlePage() {
       axiosInstance
         .get(`/articles/${id}`)
         .then((res) => {
-          setArticle(res.data.article);
-          setTitle(res.data.article.title);
-          setAuthor(res.data.article.author);
-          setPageRange(res.data.article.page_range.join("-"));
-          setContent(res.data.article.content);
-          // Inizializza altri campi se necessario
+          const articleData = res.data.article;
+          setArticle(articleData);
+          setTitle(articleData.title);
+          setAuthor(articleData.author);
+          setPageRange(articleData.page_range.join("-"));
+          setContent(articleData.content);
+          
+          if (articleData.page_scans && articleData.page_scans.length > 0) {
+            setImageData(articleData.page_scans[0].imageData);
+          }
         })
         .catch((err) => {
-          console.error("Errore nel recupero dell'articolo:", err);
-          setError("Errore nel recupero dell'articolo.");
+          console.error("Error retrieving article:", err);
+          setError("Error retrieving the article.");
         });
     }
   }, [id]);
@@ -52,13 +57,13 @@ function EditArticlePage() {
     e.preventDefault();
 
     if (!id) {
-      setError("ID dell'articolo mancante.");
+      setError("Article ID is missing.");
       return;
     }
 
     const pageRangeRegex = /^\d+-\d+$/;
     if (!pageRangeRegex.test(pageRange)) {
-      setError('Page Range deve essere nel formato "start-end", es. "1-5".');
+      setError('Page Range should be in the format "start-end", e.g., "1-5".');
       return;
     }
 
@@ -67,37 +72,37 @@ function EditArticlePage() {
       author,
       page_range: pageRange.split("-").map(Number),
       content,
-      // Includi altri campi se necessario
+      // Include other fields as needed
     };
 
     try {
       const res = await axiosInstance.put(`/articles/${id}`, updatedArticle);
 
       if (res.status === 200) {
-        setSuccessMessage("Articolo aggiornato con successo!");
+        setSuccessMessage("Article updated successfully!");
         setTimeout(() => {
           navigate(`/manageArticles/${article?.magazine_id}`);
         }, 2000);
       } else {
-        setError("Errore nell'aggiornamento dell'articolo.");
+        setError("Error updating the article.");
       }
     } catch (err) {
-      console.error("Errore nell'aggiornamento dell'articolo:", err);
-      setError("Errore nell'aggiornamento dell'articolo.");
+      console.error("Error updating the article:", err);
+      setError("Error updating the article.");
     }
   };
 
   if (!article) {
-    return <div className="container mt-4">Caricamento...</div>;
+    return <div className="container mt-4">Loading...</div>;
   }
 
   return (
     <FormTemplate
-      title="Modifica Articolo"
+      title="Edit Article"
       onSubmit={handleSubmit}
       button={
         <button type="submit" className="btn btn-primary mt-3">
-          Salva Modifiche
+          Save Changes
         </button>
       }
     >
@@ -105,47 +110,74 @@ function EditArticlePage() {
       {successMessage && (
         <div className="alert alert-success">{successMessage}</div>
       )}
-      <div className="mb-3">
-        <label className="form-label">Titolo</label>
-        <input
-          type="text"
-          className="form-control"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Autore</label>
-        <input
-          type="text"
-          className="form-control"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Page Range (es. "1-5")</label>
-        <input
-          type="text"
-          className="form-control"
-          value={pageRange}
-          onChange={(e) => setPageRange(e.target.value)}
-          placeholder="es. 1-5"
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Contenuto</label>
-        <textarea
-          className="form-control"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={5}
-        ></textarea>
-      </div>
-      {/* Aggiungi altri campi se necessario */}
+        <div className="row">
+  <div className="col-md-8">
+    <div className="mb-3">
+      <label className="form-label">Title</label>
+      <input
+        type="text"
+        className="form-control"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        required
+      />
+    </div>
+    <div className="mb-3">
+      <label className="form-label">Author</label>
+      <input
+        type="text"
+        className="form-control"
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+        required
+      />
+    </div>
+    <div className="mb-3">
+      <label className="form-label">Page Range (e.g. "1-5")</label>
+      <input
+        type="text"
+        className="form-control"
+        value={pageRange}
+        onChange={(e) => setPageRange(e.target.value)}
+        placeholder="e.g. 1-5"
+        required
+      />
+    </div>
+    <div className="mb-3">
+      <label className="form-label">Content</label>
+      <textarea
+        className="form-control"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        rows={5}
+      ></textarea>
+    </div>
+  </div>
+
+    <div className="col-md-4">
+        {imageData ? (
+            <div className="mb-3">
+                <label className="form-label">Image</label>
+                <img
+                    src={`data:image/jpeg;base64,${imageData}`}
+                    alt="Article Image"
+                    className="img-fluid" 
+                    style={{
+                        width: '100%',  
+                        height: 'auto',
+                        borderRadius: '5px',
+                        maxHeight: '500px',
+                    }}
+                />
+            </div>
+        ) : (
+            <p>No image available for this article.</p>
+        )}
+    </div>
+</div>
+
+
+      
     </FormTemplate>
   );
 }

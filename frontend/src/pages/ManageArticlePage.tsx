@@ -39,6 +39,7 @@ function ManageArticlePage() {
       axiosInstance
         .get(`/magazines/${magazineId}`)
         .then((res) => {
+          console.log(res.data.magazine);
           setMagazine(res.data.magazine);
         })
         .catch((err) => {
@@ -83,12 +84,12 @@ function ManageArticlePage() {
             };
 
             return (
-              <div className="col-4 mb-3" key={article.id}>
+                <div className="col-4 mb-3" key={article.id}>
                 <MagazineCard 
                   data={dataForCard} 
-                  onEdit={(id) => navigate(`/editArticle/${id}`, { state: { data: dataForCard } })}
+                  onEdit={() => navigate(`/editArticle/${article.id}`, { state: { data: dataForCard } })}
                 />
-              </div>
+                </div>
             );
           })
         ) : (
