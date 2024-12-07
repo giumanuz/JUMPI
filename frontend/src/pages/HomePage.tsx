@@ -13,9 +13,9 @@ function HomePage() {
     useState<ApiKeyValidationStatus>("none");
 
   useEffect(() => {
-    const apiKey = localStorage.getItem("apiKey");
-    if (apiKey) {
-      axiosInstance.defaults.headers.common["X-API-KEY"] = apiKey;
+    const storedApiKey = localStorage.getItem("apiKey");
+    if (storedApiKey) {
+      axiosInstance.defaults.headers.common["X-API-KEY"] = storedApiKey;
       setApiKey(DUMMY_API_KEY);
     }
   }, []);
@@ -57,7 +57,7 @@ function HomePage() {
     <div className="d-flex flex-column min-vh-100">
       <div className="m-auto">
         <h1 className="text-center mb-4">JUMPI</h1>
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-2 flex-wrap justify-content-center">
           <Link
             to={isApiKeyValid() ? "/search" : "#"}
             className={
@@ -75,6 +75,15 @@ function HomePage() {
             }
           >
             Upload
+          </Link>
+          <Link
+            to={isApiKeyValid() ? "/manageMagazines" : "#"}
+            className={
+              "btn btn-secondary btn-lg mx-auto" +
+              (isApiKeyValid() ? "" : " disabled")
+            }
+          >
+            Edit
           </Link>
         </div>
         <div className="mt-4">

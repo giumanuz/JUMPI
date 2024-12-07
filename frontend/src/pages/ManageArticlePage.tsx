@@ -1,0 +1,102 @@
+import { useEffect, useState } from "react";
+import axiosInstance from "../axiosInstance";
+import { useNavigate, useParams } from "react-router-dom";
+import MagazineCard from "../components/MagazineCard";
+
+interface Article {
+  id: string;
+  magazine_id: string;
+  title: string;
+  author: string;
+  page_range: number[];
+  content: string;
+  page_offsets: number[];
+  figures: any[];
+  created_on: string;
+  edited_on: string;
+}
+
+interface Magazine {
+  id: string;
+  name: string;
+  date: string;
+  publisher: string;
+  edition?: string;
+  abstract?: string;
+  genres?: string[];
+  categories?: string[];
+}
+
+function ManageArticlePage() {
+  const { magazineId } = useParams<{ magazineId: string }>();
+  const navigate = useNavigate();
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [magazine, setMagazine] = useState<Magazine | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (magazineId) {
+      axiosInstance
+        .get(`/magazines/${magazineId}`)
+        .then((res) => {
+          setMagazine(res.data.magazine);
+        })
+        .catch((err) => {
+          console.error("Error retrieving the magazine:", err);
+          setError("Error retrieving the magazine.");
+        });
+
+      axiosInstance
+        .get("/articles", { params: { magazine_id: magazineId } })
+        .then((res) => {
+          const filteredArticles = res.data.articles.filter(
+            (art: Article) => art.magazine_id === magazineId
+          );
+          setArticles(filteredArticles);
+        })
+        .catch((err) => {
+          console.error("Error retrieving articles:", err);
+          setError("Error retrieving articles.");
+        });
+    }
+  }, [magazineId]);
+
+  if (!magazine) {
+    return <div className="container mt-4">Loading magazine data...</div>;
+  }
+
+  return (
+    <div className="container mt-4">
+      <h1>Manage Articles</h1>
+      <h3>Magazine: {magazine.name}</h3>
+      {error && <div className="alert alert-danger">{error}</div>}
+      <div className="row">
+        {articles.length > 0 ? (
+          articles.map((article) => {
+            const dataForCard = {
+              _id: magazine.id,
+              name: magazine.name,
+              year: magazine.date.substring(0,4),
+              publisher: magazine.publisher,
+              genre: magazine.genres && magazine.genres.length > 0 ? magazine.genres[0] : "N/A",
+              articles: [article],
+            };
+
+            return (
+              <div className="col-4 mb-3" key={article.id}>
+                <MagazineCard 
+                  data={dataForCard} 
+                  onEdit={(id) => navigate(`/editArticle/${id}`, { state: { data: dataForCard } })}
+                />
+              </div>
+            );
+          })
+        ) : (
+          <p>No articles found for this magazine.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default ManageArticlePage;

@@ -1,9 +1,26 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const MagazineCard = ({ data }: { data: any }) => {
-  const navigate = useNavigate();
+interface Article {
+  title: string;
+  author: string;
+  content: string;
+}
 
+interface MagazineData {
+  _id: string;
+  name: string;
+  year: string;
+  publisher: string;
+  genre: string;
+  articles: Article[];
+}
+
+interface MagazineCardProps {
+  data: MagazineData;
+  onEdit: (id: string) => void;
+}
+
+const MagazineCard: React.FC<MagazineCardProps> = ({ data, onEdit }) => {
   if (!data || !data._id) {
     console.error("Missing _id in data passed to MagazineCard:", data);
     return null;
@@ -17,26 +34,20 @@ const MagazineCard = ({ data }: { data: any }) => {
     setIsExpanded((prev) => !prev);
   };
 
-  const handleEdit = () => {
-    navigate(`/edit/${_id}`, { state: { data } });
+  const handleEditClick = () => {
+    onEdit(_id);
   };
 
   return (
-    <div className="card mb-3 position-relative">
-      <button
-        className="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2"
-        onClick={handleEdit}
-        title="Edit"
-      >
-        ✏️
-      </button>
-      <div className="card-header">
+    <div className="card mb-3 h-100 d-flex flex-column p-3">
+      <div className="mb-3">
         <h5>{name}</h5>
         <small className="text-muted">
           {year} | {publisher} | {genre}
         </small>
       </div>
-      <div className="card-body">
+
+      <div className="mb-3 flex-grow-1">
         {article ? (
           <>
             <h6 className="card-title">{article.title}</h6>
@@ -55,6 +66,15 @@ const MagazineCard = ({ data }: { data: any }) => {
         ) : (
           <p className="text-muted">No articles available.</p>
         )}
+      </div>
+
+      <div className="mt-auto">
+        <button
+          className="btn btn-primary"
+          onClick={handleEditClick}
+        >
+          Edit Article
+        </button>
       </div>
     </div>
   );

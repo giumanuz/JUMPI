@@ -8,6 +8,10 @@ import MagazineListPage from "./pages/MagazineListPage";
 import ResultPage from "./pages/ResultPage";
 import UploadArticlePage from "./pages/UploadArticlePage";
 import AddMagazinePage from "./pages/AddMagazinePage";
+import EditMagazinePage from "./pages/EditMagazinePage";
+import EditArticlePage from "./pages/EditArticlePage";
+import ManageMagazinesPage from "./pages/ManageMagazinePage";
+import ManageArticlesPage from "./pages/ManageArticlePage";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -19,6 +23,11 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/resultPage" element={<ResultPage />} />
         <Route path="/addNewMagazine" element={<AddMagazinePage />} />
         <Route path="/uploadArticle" element={<UploadArticlePage />} />
+        
+        <Route path="/manageMagazines" element={<ManageMagazinesPage />} />
+        <Route path="/manageArticles/:magazineId" element={<ManageArticlesPage />} />
+        <Route path="/editMagazine/:id" element={<EditMagazinePage />} />
+        <Route path="/editArticle/:id" element={<EditArticlePage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
