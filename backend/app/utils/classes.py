@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from typing import Optional
 
@@ -17,6 +17,7 @@ class ArticleFigure:
     image_data: str
 
 
+@dataclass(init=False)
 class _BaseEntity:
     # noinspection PyUnresolvedReferences,PyArgumentList
     @classmethod
@@ -25,6 +26,14 @@ class _BaseEntity:
         blank_fields = {f.name: None for f in cls.__dataclass_fields__.values()}
         init_kwargs = {**blank_fields, **kwargs}
         return cls(**init_kwargs)
+
+    @classmethod
+    def create_blueprint_with(cls, **kwargs):
+        """Create an instance for creation purposes."""
+        kwargs['id'] = None
+        kwargs['created_on'] = datetime.now()
+        kwargs['edited_on'] = datetime.now()
+        return cls(**kwargs)
 
     @classmethod
     def query_blueprint_with(cls, **kwargs):
@@ -38,6 +47,10 @@ class _BaseEntity:
         kwargs['edited_on'] = datetime.now()
         return cls.__blank_with(**kwargs)
 
+    # noinspection PyTypeChecker
+    def to_dict(self):
+        return asdict(self)
+
 
 @dataclass
 class Article(_BaseEntity):
@@ -45,10 +58,10 @@ class Article(_BaseEntity):
     magazine_id: str
     title: str
     author: str
-    content: str
-    page_offsets: list[int]
     page_range: list[int]
     page_scans: list[ArticlePageScan]
+    content: str = ""
+    page_offsets: list[int] = field(default_factory=list)
     figures: list[ArticleFigure] = field(default_factory=list)
     created_on: datetime = field(default_factory=lambda: datetime.now())
     edited_on: datetime = field(default_factory=lambda: datetime.now())

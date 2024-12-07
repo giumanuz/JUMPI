@@ -1,10 +1,11 @@
+import logging
 import re
 
 from flask import request, Blueprint
 
 from app.services.database.database import Database
 from app.utils.classes import Magazine, Article
-from app.utils.parser import camel_to_snake_dict, snake_to_camel_case
+from app.utils.parser import camel_to_snake_dict, snake_to_camel_case, snake_to_camel_dict
 
 upload_bp = Blueprint('upload', __name__)
 
@@ -27,17 +28,26 @@ def handle_exception(e: TypeError):
 @upload_bp.route('/uploadMagazine', methods=['POST'])
 def upload_magazine():
     magazine_json: dict = camel_to_snake_dict(request.json)
-    magazine = Magazine(**magazine_json)
+    magazine = Magazine.create_blueprint_with(**magazine_json)
     magazine_id = Database.get_instance().add_magazine(magazine)
     return {'id': magazine_id}
+
+@upload_bp.route('/getMagazines', methods=['GET'])
+def get_magazines():
+    magazines = Database.get_instance().get_all_magazines()
+    magazine_dicts = (magazine.to_dict() for magazine in magazines)
+    return {
+        'magazines': [snake_to_camel_dict(d) for d in magazine_dicts]
+    }
 
 
 @upload_bp.route('/uploadArticle', methods=['POST'])
 def upload_article():
-    article_json: dict = camel_to_snake_dict(request.json)
-    article = Article(**article_json)
-    article_id = Database.get_instance().add_article(article)
-    return {'id': article_id}
+    # get article from form data and NOT from json
+    form_data = request.form
+    files = request.files
+    article_json = camel_to_snake_dict(form_data)
+    article = Article.create_blueprint_with(**article_json)
 
 
 @upload_bp.route('/updateMagazine', methods=['POST'])
