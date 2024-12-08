@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 import FormTemplate from "../pages/FormTemplate";
 
@@ -15,33 +15,25 @@ interface Magazine {
 }
 
 function EditMagazinePage() {
-  const { id } = useParams<{ id: string }>();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const id = queryParams.get("magazine_id");
   const navigate = useNavigate();
 
   const [magazine, setMagazine] = useState<Magazine | null>(null);
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-  const [publisher, setPublisher] = useState("");
-  const [edition, setEdition] = useState("");
-  const [abstract, setAbstract] = useState("");
-  const [genres, setGenres] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string>("");
+  const [categories, setCategories] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
       axiosInstance
-        .get(`/magazines/${id}`)
+        .get(`/magazineInfo?id=${id}`)
         .then((res) => {
-          setMagazine(res.data.magazine);
-          setName(res.data.magazine.name);
-          setDate(res.data.magazine.date.split("T")[0]);
-          setPublisher(res.data.magazine.publisher);
-          setEdition(res.data.magazine.edition || "");
-          setAbstract(res.data.magazine.abstract || "");
-          setGenres(res.data.magazine.genres);
-          setCategories(res.data.magazine.categories);
+          setMagazine(res.data);
+          setGenres(res.data.genres.join(", "));
+          setCategories(res.data.categories.join(", "));
         })
         .catch((err) => {
           console.error("Error retrieving the magazine:", err);
@@ -58,23 +50,24 @@ function EditMagazinePage() {
       return;
     }
 
+    if (!magazine) {
+      setError("Magazine data is missing.");
+      return;
+    }
+
     const updatedMagazine = {
-      name,
-      date,
-      publisher,
-      edition: edition || null,
-      abstract: abstract || null,
-      genres,
-      categories,
+      ...magazine,
+      genres: genres.split(",").map((g) => g.trim()).filter((g) => g),
+      categories: categories.split(",").map((c) => c.trim()).filter((c) => c),
     };
 
     try {
-      const res = await axiosInstance.put(`/magazines/${id}`, updatedMagazine);
+      const res = await axiosInstance.post(`/updateMagazine`, updatedMagazine);
 
       if (res.status === 200) {
         setSuccessMessage("Magazine updated successfully!");
         setTimeout(() => {
-          navigate("/manageMagazines");
+          navigate("/upload");
         }, 600);
       } else {
         setError("Error updating the magazine.");
@@ -100,8 +93,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={magazine.name}
+          onChange={(e) => setMagazine({ ...magazine, name: e.target.value })}
           required
         />
       </div>
@@ -110,8 +103,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={publisher}
-          onChange={(e) => setPublisher(e.target.value)}
+          value={magazine.publisher}
+          onChange={(e) => setMagazine({ ...magazine, publisher: e.target.value })}
           required
         />
       </div>
@@ -120,8 +113,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={edition}
-          onChange={(e) => setEdition(e.target.value)}
+          value={magazine.edition || ""}
+          onChange={(e) => setMagazine({ ...magazine, edition: e.target.value })}
         />
       </div>
       <div className="mb-3">
@@ -129,8 +122,8 @@ function EditMagazinePage() {
         <input
           type="date"
           className="form-control"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          value={magazine.date}
+          onChange={(e) => setMagazine({ ...magazine, date: e.target.value })}
           required
         />
       </div>
@@ -139,15 +132,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={genres.join(", ")}
-          onChange={(e) =>
-            setGenres(
-              e.target.value
-                .split(",")
-                .map((g) => g.trim())
-                .filter((g) => g)
-            )
-          }
+          value={genres}
+          onChange={(e) => setGenres(e.target.value)}
           placeholder="Enter genres separated by commas"
         />
       </div>
@@ -156,15 +142,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={categories.join(", ")}
-          onChange={(e) =>
-            setCategories(
-              e.target.value
-                .split(",")
-                .map((c) => c.trim())
-                .filter((c) => c)
-            )
-          }
+          value={categories}
+          onChange={(e) => setCategories(e.target.value)}
           placeholder="Enter categories separated by commas"
         />
       </div>
@@ -172,13 +151,10 @@ function EditMagazinePage() {
         <label className="form-label">Abstract</label>
         <textarea
           className="form-control"
-          value={abstract}
-          onChange={(e) => setAbstract(e.target.value)}
+          value={magazine.abstract || ""}
+          onChange={(e) => setMagazine({ ...magazine, abstract: e.target.value })}
           rows={3}
         ></textarea>
-      </div>
-      <div className="mb-3">
-        {/* Empty div for padding */}
       </div>
       <div className="d-flex align-items-center mt-3">
         <button type="submit" className="btn btn-primary">
@@ -186,9 +162,7 @@ function EditMagazinePage() {
         </button>
         {error && <div className="alert alert-danger ms-3 mb-0">{error}</div>}
         {successMessage && (
-          <div className="alert alert-success ms-3 mb-0">
-            {successMessage}
-          </div>
+          <div className="alert alert-success ms-3 mb-0">{successMessage}</div>
         )}
       </div>
     </FormTemplate>

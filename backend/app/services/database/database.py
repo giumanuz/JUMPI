@@ -43,6 +43,14 @@ class Database(ABC):
     @abstractmethod
     def update_article(self, article: Article) -> None:
         ...
+    
+    @abstractmethod
+    def get_magazine(self, magazine_id: str) -> Magazine:
+        ...
+
+    @abstractmethod
+    def get_article(self, article_id: str) -> Article:
+        ...
 
 
 class MagazineNotFoundError(Exception):

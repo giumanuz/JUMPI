@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
-import MagazineCard from "../components/MagazineCard";
+import ArticleCard from "../components/ArticleCard";
 
 interface Article {
   id: string;
@@ -36,8 +36,9 @@ function ManageArticlePage() {
 
   useEffect(() => {
     if (magazineId) {
-      axiosInstance
-        .get(`/magazines/${magazineId}`)
+      // I know that this api call could be avoided by passing the magazine data from the previous page, but from now on I will keep it like this
+      axiosInstance 
+        .get(`/magazineInfo?id=${magazineId}`)
         .then((res) => {
           console.log(res.data.magazine);
           setMagazine(res.data.magazine);
@@ -48,12 +49,9 @@ function ManageArticlePage() {
         });
 
       axiosInstance
-        .get("/articles", { params: { magazine_id: magazineId } })
-        .then((res) => {
-          const filteredArticles = res.data.articles.filter(
-            (art: Article) => art.magazine_id === magazineId
-          );
-          setArticles(filteredArticles);
+        .get(`/getArticlesFromMagazineid=${magazineId}`)
+        .then((res) => {  // TODO: IMPLEMNET getArticlesFromMagazineid in backend
+          setArticles(res.data);
         })
         .catch((err) => {
           console.error("Error retrieving articles:", err);
@@ -85,7 +83,7 @@ function ManageArticlePage() {
 
             return (
                 <div className="col-4 mb-3" key={article.id}>
-                <MagazineCard 
+                <ArticleCard 
                   data={dataForCard} 
                   onEdit={() => navigate(`/editArticle/${article.id}`, { state: { data: dataForCard } })}
                 />

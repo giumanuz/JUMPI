@@ -29,6 +29,7 @@ def create_app():
     # from .routes.query import query_bp
     from .routes.validate import validate_bp
     from .routes.upload import upload_bp
+    from .routes.info import info_bp
     # from .routes.edit import edit_bp
 
     setup_before_request(app)
@@ -38,6 +39,7 @@ def create_app():
     # app.register_blueprint(query_bp)
     app.register_blueprint(validate_bp)
     # app.register_blueprint(edit_bp)
+    app.register_blueprint(info_bp)   
 
     setup_error_handlers(app)
 

@@ -32,6 +32,7 @@ class ElasticsearchDb(Database):
 
     def __add_object(self, obj, index):
         obj_dict = asdict(obj)
+        obj_dict.pop('id')
         res = self.es.index(index=index, document=obj_dict).body
         self.__debug_log_query(obj_dict, res)
         return res
@@ -45,7 +46,6 @@ class ElasticsearchDb(Database):
         res = self.__search_object('magazines', query)
         return _parse_magazine_search_result(res)
 
-
     def search_articles(self, article: Article) -> list[Article]:
         query = _get_search_article_query(article)
         res = self.__search_object('articles', query)
@@ -58,22 +58,34 @@ class ElasticsearchDb(Database):
 
     def update_magazine(self, magazine: Magazine) -> bool:
         update_query = _get_update_magazine_query(magazine)
-        res = self.es.update(index="magazines", id=magazine.id, body=update_query).body
+        res = self.es.update(
+            index="magazines", id=magazine.id, body=update_query).body
         self.__debug_log_query(update_query, res)
         return res["result"] == "updated"
 
     def update_article(self, article: Article) -> bool:
         update_query = _get_update_article_query(article)
-        res = self.es.update(index="articles", id=article.id, body=update_query).body
+        res = self.es.update(
+            index="articles", id=article.id, body=update_query).body
         self.__debug_log_query(update_query, res)
         return res["result"] == "updated"
+
+    def get_magazine(self, magazine_id: str) -> Magazine:
+        res = self.es.get(index="magazines", id=magazine_id).body['_source']
+        logging.error(res)
+        logging.error(Magazine(id=magazine_id, **res))
+        return Magazine(id=magazine_id, **res)
+
+    def get_article(self, article_id: str) -> Article:
+        res = self.es.get(index="articles", id=article_id).body['_source']
+        return Article(id=article_id, **res)
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(
             f"""
             ----------------
             Query: {query}
-            
+
             Response: {res}
             ----------------
             """
@@ -82,6 +94,7 @@ class ElasticsearchDb(Database):
 
 def _parse_magazine_search_result(search_res: dict) -> list[Magazine]:
     magazines = []
+    logging.error(search_res)
     for hit in search_res["hits"]["hits"]:
         source = hit["_source"]
         magazine = Magazine(
@@ -138,6 +151,7 @@ def _parse_article_search_result(search_res: dict) -> list[Article]:
 
     return articles
 
+
 def __get_search_query_with(obj_dict: dict, ignore_fields: Iterable[str], text_fields: Iterable[str]) -> dict:
     query = {}
     for field, value in obj_dict.items():
@@ -184,7 +198,8 @@ def _get_update_article_query(article: Article) -> dict:
 _MAGAZINE_IGNORE_FIELDS = ("created_on", "edited_on")
 _MAGAZINE_TEXT_FIELDS = ("abstract",)
 
-_ARTICLE_IGNORE_FIELDS = ("page_scans", "figures", "page_offsets", "page_range", "created_on", "edited_on")
+_ARTICLE_IGNORE_FIELDS = ("page_scans", "figures",
+                          "page_offsets", "page_range", "created_on", "edited_on")
 _ARTICLE_TEXT_FIELDS = ("content",)
 
 
@@ -196,4 +211,3 @@ def _get_search_magazine_query(magazine: Magazine) -> dict:
 def _get_search_article_query(article: Article) -> dict:
     article_dict = asdict(article)
     return __get_search_query_with(article_dict, _ARTICLE_IGNORE_FIELDS, _ARTICLE_TEXT_FIELDS)
-

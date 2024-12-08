@@ -13,19 +13,35 @@ function MagazineListPage() {
       .get("/getMagazines")
       .then((res) => {
         console.log("Magazines received:", res.data.magazines);
-        setMagazines(res.data.magazines);
+        
+        const magazinesWithDates: Magazine[] = res.data.magazines.map((m: any) => ({
+          ...m,
+          createdOn: new Date(m.createdOn),
+          editedOn: new Date(m.editedOn),
+          date: new Date(m.date),
+        }));
+        
+        setMagazines(magazinesWithDates);
       })
       .catch((err) => {
         console.error("Error fetching magazines:", err);
       });
   }, []);
-
+  
   const toggleExpansion = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };
 
   const handleMagazineClick = (magazineId: string) => {
     navigate(`/uploadArticle?magazine_id=${magazineId}`);
+  };
+
+  const handleEditClick = (magazineId: string) => {
+    navigate(`/editMagazine?magazine_id=${magazineId}`);
+  };
+
+  const handleManageArticlesClick = (magazineId: string) => {
+    navigate(`/manageArticles?magazine_id=${magazineId}`);
   };
 
   return (
@@ -82,6 +98,18 @@ function MagazineListPage() {
                 onClick={() => handleMagazineClick(m.id)}
               >
                 Upload Article
+              </button>
+              <button
+                className="btn btn-secondary mt-2 ms-2"
+                onClick={() => handleEditClick(m.id)}
+              >
+                Edit Magazine
+              </button>
+              <button
+                className="btn btn-warning mt-2 ms-2"
+                onClick={() => handleManageArticlesClick(m.id)}
+              >
+                Manage Articles
               </button>
             </div>
           </div>
