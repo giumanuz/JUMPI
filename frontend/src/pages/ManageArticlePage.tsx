@@ -1,31 +1,7 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import ArticleCard from "../components/ArticleCard";
-
-interface Article {
-  id: string;
-  magazine_id: string;
-  title: string;
-  author: string;
-  page_range: number[];
-  content: string;
-  page_offsets: number[];
-  figures: any[];
-  created_on: string;
-  edited_on: string;
-}
-
-interface Magazine {
-  id: string;
-  name: string;
-  date: string;
-  publisher: string;
-  edition?: string;
-  abstract?: string;
-  genres?: string[];
-  categories?: string[];
-}
+import { getArticles, getMagazineFromId } from "../webApi";
 
 function ManageArticlePage() {
   const { search } = useLocation();
@@ -38,28 +14,9 @@ function ManageArticlePage() {
 
   useEffect(() => {
     if (magazineId) {
-      // I know that this api call could be avoided by passing the magazine data from the previous page, but from now on I will keep it like this
-      axiosInstance
-        .get(`/magazineInfo?id=${magazineId}`)
-        .then((res) => {
-          console.log(res.data.magazine);
-          setMagazine(res.data.magazine);
-        })
-        .catch((err) => {
-          console.error("Error retrieving the magazine:", err);
-          setError("Error retrieving the magazine.");
-        });
-
-      axiosInstance
-        .get(`/getArticlesFromMagazineid=${magazineId}`)
-        .then((res) => {
-          // TODO: IMPLEMNET getArticlesFromMagazineid in backend
-          setArticles(res.data.articles);
-        })
-        .catch((err) => {
-          console.error("Error retrieving articles:", err);
-          setError("Error retrieving articles.");
-        });
+      // TODO: Pass magazine through location state
+      getMagazineFromId(magazineId).then(setMagazine);
+      getArticles(magazineId).then(setArticles);
     }
   }, [magazineId]);
 
@@ -74,32 +31,18 @@ function ManageArticlePage() {
       {error && <div className="alert alert-danger">{error}</div>}
       <div className="row">
         {articles.length > 0 ? (
-          articles.map((article) => {
-            const dataForCard = {
-              _id: magazine.id,
-              name: magazine.name,
-              year: magazine.date.substring(0, 4),
-              publisher: magazine.publisher,
-              genre:
-                magazine.genres && magazine.genres.length > 0
-                  ? magazine.genres[0]
-                  : "N/A",
-              articles: [article],
-            };
-
-            return (
-              <div className="col-4 mb-3" key={article.id}>
-                <ArticleCard
-                  data={dataForCard}
-                  onEdit={() =>
-                    navigate(`/editArticle/${article.id}`, {
-                      state: { data: dataForCard },
-                    })
-                  }
-                />
-              </div>
-            );
-          })
+          articles.map((article) => (
+            <div className="col-4 mb-3" key={article.id}>
+              <ArticleCard
+                article={article}
+                onEdit={() =>
+                  navigate(`/editArticle?id=${article.id}`, {
+                    state: { article },
+                  })
+                }
+              />
+            </div>
+          ))
         ) : (
           <p>No articles found for this magazine.</p>
         )}

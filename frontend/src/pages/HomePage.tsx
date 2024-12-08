@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axiosInstance from "../axiosInstance.ts";
+import { isApiKeySet, setApiKey, validateApiKey } from "../apiKeyUtils.ts";
 import ApiKeyInputField, {
   ApiKeyValidationStatus,
 } from "../components/ApiKeyInputField.tsx";
@@ -8,33 +8,8 @@ import ApiKeyInputField, {
 const DUMMY_API_KEY = "api-key";
 
 function HomePage() {
-  const [apiKey, setApiKey] = useState("");
   const [keyValidationStatus, setKeyValidationStatus] =
     useState<ApiKeyValidationStatus>("none");
-
-  useEffect(() => {
-    const storedApiKey = localStorage.getItem("apiKey");
-    if (storedApiKey) {
-      axiosInstance.defaults.headers.common["X-API-KEY"] = storedApiKey;
-      setApiKey(DUMMY_API_KEY);
-    }
-  }, []);
-
-  const isApiKeyValid = () => {
-    return (
-      keyValidationStatus === "success" ||
-      (keyValidationStatus === "none" && apiKey)
-    );
-  };
-
-  const updateApiKey = (key: string) => {
-    if (!key || key === DUMMY_API_KEY) {
-      return;
-    }
-    setApiKey(key);
-    localStorage.setItem("apiKey", key);
-    axiosInstance.defaults.headers.common["X-API-KEY"] = key;
-  };
 
   const onApiKeyValidationTrigger = (key: string) => {
     if (!key) {
@@ -42,16 +17,15 @@ function HomePage() {
       return;
     }
     setKeyValidationStatus("validating");
-    axiosInstance
-      .get("/validate-api-key", { headers: { "X-API-KEY": key } })
-      .then(() => {
-        setKeyValidationStatus("success");
-        updateApiKey(key);
-      })
-      .catch(() => {
-        setKeyValidationStatus("error");
-      });
+    validateApiKey(key).then((isValid) => {
+      setKeyValidationStatus(isValid ? "success" : "error");
+      if (isValid) {
+        setApiKey(key);
+      }
+    });
   };
+
+  const isApiKeyValid = isApiKeySet();
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -59,31 +33,22 @@ function HomePage() {
         <h1 className="text-center mb-4">JUMPI</h1>
         <div className="d-flex gap-2 flex-wrap justify-content-center">
           <Link
-            to={isApiKeyValid() ? "/search" : "#"}
+            to={isApiKeyValid ? "/search" : "#"}
             className={
               "btn btn-primary btn-lg mx-auto" +
-              (isApiKeyValid() ? "" : " disabled")
+              (isApiKeyValid ? "" : " disabled")
             }
           >
             Search
           </Link>
           <Link
-            to={isApiKeyValid() ? "/upload" : "#"}
+            to={isApiKeyValid ? "/upload" : "#"}
             className={
               "btn btn-primary btn-lg mx-auto" +
-              (isApiKeyValid() ? "" : " disabled")
+              (isApiKeyValid ? "" : " disabled")
             }
           >
             Upload
-          </Link>
-          <Link
-            to={isApiKeyValid() ? "/manageMagazines" : "#"}
-            className={
-              "btn btn-secondary btn-lg mx-auto" +
-              (isApiKeyValid() ? "" : " disabled")
-            }
-          >
-            Edit
           </Link>
         </div>
         <div className="mt-4">
@@ -93,7 +58,7 @@ function HomePage() {
           <ApiKeyInputField
             validationStatus={keyValidationStatus}
             onKeyUpdate={onApiKeyValidationTrigger}
-            initialValue={apiKey}
+            initialValue={(isApiKeySet() && DUMMY_API_KEY) || ""}
           />
         </div>
       </div>

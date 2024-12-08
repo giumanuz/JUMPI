@@ -2,17 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 import FormTemplate from "../pages/FormTemplate";
-
-interface Magazine {
-  id: string;
-  name: string;
-  date: string;
-  publisher: string;
-  edition?: string;
-  abstract?: string;
-  genres: string[];
-  categories: string[];
-}
+import { getMagazineFromId } from "../webApi";
 
 function EditMagazinePage() {
   const { search } = useLocation();
@@ -21,24 +11,18 @@ function EditMagazinePage() {
   const navigate = useNavigate();
 
   const [magazine, setMagazine] = useState<Magazine | null>(null);
-  const [genres, setGenres] = useState<string>("");
-  const [categories, setCategories] = useState<string>("");
+  const [genresString, setGenresString] = useState<string>("");
+  const [categoriesString, setCategoriesString] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
-      axiosInstance
-        .get(`/magazineInfo?id=${id}`)
-        .then((res) => {
-          setMagazine(res.data);
-          setGenres(res.data.genres.join(", "));
-          setCategories(res.data.categories.join(", "));
-        })
-        .catch((err) => {
-          console.error("Error retrieving the magazine:", err);
-          setError("Error retrieving the magazine.");
-        });
+      getMagazineFromId(id).then((res: Magazine) => {
+        setMagazine(res);
+        setGenresString(res.genres.join(", "));
+        setCategoriesString(res.categories.join(", "));
+      });
     }
   }, [id]);
 
@@ -57,8 +41,14 @@ function EditMagazinePage() {
 
     const updatedMagazine = {
       ...magazine,
-      genres: genres.split(",").map((g) => g.trim()).filter((g) => g),
-      categories: categories.split(",").map((c) => c.trim()).filter((c) => c),
+      genres: genresString
+        .split(",")
+        .map((g) => g.trim())
+        .filter((g) => g),
+      categories: categoriesString
+        .split(",")
+        .map((c) => c.trim())
+        .filter((c) => c),
     };
 
     try {
@@ -83,11 +73,7 @@ function EditMagazinePage() {
   }
 
   return (
-    <FormTemplate
-      title="Edit Magazine"
-      onSubmit={handleSubmit}
-      button={null}
-    >
+    <FormTemplate title="Edit Magazine" onSubmit={handleSubmit} button={null}>
       <div className="mb-3">
         <label className="form-label">Name</label>
         <input
@@ -104,7 +90,9 @@ function EditMagazinePage() {
           type="text"
           className="form-control"
           value={magazine.publisher}
-          onChange={(e) => setMagazine({ ...magazine, publisher: e.target.value })}
+          onChange={(e) =>
+            setMagazine({ ...magazine, publisher: e.target.value })
+          }
           required
         />
       </div>
@@ -114,7 +102,9 @@ function EditMagazinePage() {
           type="text"
           className="form-control"
           value={magazine.edition || ""}
-          onChange={(e) => setMagazine({ ...magazine, edition: e.target.value })}
+          onChange={(e) =>
+            setMagazine({ ...magazine, edition: e.target.value })
+          }
         />
       </div>
       <div className="mb-3">
@@ -122,8 +112,10 @@ function EditMagazinePage() {
         <input
           type="date"
           className="form-control"
-          value={magazine.date}
-          onChange={(e) => setMagazine({ ...magazine, date: e.target.value })}
+          value={magazine.date.toLocaleDateString()}
+          onChange={(e) =>
+            setMagazine({ ...magazine, date: new Date(e.target.value) })
+          }
           required
         />
       </div>
@@ -132,8 +124,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={genres}
-          onChange={(e) => setGenres(e.target.value)}
+          value={genresString}
+          onChange={(e) => setGenresString(e.target.value)}
           placeholder="Enter genres separated by commas"
         />
       </div>
@@ -142,8 +134,8 @@ function EditMagazinePage() {
         <input
           type="text"
           className="form-control"
-          value={categories}
-          onChange={(e) => setCategories(e.target.value)}
+          value={categoriesString}
+          onChange={(e) => setCategoriesString(e.target.value)}
           placeholder="Enter categories separated by commas"
         />
       </div>
@@ -152,7 +144,9 @@ function EditMagazinePage() {
         <textarea
           className="form-control"
           value={magazine.abstract || ""}
-          onChange={(e) => setMagazine({ ...magazine, abstract: e.target.value })}
+          onChange={(e) =>
+            setMagazine({ ...magazine, abstract: e.target.value })
+          }
           rows={3}
         ></textarea>
       </div>

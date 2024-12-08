@@ -1,12 +1,5 @@
 import React, { useState } from "react";
 
-interface Article {
-  title: string;
-  author: string;
-  content: string;
-  created_on: string;
-}
-
 interface ArticleCardProps {
   article: Article;
   onEdit: () => void;
@@ -28,7 +21,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit }) => {
       <div className="mb-3">
         <h5>{article.title}</h5>
         <small className="text-muted">
-          Author: {article.author} | Created on: {new Date(article.created_on).toLocaleDateString()}
+          Author: {article.author} | Created on: {article.createdOn.toLocaleDateString()}
         </small>
       </div>
 

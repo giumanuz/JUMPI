@@ -79,7 +79,7 @@ class ElasticsearchDb(Database):
         return Article(id=article_id, **res)
     
     def get_articles_from_magazine(self, magazine_id: str) -> list[Article]:
-        article = Article(magazine_id=magazine_id)
+        article = Article.query_blueprint_with(magazine_id=magazine_id)
         query = _get_search_article_query(article)
         res = self.__search_object('articles', query)
         return _parse_article_search_result(res)

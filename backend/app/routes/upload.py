@@ -1,10 +1,10 @@
-import logging
+import base64
 import re
 
 from flask import request, Blueprint
 
 from app.services.database.database import Database
-from app.utils.classes import Magazine, Article
+from app.utils.classes import Magazine, Article, ArticlePageScan
 from app.utils.parser import camel_to_snake_dict, snake_to_camel_case, snake_to_camel_dict
 
 upload_bp = Blueprint('upload', __name__)
@@ -32,6 +32,7 @@ def upload_magazine():
     magazine_id = Database.get_instance().add_magazine(magazine)
     return {'id': magazine_id}
 
+
 @upload_bp.route('/getMagazines', methods=['GET'])
 def get_magazines():
     magazines = Database.get_instance().get_all_magazines()
@@ -47,7 +48,17 @@ def upload_article():
     form_data = request.form
     files = request.files
     article_json = camel_to_snake_dict(form_data)
-    article = Article.create_blueprint_with(**article_json)
+    images_file_storages = files.getlist("images")
+    page_scans = []
+    for i, image_fs in enumerate(images_file_storages):
+        image_data = image_fs.read()
+        image_fs.close()
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        page_scans.append(ArticlePageScan(i + 1, image_base64))
+
+    article = Article.create_blueprint_with(page_scans=page_scans, **article_json)
+    article_id = Database.get_instance().add_article(article)
+    return {'id': article_id}
 
 
 @upload_bp.route('/updateMagazine', methods=['POST'])
@@ -64,5 +75,3 @@ def update_article():
     article = Article.update_blueprint_with(**article_json)
     Database.get_instance().update_article(article)
     return "success"
-
-

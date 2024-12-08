@@ -1,79 +1,81 @@
 import React, { useState } from "react";
 
-interface Article {
-  title: string;
-  author: string;
-  content: string;
-}
-
-interface MagazineData {
-  _id: string;
-  name: string;
-  year: string;
-  publisher: string;
-  genre: string;
-  articles: Article[];
-}
-
 interface MagazineCardProps {
-  data: MagazineData;
-  onEdit: (id: string) => void;
+  magazine: Magazine;
+  onEdit: () => void;
+  onManageArticles: () => void;
+  onUploadArticle: () => void;
+  toggleExpansion: () => void;
+  expanded: boolean;
 }
 
-const MagazineCard: React.FC<MagazineCardProps> = ({ data, onEdit }) => {
-  if (!data || !data._id) {
-    console.error("Missing _id in data passed to MagazineCard:", data);
+const MagazineCard: React.FC<MagazineCardProps> = ({
+  magazine,
+  onEdit,
+  onManageArticles,
+  onUploadArticle,
+  toggleExpansion,
+  expanded,
+}) => {
+  if (!magazine || !magazine.id) {
     return null;
   }
 
-  const { _id, name, year, publisher, genre, articles } = data;
-  const article = articles?.[0];
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
-  const handleEditClick = () => {
-    onEdit(_id);
-  };
-
   return (
-    <div className="card mb-3 h-100 d-flex flex-column p-3">
-      <div className="mb-3">
-        <h5>{name}</h5>
-        <small className="text-muted">
-          {year} | {publisher} | {genre}
-        </small>
-      </div>
-
-      <div className="mb-3 flex-grow-1">
-        {article ? (
-          <>
-            <h6 className="card-title">{article.title}</h6>
-            <p className="card-subtitle text-muted mb-3">
-              Author: {article.author}
-            </p>
-            <p className="card-text">
-              {isExpanded
-                ? article.content
-                : `${article.content?.substring(0, 400)}...`}
-            </p>
-            <button className="btn btn-link p-0" onClick={toggleExpand}>
-              {isExpanded ? "Collapse" : "Read more"}
-            </button>
-          </>
-        ) : (
-          <p className="text-muted">No articles available.</p>
-        )}
-      </div>
-
-      <div className="mt-auto">
+    <div className="col-4 mb-3" key={magazine.id}>
+      <div className="card p-3">
+        <h5>{magazine.name}</h5>
+        <p>
+          <strong>Publisher:</strong> {magazine.publisher}
+        </p>
+        <p>
+          <strong>Edition:</strong> {magazine.edition}
+        </p>
         <button
-          className="btn btn-primary"
-          onClick={handleEditClick}
+          className="btn btn-link p-0"
+          onClick={() => toggleExpansion()}
         >
-          Edit Article
+          {expanded ? "Hide Details" : "Show Details"}
+        </button>
+        {expanded && (
+          <div className="mt-2">
+            <p>
+              <strong>Abstract:</strong> {magazine.abstract}
+            </p>
+            <p>
+              <strong>Categories:</strong> {magazine.categories.join(", ")}
+            </p>
+            <p>
+              <strong>Genres:</strong> {magazine.genres.join(", ")}
+            </p>
+            <p>
+              <strong>Created On:</strong> {magazine.createdOn.toDateString()}
+            </p>
+            <p>
+              <strong>Edited On:</strong> {magazine.editedOn.toDateString()}
+            </p>
+            <p>
+              <strong>Date:</strong> {magazine.date.toDateString()}
+            </p>
+          </div>
+        )}
+        <button
+          className="btn btn-primary mt-2"
+          onClick={() => onUploadArticle()}
+        >
+          Upload Article
+        </button>
+        <button
+          className="btn btn-secondary mt-2"
+          onClick={() => onEdit()}
+        >
+          Edit Magazine
+        </button>
+        <button
+          className="btn btn-warning mt-2"
+          onClick={() => onManageArticles()}
+        >
+          Manage Articles
         </button>
       </div>
     </div>

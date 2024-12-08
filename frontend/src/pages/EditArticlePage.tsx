@@ -3,19 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 import FormTemplate from "../pages/FormTemplate";
 
-interface Article {
-  id: string;
-  magazine_id: string;
-  title: string;
-  author: string;
-  page_range: number[];
-  content: string;
-  page_offsets: number[];
-  figures: any[];
-  created_on: string;
-  edited_on: string;
-  page_scans?: { page: number; imageData: string; uploadedOn: string }[];
-}
 
 function EditArticlePage() {
   const { search } = useLocation();
@@ -70,7 +57,7 @@ function EditArticlePage() {
       if (res.status === 200) {
         setSuccessMessage("Article updated successfully!");
         setTimeout(() => {
-          navigate(`/manageArticles/${article?.magazine_id}`);
+          navigate(`/manageArticles/${article?.magazineId}`);
         }, 600);
       } else {
         setError("Error updating the article.");
@@ -151,11 +138,11 @@ function EditArticlePage() {
         </div>
 
         <div className="col-md-4">
-          {article.page_scans && article.page_scans.length > 0 ? (
+          {article.pageScans && article.pageScans.length > 0 ? (
             <div className="mb-3">
               <label className="form-label">Image</label>
               <img
-                src={`data:image/jpeg;base64,${article.page_scans[0].imageData}`}
+                src={`data:image/jpeg;base64,${article.pageScans[0].imageData}`}
                 alt="Article Image"
                 className="img-fluid" 
                 style={{
