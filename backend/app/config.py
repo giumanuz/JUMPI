@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass
 
 
@@ -15,7 +14,6 @@ class Config:
     AZURE_FOLDER = f'{TEMP_FOLDER}/azure'
     REPORT_FOLDER = f'{TEMP_FOLDER}/reports'
     GPT_FOLDER = f'{TEMP_FOLDER}/gpt'
-
 
     @classmethod
     def create_temp_dirs(cls):
@@ -37,5 +35,6 @@ class Config:
         import shutil
         shutil.rmtree(cls.TEMP_FOLDER)
         cls.create_temp_dirs()
+
 
 APP_CONFIG: Config = None

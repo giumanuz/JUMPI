@@ -51,7 +51,6 @@ class _BaseEntity:
     def to_dict(self):
         """Convert the dataclass to a dictionary."""
         dict_copy = asdict(self)
-        dict_copy.pop('id')
         return dict_copy        
 
 

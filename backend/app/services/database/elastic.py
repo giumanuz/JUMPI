@@ -21,7 +21,7 @@ class ElasticsearchDb(Database):
         return Elasticsearch([self.url], api_key=g.api_key)
 
     def ping(self) -> bool:
-        self.logger.error(self.es.info())
+        self.logger.info(self.es.info())
         return self.es.ping()
 
     def add_magazine(self, magazine: Magazine) -> str:
@@ -72,8 +72,6 @@ class ElasticsearchDb(Database):
 
     def get_magazine(self, magazine_id: str) -> Magazine:
         res = self.es.get(index="magazines", id=magazine_id).body['_source']
-        logging.error(res)
-        logging.error(Magazine(id=magazine_id, **res))
         return Magazine(id=magazine_id, **res)
 
     def get_article(self, article_id: str) -> Article:
@@ -100,7 +98,6 @@ class ElasticsearchDb(Database):
 
 def _parse_magazine_search_result(search_res: dict) -> list[Magazine]:
     magazines = []
-    logging.error(search_res)
     for hit in search_res["hits"]["hits"]:
         source = hit["_source"]
         magazine = Magazine(
@@ -178,6 +175,8 @@ def __get_search_query_with(obj_dict: dict, ignore_fields: Iterable[str], text_f
 def __get_update_query_with(obj_dict: dict, ignore_fields: Iterable[str]) -> dict:
     update_fields = {}
     for field, value in obj_dict.items():
+        if field == "id":
+            continue
         if value is None or field in ignore_fields:
             continue
         if isinstance(value, datetime):
