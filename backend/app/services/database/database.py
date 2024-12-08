@@ -52,6 +52,9 @@ class Database(ABC):
     def get_article(self, article_id: str) -> Article:
         ...
 
+    @abstractmethod
+    def get_articles_from_magazine(self, magazine_id: str) -> list[Article]:
+        ...
 
 class MagazineNotFoundError(Exception):
     pass

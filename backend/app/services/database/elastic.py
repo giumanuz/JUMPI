@@ -79,6 +79,12 @@ class ElasticsearchDb(Database):
     def get_article(self, article_id: str) -> Article:
         res = self.es.get(index="articles", id=article_id).body['_source']
         return Article(id=article_id, **res)
+    
+    def get_articles_from_magazine(self, magazine_id: str) -> list[Article]:
+        article = Article(magazine_id=magazine_id)
+        query = _get_search_article_query(article)
+        res = self.__search_object('articles', query)
+        return _parse_article_search_result(res)
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(

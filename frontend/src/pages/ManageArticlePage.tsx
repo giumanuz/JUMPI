@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ArticleCard from "../components/ArticleCard";
 
 interface Article {
@@ -28,7 +28,9 @@ interface Magazine {
 }
 
 function ManageArticlePage() {
-  const { magazineId } = useParams<{ magazineId: string }>();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const magazineId = queryParams.get("magazine_id");
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [magazine, setMagazine] = useState<Magazine | null>(null);
@@ -37,7 +39,7 @@ function ManageArticlePage() {
   useEffect(() => {
     if (magazineId) {
       // I know that this api call could be avoided by passing the magazine data from the previous page, but from now on I will keep it like this
-      axiosInstance 
+      axiosInstance
         .get(`/magazineInfo?id=${magazineId}`)
         .then((res) => {
           console.log(res.data.magazine);
@@ -50,8 +52,9 @@ function ManageArticlePage() {
 
       axiosInstance
         .get(`/getArticlesFromMagazineid=${magazineId}`)
-        .then((res) => {  // TODO: IMPLEMNET getArticlesFromMagazineid in backend
-          setArticles(res.data);
+        .then((res) => {
+          // TODO: IMPLEMNET getArticlesFromMagazineid in backend
+          setArticles(res.data.articles);
         })
         .catch((err) => {
           console.error("Error retrieving articles:", err);
@@ -75,19 +78,26 @@ function ManageArticlePage() {
             const dataForCard = {
               _id: magazine.id,
               name: magazine.name,
-              year: magazine.date.substring(0,4),
+              year: magazine.date.substring(0, 4),
               publisher: magazine.publisher,
-              genre: magazine.genres && magazine.genres.length > 0 ? magazine.genres[0] : "N/A",
+              genre:
+                magazine.genres && magazine.genres.length > 0
+                  ? magazine.genres[0]
+                  : "N/A",
               articles: [article],
             };
 
             return (
-                <div className="col-4 mb-3" key={article.id}>
-                <ArticleCard 
-                  data={dataForCard} 
-                  onEdit={() => navigate(`/editArticle/${article.id}`, { state: { data: dataForCard } })}
+              <div className="col-4 mb-3" key={article.id}>
+                <ArticleCard
+                  data={dataForCard}
+                  onEdit={() =>
+                    navigate(`/editArticle/${article.id}`, {
+                      state: { data: dataForCard },
+                    })
+                  }
                 />
-                </div>
+              </div>
             );
           })
         ) : (

@@ -49,7 +49,10 @@ class _BaseEntity:
 
     # noinspection PyTypeChecker
     def to_dict(self):
-        return asdict(self)
+        """Convert the dataclass to a dictionary."""
+        dict_copy = asdict(self)
+        dict_copy.pop('id')
+        return dict_copy        
 
 
 @dataclass
