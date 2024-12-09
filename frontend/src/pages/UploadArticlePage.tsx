@@ -67,42 +67,55 @@ function UploadArticlePage() {
       title="Upload Article"
       onSubmit={handleSubmit}
       button={
-        <button type="submit" className="btn btn-primary mt-3">
+        <button type="submit" className="btn btn-primary">
           Submit
         </button>
       }
+      columns={2} // Mantieni il controllo generale delle colonne
     >
-      {error && <div className="alert alert-danger">{error}</div>}
-      <InputField
-        label="Title"
-        value={title}
-        placeholder="Casabella Continuità"
-        onChange={(e) => setTitle(e.target.value)}
-        required
-      />
-      <InputField
-        label="Author"
-        value={author}
-        placeholder="John Doe"
-        onChange={(e) => setAuthor(e.target.value)}
-        required
-      />
-      <InputField
-        label="Page Range"
-        value={pageRange}
-        placeholder="1-5"
-        onChange={(e) => setPageRange(e.target.value)}
-        required
-      />
-      <div className="mb-3">
-        <label className="form-label">Upload Images</label>
-        <input
-          type="file"
-          className="form-control"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
+      {/* Righe e colonne esplicite */}
+      <div className="row">
+        <div className="col-md-6">
+          <InputField
+            label="Title"
+            value={title}
+            placeholder="Casabella Continuità"
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <InputField
+            label="Author"
+            value={author}
+            placeholder="John Doe"
+            onChange={(e) => setAuthor(e.target.value)}
+            required
+          />
+        </div>
+      </div>
+      <div className="row mt-3">
+        <div className="col-md-6">
+          <InputField
+            label="Page Range"
+            value={pageRange}
+            placeholder="1-5"
+            onChange={(e) => setPageRange(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <div className="mb-3">
+            <label className="form-label">Upload Images</label>
+            <input
+              type="file"
+              className="form-control"
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
+        </div>
       </div>
     </FormTemplate>
   );

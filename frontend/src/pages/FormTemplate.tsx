@@ -1,4 +1,5 @@
 import { FormEventHandler, ReactNode } from "react";
+import "../styles/FormTemplate.scss";
 
 type FormTemplateProps = {
   title: string;
@@ -18,7 +19,7 @@ const FormTemplate = ({
   loadingDescription,
   title,
   onSubmit,
-  columns = 2,
+  columns,
   preFormContent,
 }: FormTemplateProps) => (
   <div className="d-flex justify-content-center align-items-center vh-100">
@@ -29,13 +30,7 @@ const FormTemplate = ({
       <h3 className="text-center mb-4">{title}</h3>
       <form onSubmit={onSubmit}>
         {preFormContent && <div className="mb-3">{preFormContent}</div>}
-        <div className={`row row-cols-${columns} g-3`}>
-          {children.map((child, index) => (
-            <div className="col" key={index}>
-              {child}
-            </div>
-          ))}
-        </div>
+        <div className="container">{children}</div>
         <div className="d-flex justify-content-end mt-4">{button}</div>
       </form>
 
