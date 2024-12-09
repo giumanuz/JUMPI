@@ -112,7 +112,11 @@ function EditMagazinePage() {
         <input
           type="date"
           className="form-control"
-          value={magazine.date.toLocaleDateString()}
+          value={
+            magazine.date
+              ? new Date(magazine.date).toISOString().split("T")[0]
+              : ""
+          }
           onChange={(e) =>
             setMagazine({ ...magazine, date: new Date(e.target.value) })
           }
