@@ -1,4 +1,5 @@
 import base64
+import logging
 import re
 
 from flask import request, Blueprint
@@ -43,22 +44,33 @@ def get_magazines():
 
 
 @upload_bp.route('/uploadArticle', methods=['POST'])
-def upload_article():
-    # get article from form data and NOT from json
+def upload_article_and_return_results():
     form_data = request.form
     files = request.files
     article_json = camel_to_snake_dict(form_data)
-    images_file_storages = files.getlist("images")
+    scans_file_storages = files.getlist("scans")
     page_scans = []
-    for i, image_fs in enumerate(images_file_storages):
-        image_data = image_fs.read()
-        image_fs.close()
+    for i, scan_fs in enumerate(scans_file_storages):
+        image_data = scan_fs.read()
+        scan_fs.close()
         image_base64 = base64.b64encode(image_data).decode('utf-8')
         page_scans.append(ArticlePageScan(i + 1, image_base64))
 
     article = Article.create_blueprint_with(page_scans=page_scans, **article_json)
-    article_id = Database.get_instance().add_article(article)
-    return {'id': article_id}
+    # article_id = Database.get_instance().add_article(article)
+    article_id = "123"
+    logging.error(f"Article ID: {article_id}")
+    logging.error(f"Article: {article}")
+    # TODO: Return the extracted text and image comparisons
+    return {
+        'articleId': article_id,
+        'scanResults': [
+            {
+                'page': i+1,
+                'text': "This is a sample text extracted from the scan.",
+                'comparisonImage': "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4xLjEsIGh0dHA6Ly9tYXRwbG90bGliLm9yZy+AADFEAAAgAElEQVR4nOzdeXwUZf7/8e9z7z"
+            } for i in range(len(article.page_scans))
+        ]}
 
 
 @upload_bp.route('/updateMagazine', methods=['POST'])

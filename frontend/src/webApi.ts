@@ -35,3 +35,32 @@ export async function getArticles(magazineId: string): Promise<Article[]> {
     editedOn: new Date(a.editedOn),
   }));
 }
+
+type UploadArticleRequiredKeys =
+  | "title"
+  | "author"
+  | "pageRange"
+  | "magazineId";
+export async function uploadArticleAndGetResults(
+  article: Pick<Article, UploadArticleRequiredKeys>,
+  scans: FileList
+): Promise<ArticleUploadResult> {
+  console.log("pageRange", article.pageRange.join("-"));
+  const formData = new FormData();
+  formData.append("title", article.title);
+  formData.append("author", article.author);
+  formData.append("pageRange", article.pageRange.join("-"));
+  formData.append("magazineId", article.magazineId);
+
+  if (scans.length > 0) {
+    Array.from(scans).forEach((scan, i) => {
+      formData.append("scans", scan);
+    });
+  }
+
+  return await axiosInstance.post("/uploadArticle", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}

@@ -3,19 +3,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/ResultPage.scss";
 
-interface ResultPageState {
-  extracted_text: string;
-  image_comparisons: string[];
-}
-
 const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   // Type guard to ensure state exists
-  const state = location.state as ResultPageState | undefined;
+  const { scanResults } = location.state as { scanResults: ScanResult[] };
 
-  if (!state) {
+  if (!scanResults) {
     // If state is undefined, redirect back or show an error
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -35,8 +30,6 @@ const ResultPage = () => {
     );
   }
 
-  const { extracted_text, image_comparisons } = state;
-
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <div
@@ -47,18 +40,20 @@ const ResultPage = () => {
 
         <div className="mb-4">
           <h5>Extracted Text:</h5>
-          <div className="text-container">
-            <pre>{extracted_text}</pre>
-          </div>
+          {scanResults.map(({ text }, index) => (
+            <div className="text-container" key={index}>
+              <pre>{text}</pre>
+            </div>
+          ))}
         </div>
 
         <div className="mb-4">
           <h5>Image Comparisons:</h5>
           <div className="image-container d-flex flex-wrap gap-3">
-            {image_comparisons?.map((image: string, index: number) => (
+            {scanResults?.map(({ comparisonImage }, index: number) => (
               <img
                 key={index}
-                src={`data:image/jpeg;base64,${image}`}
+                src={`data:image/jpeg;base64,${comparisonImage}`}
                 alt={`Image comparison ${index + 1}`}
                 className="img-fluid"
                 style={{

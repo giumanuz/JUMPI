@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 import FormTemplate from "../pages/FormTemplate";
+import InputField from "../components/InputField";
+import { uploadArticleAndGetResults } from "../webApi";
 
 function UploadArticlePage() {
   const [searchParams] = useSearchParams();
@@ -13,14 +15,12 @@ function UploadArticlePage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [pageRange, setPageRange] = useState("");
-  const [images, setImages] = useState<FileList | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [scans, setScans] = useState<FileList>();
+  const [error, setError] = useState<string>();
+  const [successMessage, setSuccessMessage] = useState<string>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImages(e.target.files);
-    }
+    if (e.target.files) setScans(e.target.files);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,39 +31,31 @@ function UploadArticlePage() {
       return;
     }
 
-    const pageRangeRegex = /^\d+-\d+$/;
-    if (!pageRangeRegex.test(pageRange)) {
-      setError('Page Range must be in the format "start-end", e.g., "1-5".');
+    if (!scans || scans.length === 0) {
+      setError("Please upload at least one image.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("author", author);
-    formData.append("pageRange", pageRange);
-    formData.append("magazineId", magazineId);
-
-    if (images) {
-      Array.from(images).forEach((image) => {
-        formData.append("images", image);
-      });
+    let pageRangeInts: number[];
+    try {
+      pageRangeInts = pageRange.split("-").slice(0, 2).map(Number);
+    } catch (err) {
+      setError('Page Range should be in the format "start-end", e.g., "1-5".');
+      return;
     }
 
-    try {
-      const res = await axiosInstance.post("/uploadArticle", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    const article = {
+      title,
+      magazineId,
+      author,
+      pageRange: pageRangeInts,
+    };
 
-      if (res.data.status === "ok") {
-        const { extracted_text, image_comparisons } = res.data.article;
-        navigate("/resultPage", {
-          state: { extracted_text, image_comparisons },
-        });
-      } else {
-        setError("Failed to upload the article. Please try again.");
-      }
+    try {
+      const { scanResults } = await uploadArticleAndGetResults(article, scans);
+      navigate("/resultPage", {
+        state: { scanResults },
+      });
     } catch (err) {
       console.error("Error uploading article:", err);
       setError("Failed to upload the article. Please try again.");
@@ -84,37 +76,27 @@ function UploadArticlePage() {
       {successMessage && (
         <div className="alert alert-success">{successMessage}</div>
       )}
-      <div className="mb-3">
-        <label className="form-label">Title</label>
-        <input
-          type="text"
-          className="form-control"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Author</label>
-        <input
-          type="text"
-          className="form-control"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Page Range (e.g., "1-5")</label>
-        <input
-          type="text"
-          className="form-control"
-          value={pageRange}
-          onChange={(e) => setPageRange(e.target.value)}
-          placeholder="e.g., 1-5"
-          required
-        />
-      </div>
+      <InputField
+        label="Title"
+        value={title}
+        placeholder="Casabella Continuità"
+        onChange={(e) => setTitle(e.target.value)}
+        required
+      />
+      <InputField
+        label="Author"
+        value={author}
+        placeholder="John Doe"
+        onChange={(e) => setAuthor(e.target.value)}
+        required
+      />
+      <InputField
+        label="Page Range"
+        value={pageRange}
+        placeholder="1-5"
+        onChange={(e) => setPageRange(e.target.value)}
+        required
+      />
       <div className="mb-3">
         <label className="form-label">Upload Images</label>
         <input

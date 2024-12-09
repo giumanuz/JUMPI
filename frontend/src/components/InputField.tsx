@@ -1,9 +1,9 @@
 import { ChangeEvent, FC } from "react";
 
 export type InputFieldProps = {
-  id: string;
+  id?: string;
   label: string;
-  placeholder: string;
+  placeholder?: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
@@ -11,12 +11,12 @@ export type InputFieldProps = {
 };
 
 const InputField: FC<InputFieldProps> = ({
-  id,
   label,
-  placeholder,
   value,
   onChange,
+  id = label,
   type = "text",
+  placeholder = "",
   required = false,
 }) => (
   <div className="mb-3">
