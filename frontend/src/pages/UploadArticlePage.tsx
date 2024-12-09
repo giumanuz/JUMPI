@@ -1,11 +1,11 @@
-// src/pages/UploadArticlePage.tsx
-
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axiosInstance from "../axiosInstance";
 import FormTemplate from "../pages/FormTemplate";
 import InputField from "../components/InputField";
-import { uploadArticleAndGetResults } from "../webApi";
+import {
+  uploadArticleAndGetResults,
+  UploadArticleRequiredKeys,
+} from "../webApi";
 
 function UploadArticlePage() {
   const [searchParams] = useSearchParams();
@@ -17,7 +17,6 @@ function UploadArticlePage() {
   const [pageRange, setPageRange] = useState("");
   const [scans, setScans] = useState<FileList>();
   const [error, setError] = useState<string>();
-  const [successMessage, setSuccessMessage] = useState<string>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setScans(e.target.files);
@@ -38,26 +37,27 @@ function UploadArticlePage() {
 
     let pageRangeInts: number[];
     try {
-      pageRangeInts = pageRange.split("-").slice(0, 2).map(Number);
-    } catch (err) {
+      pageRangeInts = pageRange.split("-").map(Number);
+    } catch {
       setError('Page Range should be in the format "start-end", e.g., "1-5".');
       return;
     }
 
-    const article = {
+    const article: Pick<Article, UploadArticleRequiredKeys> = {
       title,
-      magazineId,
       author,
       pageRange: pageRangeInts,
+      magazineId: magazineId as string,
     };
 
     try {
-      const { scanResults } = await uploadArticleAndGetResults(article, scans);
+      const result = await uploadArticleAndGetResults(article, scans);
+
       navigate("/resultPage", {
-        state: { scanResults },
+        state: { scanResults: result.scanResults },
       });
     } catch (err) {
-      console.error("Error uploading article:", err);
+      console.error(err);
       setError("Failed to upload the article. Please try again.");
     }
   };
@@ -73,9 +73,6 @@ function UploadArticlePage() {
       }
     >
       {error && <div className="alert alert-danger">{error}</div>}
-      {successMessage && (
-        <div className="alert alert-success">{successMessage}</div>
-      )}
       <InputField
         label="Title"
         value={title}

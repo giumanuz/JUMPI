@@ -36,31 +36,49 @@ export async function getArticles(magazineId: string): Promise<Article[]> {
   }));
 }
 
-type UploadArticleRequiredKeys =
+export type UploadArticleRequiredKeys =
   | "title"
   | "author"
   | "pageRange"
   | "magazineId";
+
 export async function uploadArticleAndGetResults(
   article: Pick<Article, UploadArticleRequiredKeys>,
   scans: FileList
 ): Promise<ArticleUploadResult> {
-  console.log("pageRange", article.pageRange.join("-"));
-  const formData = new FormData();
-  formData.append("title", article.title);
-  formData.append("author", article.author);
-  formData.append("pageRange", article.pageRange.join("-"));
-  formData.append("magazineId", article.magazineId);
+  try {
+    console.log("pageRange", article.pageRange.join("-"));
+    const formData = new FormData();
+    formData.append("title", article.title);
+    formData.append("author", article.author);
+    formData.append("pageRange", article.pageRange.join("-"));
+    formData.append("magazineId", article.magazineId);
 
-  if (scans.length > 0) {
-    Array.from(scans).forEach((scan, i) => {
-      formData.append("scans", scan);
+    if (scans && scans.length > 0) {
+      Array.from(scans).forEach((scan) => {
+        formData.append("scans", scan);
+      });
+    }
+
+    const response = await axiosInstance.post("/uploadArticle", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-  }
 
-  return await axiosInstance.post("/uploadArticle", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+    if (response.status === 200 && response.data) {
+      const result = response.data;
+
+      if (!result.scanResults) {
+        throw new Error("The API response does not contain scanResults.");
+      }
+
+      return result;
+    } else {
+      throw new Error(`Unexpected API response: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error uploading article:", error);
+    throw new Error("Failed to upload the article. Please try again.");
+  }
 }
