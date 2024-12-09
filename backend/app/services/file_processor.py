@@ -1,8 +1,12 @@
+import logging
 from base64 import b64encode
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
 from threading import Lock
+from typing import Iterator
 
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from app.config import Config
@@ -13,17 +17,24 @@ from app.utils.matching_utils import process_file
 file_processing_lock = Lock()
 
 
-def process_files(files):
+@dataclass
+class ProcessResult:
+    text: str
+    page_offsets: list[int]
+    comparison_base64_images: list[str]
+
+
+def process_files(files: list[FileStorage]) -> ProcessResult:
     with file_processing_lock:
         filenames = _process_files_and_get_filenames(files)
         combined_text, offsets = _get_text_and_page_offsets()
-        image_base64_list = _get_base64_image_representations(filenames)
-        Config.flush_temp_dirs()
+        comparison_images_b64 = _get_base64_comparison_images(filenames)
+        # Config.flush_temp_dirs()
 
-    return combined_text, offsets, image_base64_list
+    return ProcessResult(combined_text, offsets, comparison_images_b64)
 
 
-def _get_base64_image_representations(filenames):
+def _get_base64_comparison_images(filenames):
     image_base64_list = []
     image_paths = [Path(Config.IMAGE_COMPARISON_FOLDER) / filename for filename in filenames]
     for image_path in image_paths:
@@ -47,13 +58,14 @@ def _get_text_and_page_offsets() -> tuple[str, list[int]]:
     return pages_contents, page_offsets
 
 
-def _process_files_and_get_filenames(files):
+def _process_files_and_get_filenames(files: list[FileStorage]) -> Iterator[str]:
     with ThreadPoolExecutor() as executor:
         return executor.map(_process_file_and_get_filename, files)
 
 
-def _process_file_and_get_filename(file):
+def _process_file_and_get_filename(file: FileStorage):
     file_path = _save_file_on_disk_and_get_path(file)
+
     AwsTextractReader(file_path).read_to_file(Config.AWS_FOLDER)
     AzureDiReader(file_path).read_to_file(Config.AZURE_FOLDER)
 
@@ -62,9 +74,10 @@ def _process_file_and_get_filename(file):
     return file_path.name
 
 
-def _save_file_on_disk_and_get_path(file) -> Path:
+def _save_file_on_disk_and_get_path(file: FileStorage) -> Path:
     filename = secure_filename(file.filename)
     file_path = Path(Config.IMAGE_FOLDER) / filename
+    logging.error(f"FILE ---- {file.stream.read()}")
     file.save(file_path)
     return file_path
 

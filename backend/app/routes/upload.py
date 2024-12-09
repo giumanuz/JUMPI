@@ -5,6 +5,7 @@ import re
 from flask import request, Blueprint
 
 from app.services.database.database import Database
+from app.services.file_processor import process_files
 from app.utils.classes import Magazine, Article, ArticlePageScan
 from app.utils.parser import camel_to_snake_dict, snake_to_camel_case, snake_to_camel_dict
 
@@ -52,24 +53,31 @@ def upload_article_and_return_results():
     page_scans = []
     for i, scan_fs in enumerate(scans_file_storages):
         image_data = scan_fs.read()
-        scan_fs.close()
+        scan_fs.stream.seek(0)
         image_base64 = base64.b64encode(image_data).decode('utf-8')
+        logging.error(f"Image data :: {image_base64}")
         page_scans.append(ArticlePageScan(i + 1, image_base64))
 
-    article = Article.create_blueprint_with(page_scans=page_scans, **article_json)
-    # article_id = Database.get_instance().add_article(article)
-    article_id = "123"
-    logging.error(f"Article ID: {article_id}")
-    logging.error(f"Article: {article}")
-    # TODO: Return the extracted text and image comparisons
+    process_result = process_files(scans_file_storages)
+    article = Article.create_blueprint_with(
+        content=process_result.text,
+        page_offsets=process_result.page_offsets,
+        page_scans=page_scans,
+        **article_json
+    )
+    article_id = Database.get_instance().add_article(article)
+
+    for scan_fs in scans_file_storages:
+        scan_fs.close()
+
     return {
         'articleId': article_id,
+        'text': process_result.text,
         'scanResults': [
             {
-                'page': i+1,
-                'text': "This is a sample text extracted from the scan.",
-                'comparisonImage': "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4xLjEsIGh0dHA6Ly9tYXRwbG90bGliLm9yZy+AADFEAAAgAElEQVR4nOzdeXwUZf7/8e9z7z"
-            } for i in range(len(article.page_scans))
+                'page': i + 1,
+                'comparisonImage': image_data
+            } for i, image_data in enumerate(process_result.comparison_base64_images)
         ]}
 
 

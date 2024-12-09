@@ -54,7 +54,7 @@ function UploadArticlePage() {
       const result = await uploadArticleAndGetResults(article, scans);
 
       navigate("/resultPage", {
-        state: { scanResults: result.scanResults },
+        state: { result },
       });
     } catch (err) {
       console.error(err);

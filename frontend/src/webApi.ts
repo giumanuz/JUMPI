@@ -56,6 +56,7 @@ export async function uploadArticleAndGetResults(
 
     if (scans && scans.length > 0) {
       Array.from(scans).forEach((scan) => {
+        console.log(scan)
         formData.append("scans", scan);
       });
     }
