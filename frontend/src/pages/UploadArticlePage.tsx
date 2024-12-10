@@ -17,6 +17,7 @@ function UploadArticlePage() {
   const [pageRange, setPageRange] = useState("");
   const [scans, setScans] = useState<FileList>();
   const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setScans(e.target.files);
@@ -48,9 +49,12 @@ function UploadArticlePage() {
       pageRange: pageRangeInts,
       magazineId: magazineId as string,
     };
+
+    setLoading(true);
     
     try {
       const result = await uploadArticleAndGetResults(article, scans);
+      setLoading(false);
 
       navigate("/resultPage", {
         state: { result },
@@ -64,6 +68,7 @@ function UploadArticlePage() {
   return (
     <FormTemplate
       title="Upload Article"
+      loading={loading}
       onSubmit={handleSubmit}
       button={
         <button type="submit" className="btn btn-primary">

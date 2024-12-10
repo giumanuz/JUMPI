@@ -1,20 +1,8 @@
 .text-container {
   max-height: 400px;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 5px;
   padding: 10px;
-  background-color: #343b40;
-  color: #f8f9fa;
-}
-
-.text-container pre {
-  background: transparent;
-  padding: 0;
-  border: none;
-  color: inherit;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  
 }
 
 .image-container {

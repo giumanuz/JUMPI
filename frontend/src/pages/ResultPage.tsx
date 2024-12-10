@@ -42,23 +42,18 @@ const ResultPage = () => {
 
         <div className="mb-4">
           <h5>Extracted Text:</h5>
-          <pre className="bg-light p-3 border rounded">{text}</pre>
+          <textarea className="form-control">{text}</textarea>
         </div>
 
         <div className="mb-4">
           <h5>Image Comparisons:</h5>
-          <div className="image-container d-flex flex-wrap gap-3">
+          <div className="image-container d-flex flex-wrap gap-3 bg-danger">
             {scanResults.map(({ comparisonImage, page }, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center w-100 vh-100">
                 <img
                   src={`data:image/jpeg;base64,${comparisonImage}`}
                   alt={`Comparison for page ${page}`}
-                  className="img-fluid mb-2"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "300px",
-                    objectFit: "contain",
-                  }}
+                  className="img-fluid mb-2 w-100 h-auto"
                 />
                 <p>Page {page}</p>
               </div>
