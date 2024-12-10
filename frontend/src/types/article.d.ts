@@ -2,13 +2,13 @@ type ArticlePageScan = {
   page: number;
   imageData: string;
   uploadedOn: Date;
-}
+};
 
 type ArticleFigure = {
   page: number;
   caption: string;
   imageData: string;
-}
+};
 
 type Article = {
   id: string;
@@ -22,4 +22,10 @@ type Article = {
   figures: ArticleFigure[];
   createdOn: Date;
   editedOn: Date;
+};
+
+type ArticleResultPage = {
+  articleId: string;
+  scanResults: { comparisonImage: string; page: number }[];
+  text: string;
 };

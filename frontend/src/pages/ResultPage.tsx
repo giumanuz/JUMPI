@@ -1,5 +1,3 @@
-// src/pages/ResultPage.tsx
-
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/ResultPage.scss";
 
@@ -7,11 +5,10 @@ const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Type guard to ensure state exists
-  const { scanResults } = location.state as { scanResults: ScanResult[] };
+  const { result } = location.state as { result: ArticleResultPage };
+  const { articleId, scanResults, text } = result;
 
-  if (!scanResults) {
-    // If state is undefined, redirect back or show an error
+  if (!scanResults || !text) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="card bg-body-secondary p-4 shadow-sm text-center">
@@ -39,29 +36,32 @@ const ResultPage = () => {
         <h3 className="text-center mb-4">Document Analysis Results</h3>
 
         <div className="mb-4">
+          <h5>Article ID:</h5>
+          <p>{articleId}</p>
+        </div>
+
+        <div className="mb-4">
           <h5>Extracted Text:</h5>
-          {scanResults.map(({ text }, index) => (
-            <div className="text-container" key={index}>
-              <pre>{text}</pre>
-            </div>
-          ))}
+          <pre className="bg-light p-3 border rounded">{text}</pre>
         </div>
 
         <div className="mb-4">
           <h5>Image Comparisons:</h5>
           <div className="image-container d-flex flex-wrap gap-3">
-            {scanResults?.map(({ comparisonImage }, index: number) => (
-              <img
-                key={index}
-                src={`data:image/jpeg;base64,${comparisonImage}`}
-                alt={`Image comparison ${index + 1}`}
-                className="img-fluid"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "300px",
-                  objectFit: "contain",
-                }}
-              />
+            {scanResults.map(({ comparisonImage, page }, index) => (
+              <div key={index} className="text-center">
+                <img
+                  src={`data:image/jpeg;base64,${comparisonImage}`}
+                  alt={`Comparison for page ${page}`}
+                  className="img-fluid mb-2"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "300px",
+                    objectFit: "contain",
+                  }}
+                />
+                <p>Page {page}</p>
+              </div>
             ))}
           </div>
         </div>
