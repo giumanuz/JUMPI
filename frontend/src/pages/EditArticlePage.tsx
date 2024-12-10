@@ -15,7 +15,7 @@ function EditArticlePage() {
   );
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
+    
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -126,8 +126,8 @@ function EditArticlePage() {
             <div className="mb-3">
               <label className="form-label">Image</label>
               <img
-                src={`data:image/jpeg;base64,${updatedArticle.pageScans[0].imageData}`}
-                alt="Article Image"
+              // TODO: Da errore l'ide che non trova la proprietà image_data, pero in realta perche da backend viene ritornato come image_data... bisognerebbe cambiare il nome della proprietà quando si manda @edo fa te che non ho voglia ahahh
+                src={`data:image/jpeg;base64,${updatedArticle.pageScans[0].image_data}`}
                 className="img-fluid"
                 style={{
                   width: "100%",
