@@ -26,7 +26,7 @@ def create_app():
     setup_db()
 
     # from .routes.analyze import analyze_bp
-    # from .routes.query import query_bp
+    from .routes.query import query_bp
     from .routes.validate import validate_bp
     from .routes.upload import upload_bp
     from .routes.info import info_bp
@@ -36,7 +36,7 @@ def create_app():
 
     app.register_blueprint(upload_bp)
     # app.register_blueprint(analyze_bp)
-    # app.register_blueprint(query_bp)
+    app.register_blueprint(query_bp)
     app.register_blueprint(validate_bp)
     # app.register_blueprint(edit_bp)
     app.register_blueprint(info_bp)   

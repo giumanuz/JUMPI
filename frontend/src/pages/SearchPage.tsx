@@ -8,13 +8,13 @@ import { AxiosError } from "axios";
 
 const SearchPage = () => {
   const [params, setParams] = useState({
-    name_magazine: "",
-    year: "",
-    publisher: "",
-    genre: "",
+    magazine_name: "",
+    magazine_date: "",
+    magazine_publisher: "",
+    magazine_genre: "",
     article_title: "",
     article_author: "",
-    content: "",
+    article_content: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -39,11 +39,11 @@ const SearchPage = () => {
       const axiosError = error as AxiosError;
       console.error("Error uploading documents:", error);
       const data = axiosError?.response?.data as { error?: string };
-      const text = data.error;
-      console.error("Error uploading document:", error);
-      alert(`Failed to analyze document: ${text}`);
+      const text = data?.error || "An unexpected error occurred.";
+      console.error("Error querying:", error);
+      alert(`Failed to execute query: ${text}`);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -59,32 +59,32 @@ const SearchPage = () => {
       onSubmit={onSubmit}
     >
       <InputField
-        id="name_magazine"
+        id="magazine_name"
         label="Magazine Name"
         placeholder="Enter magazine name"
-        value={params.name_magazine}
+        value={params.magazine_name}
         onChange={onChange}
       />
       <InputField
-        id="year"
-        label="Year"
-        placeholder="Enter year of publication"
-        value={params.year}
+        id="magazine_date"
+        label="Date"
+        placeholder="Enter date of publication"
+        value={params.magazine_date}
         onChange={onChange}
-        type="number"
+        type="string"
       />
       <InputField
-        id="publisher"
-        label="Publisher"
-        placeholder="Enter publisher's name"
-        value={params.publisher}
+        id="magazine_publisher"
+        label="Magazine Publisher"
+        placeholder="Enter magazine publisher's name"
+        value={params.magazine_publisher}
         onChange={onChange}
       />
       <InputField
-        id="genre"
-        label="Genre"
+        id="magazine_genre"
+        label="Magazine Genre"
         placeholder="Enter genre (e.g., Science)"
-        value={params.genre}
+        value={params.magazine_genre}
         onChange={onChange}
       />
       <InputField
@@ -102,10 +102,10 @@ const SearchPage = () => {
         onChange={onChange}
       />
       <TextAreaField
-        id="content"
-        label="Content"
+        id="article_content"
+        label="Article Content"
         placeholder="Enter article content"
-        value={params.content}
+        value={params.article_content}
         onChange={onChange}
       />
     </FormTemplate>

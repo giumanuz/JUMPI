@@ -77,12 +77,44 @@ class ElasticsearchDb(Database):
     def get_article(self, article_id: str) -> Article:
         res = self.es.get(index="articles", id=article_id).body['_source']
         return Article(id=article_id, **res)
-    
+
     def get_articles_from_magazine(self, magazine_id: str) -> list[Article]:
         article = Article.query_blueprint_with(magazine_id=magazine_id)
         query = _get_search_article_query(article)
         res = self.__search_object('articles', query)
         return _parse_article_search_result(res)
+
+    def query(self, magazine: Magazine, article: Article) -> list[Article]:
+
+        logging.error("magazine: ", magazine)
+        logging.error("article: ", article)
+        magazine_query = _get_search_magazine_query(magazine)
+
+        logging.error("magazine_query: ", magazine_query)
+
+        res_magazines = self.es.search(
+            index="magazines", body=magazine_query).body
+        
+        logging.error("res_magazines: ", res_magazines)
+
+        magazine_ids = [hit["_id"] for hit in res_magazines["hits"]
+                        ["hits"]] if "hits" in res_magazines else []
+
+        article_query = _get_search_article_query(article)
+        if magazine_ids:
+            article_query["query"]["bool"]["filter"] = [
+                {"terms": {"magazine_id": magazine_ids}}
+            ]
+
+        res_articles = self.es.search(
+            index="articles", body=article_query).body
+        
+        logging.error("res_articles: ", res_articles)
+
+        if "hits" not in res_articles or not res_articles["hits"]["hits"]:
+            return []
+
+        return _parse_article_search_result(res_articles["hits"], True)
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(
@@ -116,8 +148,12 @@ def _parse_magazine_search_result(search_res: dict) -> list[Magazine]:
     return magazines
 
 
-def _parse_article_search_result(search_res: dict) -> list[Article]:
+def _parse_article_search_result(search_res: dict, flag: bool = False) -> list[Article]:
     articles = []
+    # TODO: Andra modiicato per sto hardcoding di merda
+    if flag and (not search_res or "hits" not in search_res or not search_res["hits"][1].get("hits")):
+        return articles
+
     for hit in search_res["hits"]["hits"]:
         source = hit["_source"]
 
@@ -158,7 +194,7 @@ def _parse_article_search_result(search_res: dict) -> list[Article]:
 def __get_search_query_with(obj_dict: dict, ignore_fields: Iterable[str], text_fields: Iterable[str]) -> dict:
     query = {}
     for field, value in obj_dict.items():
-        if value is None or field in ignore_fields:
+        if value is None or field in ignore_fields or not value:
             continue
         elif field in text_fields:
             query[field] = {"match": {field: value}}

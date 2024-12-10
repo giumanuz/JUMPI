@@ -11,6 +11,7 @@ import SearchPage from "./pages/SearchPage";
 import UploadArticlePage from "./pages/UploadArticlePage";
 import ManageArticlePage from "./pages/ManageArticlePage";
 import { isApiKeySet, reloadApiKey } from "./apiKeyUtils";
+import QueryResultPage from "./pages/QueryResultsPage";
 
 function App() {
   useEffect(() => {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/resultPage" element={<ResultPage />} />
         <Route path="/addNewMagazine" element={<AddMagazinePage />} />
         <Route path="/uploadArticle" element={<UploadArticlePage />} />
+        <Route path="/queryResults" element={<QueryResultPage />} />
 
         <Route path="/editMagazine" element={<EditMagazinePage />} />
         <Route path="/manageArticles" element={<ManageArticlePage />} />

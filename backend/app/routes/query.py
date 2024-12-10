@@ -1,3 +1,6 @@
+from typing import Optional
+from datetime import datetime
+from flask import request, jsonify
 from flask import Blueprint, request
 
 from app.utils.classes import Magazine, Article
@@ -10,24 +13,29 @@ query_bp = Blueprint('query', __name__)
 def query_documents():
     query_params = request.args or {}
 
-    # noinspection PyTypeChecker
     magazine = Magazine(
-        name=query_params.get('name_magazine'),
-        year=query_params.get('year'),
-        publisher=query_params.get('publisher'),
-        genre=query_params.get('genre'),
+        id="",
+        name=query_params.get('magazine_name', ""),
+        date=datetime.strptime(query_params.get(
+            'magazine_date', ""), "%Y-%m-%d") if query_params.get('magazine_date') else None,
+        publisher=query_params.get('magazine_publisher', ""),
+        edition=None,
         abstract=None,
-        articles=None
+        genres=query_params.get('magazine_genre', "").split(
+            ",") if query_params.get('magazine_genre') else [],
+        categories=[],
     )
 
-    # noinspection PyTypeChecker
     article = Article(
-        title=query_params.get('article_title'),
-        author=query_params.get('article_author'),
-        content=query_params.get('content'),
-        images=None,
-        page_offsets=None,
-        page_range=None
+        id="",
+        magazine_id="",
+        title=query_params.get('article_title', ""),
+        author=query_params.get('article_author', ""),
+        page_range=[],
+        page_scans=[],
+        content=query_params.get('article_content', ""),
+        page_offsets=[],
+        figures=[],
     )
 
     return Database.get_instance().query(magazine, article)
