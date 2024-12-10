@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 
 interface ArticleCardProps {
-  article: Article;
+  article: {
+    id: string;
+    title: string;
+    author: string;
+    content: string;
+    createdOn: Date;
+  };
   onEdit: () => void;
 }
 
@@ -12,16 +18,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit }) => {
     setIsExpanded((prev) => !prev);
   };
 
-  const handleEditClick = () => {
-    onEdit();
-  };
-
   return (
     <div className="card mb-3 h-100 d-flex flex-column p-3">
       <div className="mb-3">
         <h5>{article.title}</h5>
         <small className="text-muted">
-          Author: {article.author} | Created on: {article.createdOn.toLocaleDateString()}
+          Author: {article.author} | Created on:{" "}
+          {article.createdOn.toLocaleDateString()}
         </small>
       </div>
 
@@ -29,7 +32,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit }) => {
         <p className="card-text">
           {isExpanded
             ? article.content
-            : `${article.content?.substring(0, 400)}...`}
+            : `${article.content.substring(0, 400)}...`}
         </p>
         <button className="btn btn-link p-0" onClick={toggleExpand}>
           {isExpanded ? "Collapse" : "Read more"}
@@ -37,7 +40,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit }) => {
       </div>
 
       <div className="mt-auto">
-        <button className="btn btn-primary" onClick={handleEditClick}>
+        <button className="btn btn-primary" onClick={onEdit}>
           Edit Article
         </button>
       </div>

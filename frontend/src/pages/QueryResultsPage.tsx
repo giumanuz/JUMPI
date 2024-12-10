@@ -5,6 +5,8 @@ const QueryResultPage = () => {
   const location = useLocation();
   const results = location.state?.results ?? [];
 
+  console.log("Query Results:", results);
+
   return (
     <div className="container mt-4">
       <h1>Search Results</h1>
@@ -12,17 +14,17 @@ const QueryResultPage = () => {
         <p>No results found.</p>
       ) : (
         <div className="row">
-          {results.map((result: any) => (
-            <div className="col-md-4 mb-3" key={result._id}>
+          {results.map((result: Article) => (
+            <div className="col-md-4 mb-3" key={result.id}>
               <ArticleCard
                 article={{
-                  id: result._id,
-                  title: result._source.title,
-                  author: result._source.author,
-                  content: result._source.content,
-                  createdOn: result._source.created_on.toDate(),
+                  id: result.id,
+                  title: result.title ?? "Untitled",
+                  author: result.author ?? "Unknown",
+                  content: result.content ?? "No content available.",
+                  createdOn: new Date(result.createdOn || Date.now()),
                 }}
-                onShowDetails={() => {}}
+                onEdit={() => {}}
               />
             </div>
           ))}

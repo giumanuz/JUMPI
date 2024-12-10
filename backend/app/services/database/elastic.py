@@ -85,17 +85,10 @@ class ElasticsearchDb(Database):
         return _parse_article_search_result(res)
 
     def query(self, magazine: Magazine, article: Article) -> list[Article]:
-
-        logging.error("magazine: ", magazine)
-        logging.error("article: ", article)
         magazine_query = _get_search_magazine_query(magazine)
-
-        logging.error("magazine_query: ", magazine_query)
 
         res_magazines = self.es.search(
             index="magazines", body=magazine_query).body
-        
-        logging.error("res_magazines: ", res_magazines)
 
         magazine_ids = [hit["_id"] for hit in res_magazines["hits"]
                         ["hits"]] if "hits" in res_magazines else []
@@ -108,13 +101,11 @@ class ElasticsearchDb(Database):
 
         res_articles = self.es.search(
             index="articles", body=article_query).body
-        
-        logging.error("res_articles: ", res_articles)
 
         if "hits" not in res_articles or not res_articles["hits"]["hits"]:
             return []
 
-        return _parse_article_search_result(res_articles["hits"], True)
+        return _parse_article_search_result(res_articles)
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(
@@ -148,11 +139,8 @@ def _parse_magazine_search_result(search_res: dict) -> list[Magazine]:
     return magazines
 
 
-def _parse_article_search_result(search_res: dict, flag: bool = False) -> list[Article]:
+def _parse_article_search_result(search_res: dict) -> list[Article]:
     articles = []
-    # TODO: Andra modiicato per sto hardcoding di merda
-    if flag and (not search_res or "hits" not in search_res or not search_res["hits"][1].get("hits")):
-        return articles
 
     for hit in search_res["hits"]["hits"]:
         source = hit["_source"]
