@@ -47,13 +47,15 @@ const ResultPage = () => {
 
         <div className="mb-4">
           <h5>Image Comparisons:</h5>
-          <div className="image-container d-flex flex-wrap gap-3 bg-danger">
+          <div className="d-flex flex-wrap gap-3">
             {scanResults.map(({ comparisonImage, page }, index) => (
-              <div key={index} className="text-center w-100 vh-100">
+              <div key={index} className="text-center w-100 vh-100" style={{
+                    height: 500
+                  }}>
                 <img
                   src={`data:image/jpeg;base64,${comparisonImage}`}
                   alt={`Comparison for page ${page}`}
-                  className="img-fluid mb-2 w-100 h-auto"
+                  className="w-auto h-100 object-fit-cover border border-white"
                 />
                 <p>Page {page}</p>
               </div>
