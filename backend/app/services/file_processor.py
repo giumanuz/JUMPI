@@ -29,7 +29,7 @@ def process_files(files: list[FileStorage]) -> ProcessResult:
         filenames = _process_files_and_get_filenames(files)
         combined_text, offsets = _get_text_and_page_offsets()
         comparison_images_b64 = _get_base64_comparison_images(filenames)
-        # Config.flush_temp_dirs()
+        Config.flush_temp_dirs()
 
     return ProcessResult(combined_text, offsets, comparison_images_b64)
 

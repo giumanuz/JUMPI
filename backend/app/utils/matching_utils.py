@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 def process_file(
         filename: str,
         image_path: str,
-        threshold_high=95,
-        threshold_low=90,
+        threshold_high=0.95,
+        threshold_low=0.90,
 ):
     azure_file_path = os.path.join(Config.AZURE_FOLDER, filename)
     aws_file_path = os.path.join(Config.AWS_FOLDER, filename)
@@ -45,10 +45,6 @@ def process_file(
 
     prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
     gpt_ans = _get_gpt_merged_text(prompt)
-
-    output_path = os.path.join(Config.GPT_FOLDER, filename).replace('.json', '.txt')
-    with open(output_path, 'w') as f:
-        f.write(gpt_ans)
 
     gpt_strings = gpt_ans.split("\n")
     _match(matched_lines, gpt_strings, is_gpt=True)
@@ -129,11 +125,14 @@ def _create_output_and_visuals(
         azure_file: str,
         matched_lines: list[MatchedLine],
         image_path: str,
-        threshold_high=95,
-        threshold_low=90,
+        threshold_high=0.95,
+        threshold_low=0.90,
 ):
     comparison_image_path = os.path.join(Config.IMAGE_COMPARISON_FOLDER, os.path.basename(image_path))
     output_file_path = os.path.join(Config.REPORT_FOLDER, f'{azure_file}.txt').replace('.json', '')
+
+    # TODO: In the future these lines will be removed
+    gpt_file_path = os.path.join(Config.GPT_FOLDER, azure_file).replace('.json', '.txt')
 
     with open(output_file_path, 'w') as output_file:
         with Image.open(image_path) as img:
@@ -151,6 +150,10 @@ def _create_output_and_visuals(
                 output_file.write(f"AWS:   {matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND}\n")
                 output_file.write(f"GPT:   {matched_line.gpt_string if matched_line.gpt_string else LINE_NOT_FOUND}\n")
                 output_file.write("\n" + "-" * 50 + "\n\n")
+
+                #TODO: In the future these lines will be removed
+                with open(gpt_file_path, 'a') as gpt_file:
+                    gpt_file.write(matched_line.gpt_string if matched_line.gpt_string else matched_line.azure_line.content)
 
             img.save(comparison_image_path)
 
