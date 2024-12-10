@@ -38,10 +38,16 @@ class AwsTextractReader(OcrReader):
     def __analyze_document(self, image_bytes):
         try:
             self.logger.debug(f"Analyzing image {self.image_path}")
-            return self.textract.analyze_document(
+            if not image_bytes:
+                raise ValueError("Image file is empty or corrupted")
+            response = self.textract.analyze_document(
                 Document={'Bytes': image_bytes},
                 FeatureTypes=['LAYOUT']
             )
+            return response
+        except boto3.exceptions.ClientError as e:
+            self.logger.error(f"AWS ClientError: {e}")
+            raise Exception(f"AWS ClientError: {e}")
         except Exception as e:
             self.logger.error(f"Error during document analysis: {e}")
             raise Exception(f"Error during document analysis: {e}")

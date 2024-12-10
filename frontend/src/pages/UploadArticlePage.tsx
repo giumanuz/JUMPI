@@ -35,21 +35,20 @@ function UploadArticlePage() {
       return;
     }
 
-    let pageRangeInts: number[];
-    try {
-      pageRangeInts = pageRange.split("-").map(Number);
-    } catch {
+    const pageRangeInts: number[] = pageRange.split("-").map(Number);
+
+    if (pageRangeInts.length !== 2 || pageRangeInts.some(isNaN)) {
       setError('Page Range should be in the format "start-end", e.g., "1-5".');
       return;
     }
-
+    
     const article: Pick<Article, UploadArticleRequiredKeys> = {
       title,
       author,
       pageRange: pageRangeInts,
       magazineId: magazineId as string,
     };
-
+    
     try {
       const result = await uploadArticleAndGetResults(article, scans);
 

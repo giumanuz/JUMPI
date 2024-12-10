@@ -1,4 +1,5 @@
 import base64
+import json
 import logging
 import re
 
@@ -15,7 +16,8 @@ upload_bp = Blueprint('upload', __name__)
 @upload_bp.errorhandler(TypeError)
 def handle_exception(e: TypeError):
     error_msg = e.args[0]
-    matches = re.match(r".*? missing (\d+) required positional arguments: (.*)$", error_msg, flags=re.S)
+    matches = re.match(
+        r".*? missing (\d+) required positional arguments: (.*)$", error_msg, flags=re.S)
     if not matches:
         return {'error': str(error_msg)}, 500
     num_missing_args = int(matches.group(1))
@@ -46,7 +48,8 @@ def get_magazines():
 
 @upload_bp.route('/uploadArticle', methods=['POST'])
 def upload_article_and_return_results():
-    form_data = request.form
+    form_data = request.form.to_dict()
+    form_data['pageRange'] = json.loads(form_data.get('pageRange'))
     files = request.files
     article_json = camel_to_snake_dict(form_data)
     scans_file_storages = files.getlist("scans")

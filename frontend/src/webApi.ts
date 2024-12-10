@@ -47,16 +47,16 @@ export async function uploadArticleAndGetResults(
   scans: FileList
 ): Promise<ArticleUploadResult> {
   try {
-    console.log("pageRange", article.pageRange.join("-"));
     const formData = new FormData();
     formData.append("title", article.title);
     formData.append("author", article.author);
-    formData.append("pageRange", article.pageRange.join("-"));
+    //  La libreria FormData non supporta direttamente la serializzazione di array o oggetti complessi, quindi si deve convertire pageRange in un JSON string e poi fare il parsing lato server (oppure direttamente parsare lato backend)
+    formData.append("pageRange", JSON.stringify(article.pageRange));
     formData.append("magazineId", article.magazineId);
 
     if (scans && scans.length > 0) {
       Array.from(scans).forEach((scan) => {
-        console.log(scan)
+        console.log(scan);
         formData.append("scans", scan);
       });
     }
