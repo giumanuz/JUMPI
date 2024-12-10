@@ -84,6 +84,7 @@ class ElasticsearchDb(Database):
         res = self.__search_object('articles', query)
         return _parse_article_search_result(res)
 
+    # TODO: Da rivedere perche non è super clean
     def query(self, magazine: Magazine, article: Article) -> list[Article]:
         magazine_query = _get_search_magazine_query(magazine)
 
