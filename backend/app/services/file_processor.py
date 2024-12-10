@@ -77,7 +77,6 @@ def _process_file_and_get_filename(file: FileStorage):
 def _save_file_on_disk_and_get_path(file: FileStorage) -> Path:
     filename = secure_filename(file.filename)
     file_path = Path(Config.IMAGE_FOLDER) / filename
-    logging.error(f"FILE ---- {file.stream.read()}")
     file.save(file_path)
     return file_path
 

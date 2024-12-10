@@ -26,7 +26,6 @@ class AwsTextractReader(OcrReader):
     def read_to_file(self, output_dir: str):
         with open(self.image_path, 'rb') as document:
             image_bytes = document.read()
-        logging.error(f"AWS reader :: {base64.b64encode(image_bytes).decode('utf-8')}")
         output_file = Path(output_dir) / self.json_result_filename
         response = self.__analyze_document(image_bytes)
         self.__save_result_to_file(response, output_file)

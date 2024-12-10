@@ -55,7 +55,6 @@ def upload_article_and_return_results():
         image_data = scan_fs.read()
         scan_fs.stream.seek(0)
         image_base64 = base64.b64encode(image_data).decode('utf-8')
-        logging.error(f"Image data :: {image_base64}")
         page_scans.append(ArticlePageScan(i + 1, image_base64))
 
     process_result = process_files(scans_file_storages)
