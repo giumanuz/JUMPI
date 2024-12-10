@@ -1,42 +1,23 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import axiosInstance from "../axiosInstance";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FormTemplate from "../pages/FormTemplate";
-
+import axiosInstance from "../axiosInstance";
 
 function EditArticlePage() {
-  const { search } = useLocation();
-  const queryParams = new URLSearchParams(search);
-  const id = queryParams.get("magazine_id");
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const [article, setArticle] = useState<Article | null>(null);
-  const [pageRange, setPageRange] = useState("");
+  const { article } = location.state as { article: Article };
+
+  const [updatedArticle, setUpdatedArticle] = useState<Article>(article);
+  const [pageRange, setPageRange] = useState<string>(
+    article.pageRange ? article.pageRange.join("-") : ""
+  );
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      axiosInstance
-        .get(`/articleInfo?id=${id}`)
-        .then((res) => {
-          setArticle(res.data);
-          setPageRange(res.data.page_range.join("-"));
-        })
-        .catch((err) => {
-          console.error("Error retrieving article:", err);
-          setError("Error retrieving the article.");
-        });
-    }
-  }, [id]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!id) {
-      setError("Article ID is missing.");
-      return;
-    }
 
     const pageRangeRegex = /^\d+-\d+$/;
     if (!pageRangeRegex.test(pageRange)) {
@@ -46,18 +27,23 @@ function EditArticlePage() {
 
     const pageRangeArray = pageRange.split("-").map(Number);
 
-    const updatedArticle = {
-      ...article,
+    const updatedData = {
+      id: updatedArticle.id,
+      title: updatedArticle.title,
+      author: updatedArticle.author,
       page_range: pageRangeArray,
+      content: updatedArticle.content,
     };
 
+    console.log("Payload being sent to backend:", updatedData);
+
     try {
-      const res = await axiosInstance.put(`/updateArticle`, updatedArticle);
+      const res = await axiosInstance.put(`/updateArticle`, updatedData);
 
       if (res.status === 200) {
         setSuccessMessage("Article updated successfully!");
         setTimeout(() => {
-          navigate(`/manageArticles/${article?.magazineId}`);
+          navigate(`/`);
         }, 600);
       } else {
         setError("Error updating the article.");
@@ -67,10 +53,6 @@ function EditArticlePage() {
       setError("Error updating the article.");
     }
   };
-
-  if (!article) {
-    return <div className="container mt-4">Loading...</div>;
-  }
 
   return (
     <FormTemplate
@@ -86,7 +68,6 @@ function EditArticlePage() {
       {successMessage && (
         <div className="alert alert-success">{successMessage}</div>
       )}
-      
       <div className="row">
         <div className="col-md-8">
           <div className="mb-3">
@@ -94,9 +75,9 @@ function EditArticlePage() {
             <input
               type="text"
               className="form-control"
-              value={article.title}
+              value={updatedArticle.title}
               onChange={(e) =>
-                setArticle({ ...article, title: e.target.value })
+                setUpdatedArticle({ ...updatedArticle, title: e.target.value })
               }
               required
             />
@@ -106,9 +87,9 @@ function EditArticlePage() {
             <input
               type="text"
               className="form-control"
-              value={article.author}
+              value={updatedArticle.author}
               onChange={(e) =>
-                setArticle({ ...article, author: e.target.value })
+                setUpdatedArticle({ ...updatedArticle, author: e.target.value })
               }
               required
             />
@@ -128,9 +109,12 @@ function EditArticlePage() {
             <label className="form-label">Content</label>
             <textarea
               className="form-control"
-              value={article.content}
+              value={updatedArticle.content}
               onChange={(e) =>
-                setArticle({ ...article, content: e.target.value })
+                setUpdatedArticle({
+                  ...updatedArticle,
+                  content: e.target.value,
+                })
               }
               rows={5}
             ></textarea>
@@ -138,18 +122,18 @@ function EditArticlePage() {
         </div>
 
         <div className="col-md-4">
-          {article.pageScans && article.pageScans.length > 0 ? (
+          {updatedArticle.pageScans && updatedArticle.pageScans.length > 0 ? (
             <div className="mb-3">
               <label className="form-label">Image</label>
               <img
-                src={`data:image/jpeg;base64,${article.pageScans[0].imageData}`}
+                src={`data:image/jpeg;base64,${updatedArticle.pageScans[0].imageData}`}
                 alt="Article Image"
-                className="img-fluid" 
+                className="img-fluid"
                 style={{
-                  width: '100%',  
-                  height: 'auto',
-                  borderRadius: '5px',
-                  maxHeight: '500px',
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: "5px",
+                  maxHeight: "500px",
                 }}
               />
             </div>

@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from flask import request, Blueprint
+from flask import jsonify, request, Blueprint
 
 from app.services.database.database import Database
 from app.services.file_processor import process_files
@@ -91,9 +91,20 @@ def update_magazine():
     return "success"
 
 
-@upload_bp.route('/updateArticle', methods=['POST'])
+@upload_bp.route('/updateArticle', methods=['PUT'])
 def update_article():
-    article_json: dict = camel_to_snake_dict(request.json)
-    article = Article.update_blueprint_with(**article_json)
-    Database.get_instance().update_article(article)
-    return "success"
+    updated_data = request.json
+    article_id = updated_data.get("id")
+    
+    existing_article = Database.get_instance().get_article(article_id)
+    if not existing_article:
+        return jsonify({"error": "Article not found"}), 404
+
+    existing_article.title = updated_data.get("title", existing_article.title)
+    existing_article.author = updated_data.get("author", existing_article.author)
+    existing_article.page_range = updated_data.get("page_range", existing_article.page_range)
+    existing_article.content = updated_data.get("content", existing_article.content)
+    
+    Database.get_instance().update_article(existing_article)
+    return jsonify({"success": True})
+
