@@ -126,8 +126,7 @@ function EditArticlePage() {
             <div className="mb-3">
               <label className="form-label">Image</label>
               <img
-              // TODO: Da errore l'ide che non trova la proprietà image_data, pero in realta perche da backend viene ritornato come image_data... bisognerebbe cambiare il nome della proprietà quando si manda @edo fa te che non ho voglia ahahh
-                src={`data:image/jpeg;base64,${updatedArticle.pageScans[0].image_data}`}
+                src={`data:image/jpeg;base64,${updatedArticle.pageScans[0].imageData}`}
                 className="img-fluid"
                 style={{
                   width: "100%",
