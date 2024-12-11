@@ -8,6 +8,7 @@ from flask import g
 
 from app.services.database.database import Database
 from app.utils.classes import Article, Magazine, ArticlePageScan, ArticleFigure
+import hashlib
 
 
 class ElasticsearchDb(Database):
@@ -107,6 +108,23 @@ class ElasticsearchDb(Database):
             return []
 
         return _parse_article_search_result(res_articles)
+
+    # TODO: occorre refactorare e spostare questo codice da un'altra parte, ma non so dove lol
+    def exist_user(self, email: str) -> bool:
+        return self.es.exists(index="users", id=email)
+
+    def login_user(self, email: str, password: str) -> bool:
+        res = self.es.get(index="users", id=email)
+        stored_password = res["_source"]["password"]
+        if stored_password == hash_password(password):
+            return True
+        return False
+
+    def register_user(self, username: str, email: str, password: str) -> bool:
+        res = self.es.index(index="users", id=email, body={
+            "username": username,
+            "password": hash_password(password)
+        })
 
     def __debug_log_query(self, query: dict, res: dict):
         self.logger.debug(
@@ -241,3 +259,7 @@ def _get_search_magazine_query(magazine: Magazine) -> dict:
 def _get_search_article_query(article: Article) -> dict:
     article_dict = asdict(article)
     return __get_search_query_with(article_dict, _ARTICLE_IGNORE_FIELDS, _ARTICLE_TEXT_FIELDS)
+
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()

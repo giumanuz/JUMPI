@@ -60,6 +60,18 @@ class Database(ABC):
     def query(self, magazine: Magazine, article: Article) -> list[Article]:
         ...
 
+    @abstractmethod
+    def exist_user(self, email: str) -> bool:
+        ...
+
+    @abstractmethod
+    def login_user(self, email: str, password: str) -> bool:
+        ...
+
+    @abstractmethod
+    def register_user(self, username: str, email: str, password: str) -> None:
+        ...
+
 class MagazineNotFoundError(Exception):
     pass
 

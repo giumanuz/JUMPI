@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import axiosInstance from "./axiosInstance";
+import { AuthProvider } from "./authContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AddMagazinePage from "./pages/AddMagazinePage";
@@ -12,34 +12,106 @@ import UploadArticlePage from "./pages/UploadArticlePage";
 import ManageArticlePage from "./pages/ManageArticlePage";
 import { isApiKeySet, reloadApiKey } from "./apiKeyUtils";
 import QueryResultPage from "./pages/QueryResultsPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   useEffect(() => {
     console.log("Checking if API key is set...");
     if (isApiKeySet()) {
-        console.log("API key is set. Reloading it...");
-        reloadApiKey();
-        return
+      console.log("API key is set. Reloading it...");
+      reloadApiKey();
+      return;
     }
     console.log("API key is not set.");
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/upload" element={<MagazineListPage />} />
-        <Route path="/resultPage" element={<ResultPage />} />
-        <Route path="/addNewMagazine" element={<AddMagazinePage />} />
-        <Route path="/uploadArticle" element={<UploadArticlePage />} />
-        <Route path="/queryResults" element={<QueryResultPage />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-        <Route path="/editMagazine" element={<EditMagazinePage />} />
-        <Route path="/manageArticles" element={<ManageArticlePage />} />
-        <Route path="/editArticle" element={<EditArticlePage />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Rotte protette */}
+          <Route
+            path="/search"
+            element={
+              <PrivateRoute>
+                <SearchPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/upload"
+            element={
+              <PrivateRoute>
+                <MagazineListPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/resultPage"
+            element={
+              <PrivateRoute>
+                <ResultPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/addNewMagazine"
+            element={
+              <PrivateRoute>
+                <AddMagazinePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/uploadArticle"
+            element={
+              <PrivateRoute>
+                <UploadArticlePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/queryResults"
+            element={
+              <PrivateRoute>
+                <QueryResultPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/editMagazine"
+            element={
+              <PrivateRoute>
+                <EditMagazinePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manageArticles"
+            element={
+              <PrivateRoute>
+                <ManageArticlePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/editArticle"
+            element={
+              <PrivateRoute>
+                <EditArticlePage />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
