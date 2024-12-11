@@ -59,7 +59,10 @@ function RegisterPage() {
       <button onClick={onSubmit} className="btn btn-primary mt-3">
         Register
       </button>
-      <button onClick={() => navigate("/login")} className="btn btn-secondary mt-3">
+      <button
+        onClick={() => navigate("/login")}
+        className="btn btn-secondary mt-3"
+      >
         Already have an account? Login
       </button>
     </div>

@@ -101,7 +101,6 @@ function handleErrorResponse(error: any, defaultMessage: string): never {
   throw new Error(defaultMessage);
 }
 
-
 export async function handleLogin(
   email: string,
   password: string
@@ -115,8 +114,6 @@ export async function handleLogin(
     if (response.status !== 200) {
       throw new Error("Error during login.");
     }
-
-    localStorage.setItem("token", response.data.token);
   } catch (error) {
     handleErrorResponse(error, "Failed to log in. Please try again.");
   }
@@ -137,8 +134,6 @@ export async function registerUser(
     if (response.status !== 200) {
       throw new Error("Error during registration.");
     }
-
-    localStorage.setItem("token", response.data.token);
   } catch (error) {
     handleErrorResponse(error, "Failed to register. Please try again.");
   }

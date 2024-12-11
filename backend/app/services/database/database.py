@@ -43,7 +43,7 @@ class Database(ABC):
     @abstractmethod
     def update_article(self, article: Article) -> None:
         ...
-    
+
     @abstractmethod
     def get_magazine(self, magazine_id: str) -> Magazine:
         ...
@@ -71,6 +71,7 @@ class Database(ABC):
     @abstractmethod
     def register_user(self, username: str, email: str, password: str) -> None:
         ...
+
 
 class MagazineNotFoundError(Exception):
     pass

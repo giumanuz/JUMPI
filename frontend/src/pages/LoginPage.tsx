@@ -18,7 +18,7 @@ function LoginPage() {
     } catch (err) {
       setError((err as Error).message);
     }
-  }
+  };
 
   return (
     <div className="d-flex flex-column align-items-center min-vh-100 justify-content-center">
@@ -43,7 +43,10 @@ function LoginPage() {
       <button onClick={onSubmit} className="btn btn-primary mt-3">
         Login
       </button>
-      <button onClick={() => navigate("/register")} className="btn btn-secondary mt-3">
+      <button
+        onClick={() => navigate("/register")}
+        className="btn btn-secondary mt-3"
+      >
         Register
       </button>
     </div>
