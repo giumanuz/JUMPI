@@ -10,12 +10,24 @@ import ResultPage from "./pages/ResultPage";
 import SearchPage from "./pages/SearchPage";
 import UploadArticlePage from "./pages/UploadArticlePage";
 import ManageArticlePage from "./pages/ManageArticlePage";
-import { isApiKeySet, reloadApiKey } from "./apiKeyUtils";
 import QueryResultPage from "./pages/QueryResultsPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
 import PrivateRoute from "./PrivateRoute";
+import { isApiKeySet, reloadApiKey } from "./apiKeyUtils";
+
+const protectedRoutes = [
+  { path: "/search", element: <SearchPage /> },
+  { path: "/upload", element: <MagazineListPage /> },
+  { path: "/resultPage", element: <ResultPage /> },
+  { path: "/addNewMagazine", element: <AddMagazinePage /> },
+  { path: "/uploadArticle", element: <UploadArticlePage /> },
+  { path: "/queryResults", element: <QueryResultPage /> },
+  { path: "/editMagazine", element: <EditMagazinePage /> },
+  { path: "/manageArticles", element: <ManageArticlePage /> },
+  { path: "/editArticle", element: <EditArticlePage /> },
+];
 
 function App() {
   useEffect(() => {
@@ -32,83 +44,19 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Rotte protette */}
-          <Route
-            path="/search"
-            element={
-              <PrivateRoute>
-                <SearchPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/upload"
-            element={
-              <PrivateRoute>
-                <MagazineListPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/resultPage"
-            element={
-              <PrivateRoute>
-                <ResultPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/addNewMagazine"
-            element={
-              <PrivateRoute>
-                <AddMagazinePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/uploadArticle"
-            element={
-              <PrivateRoute>
-                <UploadArticlePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/queryResults"
-            element={
-              <PrivateRoute>
-                <QueryResultPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/editMagazine"
-            element={
-              <PrivateRoute>
-                <EditMagazinePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/manageArticles"
-            element={
-              <PrivateRoute>
-                <ManageArticlePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/editArticle"
-            element={
-              <PrivateRoute>
-                <EditArticlePage />
-              </PrivateRoute>
-            }
-          />
+          {/* Protected Routes */}
+          {protectedRoutes.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<PrivateRoute>{element}</PrivateRoute>}
+            />
+          ))}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
