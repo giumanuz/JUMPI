@@ -121,7 +121,7 @@ class ElasticsearchDb(Database):
         return False
 
     def register_user(self, username: str, email: str, password: str) -> bool:
-        res = self.es.index(index="users", id=email, body={
+        self.es.index(index="users", id=email, body={
             "username": username,
             "password": hash_password(password)
         })
