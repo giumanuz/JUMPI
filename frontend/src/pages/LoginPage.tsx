@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../authContext";
 import { useNavigate } from "react-router-dom";
-import { handleLogin } from "../webApi";
+import { handleLogin } from "../authApi";
 
 function LoginPage() {
   const { login } = useAuth();

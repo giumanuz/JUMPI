@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../webApi";
+import { registerUser } from "../authApi";
 import { useAuth } from "../authContext";
 
 function RegisterPage() {
