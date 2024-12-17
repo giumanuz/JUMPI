@@ -14,7 +14,6 @@ from app.services.ocr_readers.aws_reader import AwsTextractReader
 from app.services.ocr_readers.azure_reader import AzureDiReader
 from app.utils.matching_utils import process_file
 from app.utils.classes import ArticleFigure
-from backend.commons import Polygon
 
 file_processing_lock = Lock()
 
@@ -32,36 +31,10 @@ def process_files(files: list[FileStorage]) -> ProcessResult:
         filenames = _process_files_and_get_filenames(files)
         combined_text, offsets = _get_text_and_page_offsets()
         comparison_images_b64 = _get_base64_comparison_images(filenames)
-        figures = _get_figures()
+        figures = AzureDiReader.get_figures()
         Config.flush_temp_dirs()
 
     return ProcessResult(combined_text, offsets, comparison_images_b64, figures)
-
-
-def _get_figures() -> list[ArticleFigure]:
-    for file_path in Path(Config.AZURE_FOLDER).iterdir():
-        with file_path.open('r') as f:
-            data = json.load(f)
-
-        name_file = file_path.name
-        image = Path(Config.IMAGE_FOLDER) / name_file
-
-        figures = []
-        for figure in data.get("figures", []):
-            boundingRegions = figure.get("boundingRegions", [])
-            polygon = Polygon(boundingRegions["polygon"])
-            image_polygon = polygon.crop_image(image)
-            caption = figure.get("caption", {}) or figure.get("footnotes", {})
-            caption_content = caption.get("content", "")
-
-            article_figure = ArticleFigure(
-                page=boundingRegions.get("pageNumber", -1),
-                caption=caption_content,
-                image_data=b64encode(image_polygon.tobytes()).decode('utf-8')
-            )
-            figures.append(article_figure)
-
-        return figures
 
 
 def _get_base64_comparison_images(filenames):

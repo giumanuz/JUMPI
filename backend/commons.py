@@ -1,7 +1,5 @@
 from Levenshtein import ratio
 from shapely.geometry import Polygon as ShapelyPolygon
-from PIL import Image
-from pathlib import Path
 
 '''
 The following classes are used to extract lines from azure jsons.
@@ -24,21 +22,6 @@ class Polygon:
 
     def to_shapely(self):
         return ShapelyPolygon([(p.x, p.y) for p in self.points])
-
-    def to_image_polygon(self, image_path: Path):
-        image = Image.open(image_path)
-        width, height = image.size
-        return [(p.x * width, p.y * height) for p in self.points]
-
-    def crop_image(self, image_path: Path, output_path: Path):
-        image = Image.open(image_path)
-        polygon = self.to_image_polygon(image_path)
-        min_x = min(p[0] for p in polygon)
-        min_y = min(p[1] for p in polygon)
-        max_x = max(p[0] for p in polygon)
-        max_y = max(p[1] for p in polygon)
-        cropped_image = image.crop((min_x, min_y, max_x, max_y))
-        return cropped_image
 
 
 class Line:

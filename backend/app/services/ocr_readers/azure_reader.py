@@ -1,3 +1,4 @@
+from base64 import b64encode
 import json
 import logging
 import os
@@ -6,8 +7,10 @@ from pathlib import Path
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.ai.documentintelligence.models import AnalyzeResult
 from azure.core.credentials import AzureKeyCredential
+from flask import Config
 
 from app.services.ocr_readers.ocr_reader import OcrReader
+from app.utils.classes import ArticleFigure
 from commons import Line, Polygon
 
 
@@ -72,7 +75,6 @@ class AzureDiReader(OcrReader):
             credential=AzureKeyCredential(AZURE_DI_API_KEY)
         )
 
-
     def read_to_file(self, output_dir: str):
         result = self.__analyze_document()
         output_file_path = Path(output_dir) / self.json_result_filename
@@ -84,14 +86,16 @@ class AzureDiReader(OcrReader):
 
         for figure in data.get("figures", []):
             for boundingRegion in figure.get("boundingRegions", []):
-                self.__figure_polygons.append(Polygon(boundingRegion["polygon"]))
+                self.__figure_polygons.append(
+                    Polygon(boundingRegion["polygon"]))
             caption = figure.get("caption", {})
             for span in caption.get("spans", []):
                 self.__caption_spans.append((span["offset"], span["length"]))
 
         for paragraph in data.get("paragraphs", []):
             if paragraph.get("role", "") == "pageNumber":
-                self.__page_offsets.append(paragraph.get("spans", [])[0]["offset"])
+                self.__page_offsets.append(
+                    paragraph.get("spans", [])[0]["offset"])
                 continue
             # result = repr(paragraph.get("content", ""))[1:-1]
             # if gpt_is_caption(result):
@@ -121,11 +125,40 @@ class AzureDiReader(OcrReader):
                     polygons=line_polygons,
                     content=line_content,
                     confidence=line_confidence,
-                    spans=[(span["offset"], span["length"]) for span in line_spans],
+                    spans=[(span["offset"], span["length"])
+                           for span in line_spans],
                     is_caption=line_is_caption
                 ))
 
         return lines
+
+    @classmethod
+    def get_figures(cls) -> list[ArticleFigure]:
+        for file_path in Path(Config.AZURE_FOLDER).iterdir():
+            with file_path.open('r') as f:
+                data = json.load(f)
+
+            name_file = file_path.name
+            image = Path(Config.IMAGE_FOLDER) / name_file
+
+            figures = []
+            for figure in data.get("figures", []):
+                boundingRegions = figure.get("boundingRegions", [])
+                polygon = Polygon(boundingRegions["polygon"])
+                image_polygon = cls._crop_image(image, polygon)
+                caption = figure.get(
+                    "caption", {}) or figure.get("footnotes", {})
+                caption_content = caption.get("content", "")
+
+                article_figure = ArticleFigure(
+                    page=boundingRegions.get("pageNumber", -1),
+                    caption=caption_content,
+                    image_data=b64encode(
+                        image_polygon.tobytes()).decode('utf-8')
+                )
+                figures.append(article_figure)
+
+            return figures
 
     def __analyze_document(self) -> AnalyzeResult:
         try:
@@ -156,7 +189,8 @@ class AzureDiReader(OcrReader):
     def __is_line_inside_figure(self, line_polygon: Polygon, threshold: float = 0.9) -> bool:
         overlap_percentage = 0
         for figure_polygon in self.__figure_polygons:
-            overlap_percentage += _compute_overlap_percentage(line_polygon, figure_polygon)
+            overlap_percentage += _compute_overlap_percentage(
+                line_polygon, figure_polygon)
         return overlap_percentage >= threshold
 
     def __is_line_in_captions(self, line_spans: list[dict]) -> bool:
