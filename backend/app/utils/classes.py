@@ -95,4 +95,5 @@ class ResultComparison:
     aws_lines: list[str]
     gpt_lines: list[str]
     comparison_image: str
-    figures: list[ArticleFigure] = field(default_factory=list)
+    user_text: str
+    figures: list[ArticleFigure]

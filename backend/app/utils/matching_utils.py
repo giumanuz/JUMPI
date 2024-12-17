@@ -46,8 +46,7 @@ def _process_file(
         aws_lines_content += (
             matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND) + "\n"
 
-    prompt = f"AZURE:\n{
-        azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
+    prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
     gpt_ans = _get_gpt_merged_text(prompt)
 
     gpt_strings = gpt_ans.split("\n")
@@ -135,6 +134,7 @@ def _generate_result_comparison(
     azure_strings = []
     aws_strings = []
     gpt_strings = []
+    user_text = []
 
     image_highlighted = azure_reader.image
     draw = ImageDraw.Draw(image_highlighted, 'RGBA')
@@ -150,6 +150,8 @@ def _generate_result_comparison(
         azure_strings.append(matched_line.azure_line.content)
         aws_strings.append(matched_line.aws_string)
         gpt_strings.append(matched_line.gpt_string)
+        user_text.append(
+            matched_line.gpt_string if matched_line.gpt_string else matched_line.azure_line.content)
 
     buffered = BytesIO()
     image_highlighted.save(buffered, format="PNG")
@@ -162,7 +164,8 @@ def _generate_result_comparison(
         aws_lines=aws_strings,
         gpt_lines=gpt_strings,
         comparison_image=img_base64,
-        figures=figures
+        user_text="\n".join(user_text),
+        figures=figures,
     )
 
 

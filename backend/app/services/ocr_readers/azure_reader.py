@@ -130,9 +130,7 @@ class AzureDiReader(OcrReader):
 
     def get_figures(self) -> list[ArticleFigure]:
         figures = []
-        logging.error("fuori")
         for figure in self.json_data.get("figures", []):
-            logging.error("dentro")
             boundingRegions = figure.get("boundingRegions", [])
             polygon = Polygon(boundingRegions["polygon"])
             image_polygon = self._crop_image(self.image, polygon)
@@ -140,17 +138,16 @@ class AzureDiReader(OcrReader):
                 "caption", {}) or figure.get("footnotes", {})
             caption_content = caption.get("content", "")
 
-            logging.error(f"Caption: {caption_content}")
-            logging.error(f"Image: {image_polygon}")
+            # TODO: vedere se è corretto la base64 delle figures
             article_figure = ArticleFigure(
                 page=boundingRegions.get("pageNumber", -1),
                 caption=caption_content,
                 image_data=b64encode(
                     image_polygon.tobytes()).decode('utf-8')
             )
+            
             figures.append(article_figure)
 
-        logging.error(f"Figures: {figures}")
         return figures
 
     def _crop_image(self, points: list[int], image: Image) -> Image:
