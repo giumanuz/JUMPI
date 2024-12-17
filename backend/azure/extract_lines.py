@@ -18,7 +18,8 @@ def compute_overlap_percentage(polygon1: Polygon, polygon2: Polygon) -> float:
 def is_line_inside_figure(line_polygon: Polygon, figures_polygons: list[Polygon], threshold: float = 0.9) -> bool:
     overlap_percentage = 0
     for figure_polygon in figures_polygons:
-        overlap_percentage += compute_overlap_percentage(line_polygon, figure_polygon)
+        overlap_percentage += compute_overlap_percentage(
+            line_polygon, figure_polygon)
     return overlap_percentage >= threshold
 
 
@@ -74,8 +75,10 @@ def extract_lines(file_path: str) -> list[Line]:
     with open(file_path, 'r') as file:
         data = json.load(file)
 
-    figure_polygons = []  # if the polygon of a line is inside a figure, the text will be skipped
-    caption_spans = []  # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
+    # if the polygon of a line is inside a figure, the text will be skipped
+    figure_polygons = []
+    # span is a pair of {offset, length}. You can get the content using whole_text[offset:offset+length]
+    caption_spans = []
     offset_page_number = []  # in this way I can idenfy the page number and skip it
 
     for figure in data.get("figures", []):
@@ -120,7 +123,8 @@ def extract_lines(file_path: str) -> list[Line]:
                 polygons=line_polygons,
                 content=line_content,
                 confidence=line_confidence,
-                spans=[(span["offset"], span["length"]) for span in line_spans],
+                spans=[(span["offset"], span["length"])
+                       for span in line_spans],
                 is_caption=line_is_caption
             ))
 

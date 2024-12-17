@@ -1,6 +1,5 @@
 import base64
 import json
-import logging
 import re
 
 from flask import jsonify, request, Blueprint
@@ -63,8 +62,8 @@ def upload_article_and_return_results():
     process_result = process_files(scans_file_storages)
     article = Article.create_blueprint_with(
         content=process_result.text,
-        page_offsets=process_result.page_offsets,
         page_scans=page_scans,
+        figures=process_result.figures,
         **article_json
     )
     article_id = Database.get_instance().add_article(article)

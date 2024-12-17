@@ -1,37 +1,39 @@
+import base64
 import logging
-import os
 from functools import cache
 from typing import Optional
+from io import BytesIO
 
 import openai
 from Levenshtein import ratio
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 
-from app.config import Config
 from app.services.openai_client import OpenaiClient
-from aws.extract_lines import extract_lines as extract_lines_aws
-from azure.extract_lines import extract_lines as extract_lines_azure
 from commons import MatchedLine, LINE_NOT_FOUND
+from app.services.ocr_readers.aws_reader import AwsTextractReader
+from app.services.ocr_readers.azure_reader import AzureDiReader
+from app.utils.classes import ResultComparison
+from werkzeug.datastructures import FileStorage
+
 
 __openai_client: Optional[OpenaiClient] = None
 
 logger = logging.getLogger(__name__)
 
 
-def process_file(
-        filename: str,
-        image_path: str,
+def _process_file(
+        file: FileStorage,
         threshold_high=0.95,
         threshold_low=0.90,
-):
-    azure_file_path = os.path.join(Config.AZURE_FOLDER, filename)
-    aws_file_path = os.path.join(Config.AWS_FOLDER, filename)
+) -> ResultComparison:
 
-    if not (os.path.isfile(azure_file_path) and os.path.isfile(aws_file_path)):
-        return
+    aws_reader = AwsTextractReader(file)
+    azure_reader = AzureDiReader(file)
+    aws_reader.load_json()
+    azure_reader.load_json()
 
-    azure_lines = extract_lines_azure(azure_file_path)
-    aws_strings = extract_lines_aws(aws_file_path)
+    azure_lines = azure_reader.get_lines()
+    aws_strings = aws_reader.get_lines()
 
     matched_lines = [MatchedLine(azure_line) for azure_line in azure_lines]
 
@@ -41,18 +43,19 @@ def process_file(
     aws_lines_content = ""
     for matched_line in matched_lines:
         azure_lines_content += matched_line.azure_line.content + "\n"
-        aws_lines_content += (matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND) + "\n"
+        aws_lines_content += (
+            matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND) + "\n"
 
-    prompt = f"AZURE:\n{azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
+    prompt = f"AZURE:\n{
+        azure_lines_content}\n--------------\nAWS:\n{aws_lines_content}"
     gpt_ans = _get_gpt_merged_text(prompt)
 
     gpt_strings = gpt_ans.split("\n")
     _match(matched_lines, gpt_strings, is_gpt=True)
 
-    _create_output_and_visuals(
-        filename,
+    return _generate_result_comparison(
+        azure_reader,
         matched_lines,
-        image_path,
         threshold_high,
         threshold_low,
     )
@@ -84,6 +87,7 @@ def _get_gpt_merged_text(user_prompt: str) -> str:
         logger.error(f"Error in API request", exc_info=e)
         return ""
 
+
 def _strip_all_lines(text: str) -> str:
     return "\n".join((l.strip() for l in text.split("\n")))
 
@@ -97,7 +101,8 @@ def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt
     heap = []
     for idx_to_match, string_to_match in enumerate(strings_to_match):
         for azure_idx, matched_line in enumerate(matched_lines):
-            similarity = ratio(matched_line.azure_line.content, string_to_match)
+            similarity = ratio(
+                matched_line.azure_line.content, string_to_match)
             if similarity >= threshold:
                 heapq.heappush(heap, (-similarity, azure_idx, idx_to_match))
 
@@ -121,41 +126,44 @@ def _match(matched_lines: list[MatchedLine], strings_to_match: list[str], is_gpt
             matched_lines[azure_idx].aws_string = strings_to_match[idx_to_match]
 
 
-def _create_output_and_visuals(
-        azure_file: str,
+def _generate_result_comparison(
+        azure_reader: AzureDiReader,
         matched_lines: list[MatchedLine],
-        image_path: str,
-        threshold_high=0.95,
-        threshold_low=0.90,
-):
-    comparison_image_path = os.path.join(Config.IMAGE_COMPARISON_FOLDER, os.path.basename(image_path))
-    output_file_path = os.path.join(Config.REPORT_FOLDER, f'{azure_file}.txt').replace('.json', '')
+        threshold_high,
+        threshold_low,
+) -> ResultComparison:
+    azure_strings = []
+    aws_strings = []
+    gpt_strings = []
 
-    # TODO: In the future these lines will be removed
-    gpt_file_path = os.path.join(Config.GPT_FOLDER, azure_file).replace('.json', '.txt')
+    image_highlighted = azure_reader.image
+    draw = ImageDraw.Draw(image_highlighted, 'RGBA')
 
-    with open(output_file_path, 'w') as output_file:
-        with Image.open(image_path) as img:
-            img = img.convert("RGB")
-            draw = ImageDraw.Draw(img, 'RGBA')
-            for idx, matched_line in enumerate(matched_lines):
-                polygon = matched_line.azure_line.polygons[0]  # See why [0] in the definition of Line class
-                similarity = matched_line.get_similarity()
-                if similarity < threshold_low:
-                    _draw_polygon(draw, polygon, 'red')
-                elif similarity < threshold_high:
-                    _draw_polygon(draw, polygon, 'yellow')
+    for idx, matched_line in enumerate(matched_lines):
+        polygon = matched_line.azure_line.polygons[0]
+        similarity = matched_line.get_similarity()
+        if similarity < threshold_low:
+            _draw_polygon(draw, polygon, 'red')
+        elif similarity < threshold_high:
+            _draw_polygon(draw, polygon, 'yellow')
 
-                output_file.write(f"Azure: {matched_line.azure_line.content}\n")
-                output_file.write(f"AWS:   {matched_line.aws_string if matched_line.aws_string else LINE_NOT_FOUND}\n")
-                output_file.write(f"GPT:   {matched_line.gpt_string if matched_line.gpt_string else LINE_NOT_FOUND}\n")
-                output_file.write("\n" + "-" * 50 + "\n\n")
+        azure_strings.append(matched_line.azure_line.content)
+        aws_strings.append(matched_line.aws_string)
+        gpt_strings.append(matched_line.gpt_string)
 
-                #TODO: In the future these lines will be removed
-                with open(gpt_file_path, 'a') as gpt_file:
-                    gpt_file.write(matched_line.gpt_string if matched_line.gpt_string else matched_line.azure_line.content)
+    buffered = BytesIO()
+    image_highlighted.save(buffered, format="PNG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
-            img.save(comparison_image_path)
+    figures = azure_reader.get_figures()
+
+    return ResultComparison(
+        azure_lines=azure_strings,
+        aws_lines=aws_strings,
+        gpt_lines=gpt_strings,
+        comparison_image=img_base64,
+        figures=figures
+    )
 
 
 def _draw_polygon(draw, polygon, color):

@@ -1,13 +1,12 @@
 from base64 import b64encode
-import json
 import logging
 import os
-from pathlib import Path
+from PIL import Image, ImageDraw
+import numpy
 
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.ai.documentintelligence.models import AnalyzeResult
 from azure.core.credentials import AzureKeyCredential
-from flask import Config
 
 from app.services.ocr_readers.ocr_reader import OcrReader
 from app.utils.classes import ArticleFigure
@@ -63,7 +62,6 @@ class AzureDiReader(OcrReader):
 
     def __init__(self, image_path):
         super().__init__(image_path)
-        self.json_result_filename = Path(self.image_path).stem + ".json"
         self.__figure_polygons = []
         self.__caption_spans = []
         self.__page_offsets = []
@@ -75,16 +73,13 @@ class AzureDiReader(OcrReader):
             credential=AzureKeyCredential(AZURE_DI_API_KEY)
         )
 
-    def read_to_file(self, output_dir: str):
+    def load_json(self) -> None:
         result = self.__analyze_document()
-        output_file_path = Path(output_dir) / self.json_result_filename
-        self.__save_result_to_file(result, output_file_path)
+        self.json_data = result.as_dict()
 
+    # TODO: Rivedere la parte delle caption e delle figure perche con la caption che detectioamo che ssono dentro una figura non ci stiamo facendo niente
     def get_lines(self) -> list[Line]:
-        with open(self.image_path, 'r') as file:
-            data = json.load(file)
-
-        for figure in data.get("figures", []):
+        for figure in self.json_data.get("figures", []):
             for boundingRegion in figure.get("boundingRegions", []):
                 self.__figure_polygons.append(
                     Polygon(boundingRegion["polygon"]))
@@ -92,7 +87,7 @@ class AzureDiReader(OcrReader):
             for span in caption.get("spans", []):
                 self.__caption_spans.append((span["offset"], span["length"]))
 
-        for paragraph in data.get("paragraphs", []):
+        for paragraph in self.json_data.get("paragraphs", []):
             if paragraph.get("role", "") == "pageNumber":
                 self.__page_offsets.append(
                     paragraph.get("spans", [])[0]["offset"])
@@ -103,10 +98,11 @@ class AzureDiReader(OcrReader):
                 self.__caption_spans.append((span["offset"], span["length"]))
 
         lines = []
-        words = [page.get("words", []) for page in data.get("pages", [])]
+        words = [page.get("words", [])
+                 for page in self.json_data.get("pages", [])]
 
-        for page_idx in range(len(data.get("pages", []))):
-            for line in data["pages"][page_idx].get("lines", []):
+        for page_idx in range(len(self.json_data.get("pages", []))):
+            for line in self.json_data["pages"][page_idx].get("lines", []):
                 line_polygon = Polygon(line["polygon"])
                 line_spans = line.get("spans", [])
                 line_content = repr(line.get("content", ""))[1:-1]
@@ -132,33 +128,43 @@ class AzureDiReader(OcrReader):
 
         return lines
 
-    @classmethod
-    def get_figures(cls) -> list[ArticleFigure]:
-        for file_path in Path(Config.AZURE_FOLDER).iterdir():
-            with file_path.open('r') as f:
-                data = json.load(f)
+    def get_figures(self) -> list[ArticleFigure]:
+        figures = []
+        logging.error("fuori")
+        for figure in self.json_data.get("figures", []):
+            logging.error("dentro")
+            boundingRegions = figure.get("boundingRegions", [])
+            polygon = Polygon(boundingRegions["polygon"])
+            image_polygon = self._crop_image(self.image, polygon)
+            caption = figure.get(
+                "caption", {}) or figure.get("footnotes", {})
+            caption_content = caption.get("content", "")
 
-            name_file = file_path.name
-            image = Path(Config.IMAGE_FOLDER) / name_file
+            logging.error(f"Caption: {caption_content}")
+            logging.error(f"Image: {image_polygon}")
+            article_figure = ArticleFigure(
+                page=boundingRegions.get("pageNumber", -1),
+                caption=caption_content,
+                image_data=b64encode(
+                    image_polygon.tobytes()).decode('utf-8')
+            )
+            figures.append(article_figure)
 
-            figures = []
-            for figure in data.get("figures", []):
-                boundingRegions = figure.get("boundingRegions", [])
-                polygon = Polygon(boundingRegions["polygon"])
-                image_polygon = cls._crop_image(image, polygon)
-                caption = figure.get(
-                    "caption", {}) or figure.get("footnotes", {})
-                caption_content = caption.get("content", "")
+        logging.error(f"Figures: {figures}")
+        return figures
 
-                article_figure = ArticleFigure(
-                    page=boundingRegions.get("pageNumber", -1),
-                    caption=caption_content,
-                    image_data=b64encode(
-                        image_polygon.tobytes()).decode('utf-8')
-                )
-                figures.append(article_figure)
+    def _crop_image(self, points: list[int], image: Image) -> Image:
+        imArray = numpy.asarray(image)
+        maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
+        ImageDraw.Draw(maskIm).polygon(points, outline=1, fill=1)
+        mask = numpy.array(maskIm)
+        newImArray = numpy.empty(imArray.shape, dtype='uint8')
 
-            return figures
+        newImArray[:, :, :3] = imArray[:, :, :3]
+
+        newImArray[:, :, 3] = mask*255
+
+        return Image.fromarray(newImArray, "RGBA")
 
     def __analyze_document(self) -> AnalyzeResult:
         try:
@@ -168,23 +174,13 @@ class AzureDiReader(OcrReader):
             raise Exception(f"Error during document analysis: {e}")
 
     def __try_analyze_document(self) -> AnalyzeResult:
-        with open(self.image_path, "rb") as f:
-            poller = self.client.begin_analyze_document(
-                "prebuilt-layout",
-                analyze_request=f,
-                content_type="application/octet-stream"
-            )
+        image_bytes = self._process_file_to_bytes()
+        poller = self.client.begin_analyze_document(
+            "prebuilt-layout",
+            analyze_request=image_bytes,
+            content_type="application/octet-stream"
+        )
         return poller.result()
-
-    def __save_result_to_file(self, result: AnalyzeResult, output_file: Path):
-        try:
-            with open(output_file, 'w') as f:
-                json.dump(result.as_dict(), f, indent=4)
-            self.logger.debug(f"Result saved in: {output_file}")
-            return output_file
-        except Exception as e:
-            self.logger.error(f"Error saving result to file: {e}")
-            raise e
 
     def __is_line_inside_figure(self, line_polygon: Polygon, threshold: float = 0.9) -> bool:
         overlap_percentage = 0

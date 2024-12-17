@@ -81,3 +81,18 @@ class Magazine(_BaseEntity):
     categories: list[str] = field(default_factory=list)
     created_on: datetime = field(default_factory=lambda: datetime.now())
     edited_on: datetime = field(default_factory=lambda: datetime.now())
+
+@dataclass
+class ProcessResult:
+    text: str
+    comparison_base64_images: list[str]
+    figures: list[ArticleFigure] = field(default_factory=list)
+
+
+@dataclass
+class ResultComparison:
+    azure_lines: list[str]
+    aws_lines: list[str]
+    gpt_lines: list[str]
+    comparison_image: str
+    figures: list[ArticleFigure] = field(default_factory=list)
