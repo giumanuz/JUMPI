@@ -2,7 +2,7 @@ import logging
 
 import elasticsearch
 
-
+#TODO: E' mai usata questa funzione?
 def setup_error_handlers(app):
     @app.errorhandler(Exception)
     def handle_general_error(error):

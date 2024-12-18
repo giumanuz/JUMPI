@@ -1,7 +1,7 @@
 from app.services.database.database import Database, MagazineNotFoundError
 from app.utils.classes import Article, Magazine
 
-
+#TODO: Non viene mai usata, perche @edo l'hai messa?
 class InMemoryDb(Database):
     def __init__(self):
         self.magazines = []

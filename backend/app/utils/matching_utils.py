@@ -20,7 +20,7 @@ __openai_client: Optional[OpenaiClient] = None
 
 logger = logging.getLogger(__name__)
 
-
+#TODO: Non so perchè vsCode non mostra che è usata
 def _process_file(
         file: FileStorage,
         threshold_high=0.95,

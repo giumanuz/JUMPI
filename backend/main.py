@@ -12,8 +12,6 @@ def main():
     setup_config()
     app = create_app()
 
-    config.Config.create_temp_dirs()
-
     host = os.getenv('HOST', '0.0.0.0')
     port = int(os.getenv('PORT', 5123))
     app.run(debug=debug, host=host, port=port)

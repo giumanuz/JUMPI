@@ -77,7 +77,7 @@ class AzureDiReader(OcrReader):
         result = self.__analyze_document()
         self.json_data = result.as_dict()
 
-    # TODO: Rivedere la parte delle caption e delle figure perche con la caption che detectioamo che ssono dentro una figura non ci stiamo facendo niente
+    # TODO: Rivedere la parte delle caption e delle figure perche con la caption che detectioamo che sono dentro una figura non ci stiamo facendo niente
     def get_lines(self) -> list[Line]:
         for figure in self.json_data.get("figures", []):
             for boundingRegion in figure.get("boundingRegions", []):
