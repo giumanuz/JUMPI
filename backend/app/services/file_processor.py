@@ -14,7 +14,7 @@ def process_files(files: list[FileStorage]) -> ProcessResult:
         results: list[ResultComparison] = _process_files(files)
         combined_text = "\n".join([elem.user_text for elem in results])
         comparison_images_b64 = [elem.comparison_image for elem in results]
-        figures = [elem.figures for elem in results]
+        figures = [figure for elem in results for figure in elem.figures]
 
     return ProcessResult(combined_text, comparison_images_b64, figures)
 

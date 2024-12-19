@@ -25,8 +25,8 @@ type Article = {
 };
 
 type ArticleResultPage = {
-  articleId: string;
   scanResults: { comparisonImage: string; page: number }[];
   text: string;
   figures: ArticleFigure[];
+  pageScans: ArticlePageScan[];
 };

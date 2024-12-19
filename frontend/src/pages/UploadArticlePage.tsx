@@ -42,7 +42,7 @@ function UploadArticlePage() {
       setError('Page Range should be in the format "start-end", e.g., "1-5".');
       return;
     }
-    
+
     const article: Pick<Article, UploadArticleRequiredKeys> = {
       title,
       author,
@@ -51,13 +51,13 @@ function UploadArticlePage() {
     };
 
     setLoading(true);
-    
+
     try {
       const result = await uploadArticleAndGetResults(article, scans);
       setLoading(false);
 
       navigate("/resultPage", {
-        state: { result },
+        state: { result, article },
       });
     } catch (err) {
       console.error(err);

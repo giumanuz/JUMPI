@@ -86,7 +86,7 @@ class Magazine(_BaseEntity):
 class ProcessResult:
     text: str
     comparison_base64_images: list[str]
-    figures: list[ArticleFigure] = field(default_factory=list)
+    figures: list[ArticleFigure]
 
 
 @dataclass

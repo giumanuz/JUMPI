@@ -1,19 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/ResultPage.scss";
 import { useState } from "react";
+import { UploadArticleRequiredKeys } from "../webApi";
+import axiosInstance from "../axiosInstance";
 
 const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { result } = location.state as { result: ArticleResultPage };
-  const { articleId, scanResults, text, figures } = result;
+  const { result, article } = location.state as {
+    result: ArticleResultPage;
+    article: Pick<Article, UploadArticleRequiredKeys>;
+  };
+  const { scanResults, text, figures } = result;
 
   const [editableText, setEditableText] = useState(text);
-  const [editableFigures, setEditableFigures] = useState(
-    figures || []
-  );
-
+  const [editableFigures, setEditableFigures] = useState(figures || []);
   const [editableScanResults] = useState(scanResults);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,7 +30,10 @@ const ResultPage = () => {
           <p>
             It seems you navigated to this page without submitting an article.
           </p>
-          <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
+          <button
+            className="btn btn-primary mt-3"
+            onClick={() => navigate("/")}
+          >
             Go Back to Upload
           </button>
         </div>
@@ -42,13 +47,17 @@ const ResultPage = () => {
     setSubmitSuccess(false);
 
     const payload = {
-      articleId: articleId,
-      text: editableText,
+      title: article.title,
+      magazine_id: article.magazineId,
+      author: article.author,
+      page_range: article.pageRange,
+      page_scans: result.pageScans,
+      content: editableText,
       figures: editableFigures,
     };
 
     try {
-      const response = await fetch("/editedArticle", {
+      const response = await axiosInstance.post("/saveEditedArticle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,20 +79,14 @@ const ResultPage = () => {
 
   return (
     <div className="container vh-100 d-flex justify-content-center align-items-center">
-      <div className="card bg-body-secondary p-4 shadow-sm w-100" style={{ maxWidth: "1200px" }}>
+      <div
+        className="card bg-body-secondary p-4 shadow-sm w-100"
+        style={{ maxWidth: "1200px" }}
+      >
         <h3 className="text-center mb-4">Document Analysis Results</h3>
         <div className="d-flex flex-row">
           {/* Colonna Sinistra: Contenuti Testuali */}
-          <div className="flex-grow-1 me-4">
-            <div className="mb-4">
-              <h5>Article ID:</h5>
-              <input
-                type="text"
-                className="form-control"
-                value={articleId}
-              />
-            </div>
-
+          <div className="text-container me-4 flex-grow-1">
             <div className="mb-4">
               <h5>Extracted Text:</h5>
               <textarea
@@ -94,7 +97,6 @@ const ResultPage = () => {
               ></textarea>
             </div>
 
-            {/* Sezione Figure e Didascalie */}
             {editableFigures && editableFigures.length > 0 && (
               <div className="mb-4">
                 <h5>Figures:</h5>
@@ -121,7 +123,6 @@ const ResultPage = () => {
               </div>
             )}
 
-            {/* Pulsante di Invio */}
             <div className="mb-4">
               <button
                 className="btn btn-success"
@@ -144,7 +145,10 @@ const ResultPage = () => {
           </div>
 
           {/* Colonna Destra: Immagini */}
-          <div className="flex-shrink-0" style={{ width: "600px", overflowY: "auto" }}>
+          <div
+            className="image-container flex-shrink-0"
+            style={{ width: "600px", overflowY: "auto" }}
+          >
             <h5>Image Comparisons:</h5>
             <div className="d-flex flex-column gap-4">
               {editableScanResults.map(({ comparisonImage, page }, index) => (
@@ -153,7 +157,7 @@ const ResultPage = () => {
                     src={`data:image/jpeg;base64,${comparisonImage}`}
                     alt={`Comparison for page ${page}`}
                     className="img-fluid border border-white"
-                    style={{ maxHeight: "500px", objectFit: "cover" }}
+                    style={{ maxHeight: "300px", objectFit: "cover" }}
                   />
                   <p>Page {page}</p>
                 </div>
