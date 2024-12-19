@@ -9,7 +9,7 @@ def main():
     load_dotenv()
 
     debug = get_boolean_env_var('DEBUG')
-    setup_config()
+    initialize_app_config()
     app = create_app()
 
     host = os.getenv('HOST', '0.0.0.0')
@@ -17,7 +17,7 @@ def main():
     app.run(debug=debug, host=host, port=port)
 
 
-def setup_config(debug=False):
+def initialize_app_config(debug=False):
     config.APP_CONFIG = config.Config(
         ELASTIC_URL=os.getenv('ELASTIC_URL'),
         OPENAI_API_KEY=os.getenv('OPENAI_API_KEY'),
