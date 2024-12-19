@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from app.services.database.database import Database
-from app.utils.parser import snake_to_camel_dict, snake_to_camel_case
+from app.utils.parser import snake_to_camel, snake_to_camel_case
 import re
 
 info_bp = Blueprint('info', __name__)
@@ -32,14 +32,14 @@ def handle_exception(e: TypeError):
 def info_documents():
     magazine_id = request.args.get('id')
     magazine = Database.get_instance().get_magazine(magazine_id)
-    return snake_to_camel_dict(magazine.to_dict())
+    return snake_to_camel(magazine.to_dict())
 
 
 @info_bp.route('/articleInfo', methods=['GET'])
 def info_article():
     article_id = request.args.get('id')
     article = Database.get_instance().get_article(article_id)
-    return snake_to_camel_dict(article.to_dict())
+    return snake_to_camel(article.to_dict())
 
 
 @info_bp.route('/getArticlesFromMagazineid', methods=['GET'])
@@ -48,5 +48,5 @@ def get_articles_from_magazine():
     articles = Database.get_instance().get_articles_from_magazine(magazine_id)
     article_dicts = (article.to_dict() for article in articles)
     return {
-        'articles': [snake_to_camel_dict(d) for d in article_dicts]
+        'articles': [snake_to_camel(d) for d in article_dicts]
     }

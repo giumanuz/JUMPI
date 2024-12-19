@@ -8,7 +8,7 @@ from flask import jsonify, request, Blueprint
 from app.services.database.database import Database
 from app.services.file_processor import process_files
 from app.utils.classes import Magazine, Article, ArticlePageScan
-from app.utils.parser import camel_to_snake_dict, snake_to_camel_case, snake_to_camel_dict
+from app.utils.parser import camel_to_snake, snake_to_camel_case, snake_to_camel
 
 upload_bp = Blueprint('upload', __name__)
 
@@ -31,7 +31,7 @@ def handle_exception(e: TypeError):
 
 @upload_bp.route('/uploadMagazine', methods=['POST'])
 def upload_magazine():
-    magazine_json: dict = camel_to_snake_dict(request.json)
+    magazine_json: dict = camel_to_snake(request.json)
     magazine = Magazine.create_blueprint_with(**magazine_json)
     magazine_id = Database.get_instance().add_magazine(magazine)
     return {'id': magazine_id}
@@ -42,7 +42,7 @@ def get_magazines():
     magazines = Database.get_instance().get_all_magazines()
     magazine_dicts = (magazine.to_dict() for magazine in magazines)
     return {
-        'magazines': [snake_to_camel_dict(d) for d in magazine_dicts]
+        'magazines': [snake_to_camel(d) for d in magazine_dicts]
     }
 
 
@@ -52,10 +52,9 @@ def upload_article_and_return_results():
     # with open('output.json', 'r') as f:
     #     return jsonify(json.loads(f.read()))
     # return
-    form_data = request.form.to_dict()
-    form_data['pageRange'] = json.loads(form_data.get('pageRange'))
+    form_data = camel_to_snake(request.form.to_dict())
+    form_data['page_range'] = json.loads(form_data.get('page_range'))
     files = request.files
-    article_json = camel_to_snake_dict(form_data)
     scans_file_storages = files.getlist("scans")
     page_scans = []
     for i, scan_fs in enumerate(scans_file_storages):
@@ -69,48 +68,45 @@ def upload_article_and_return_results():
     for scan_fs in scans_file_storages:
         scan_fs.close()
 
-    return {
+    return snake_to_camel({
         'text': process_result.text,
-        'scanResults': [
+        'scan_results': [
             {
                 'page': i + 1,
-                'comparisonImage': image_data
+                'comparison_image': image_data
             } for i, image_data in enumerate(process_result.comparison_base64_images)
         ],
         'figures': [
             {
                 'page': figure.page,
                 'caption': figure.caption,
-                'imageData': figure.image_data,
+                'image_data': figure.image_data,
             } for figure in process_result.figures
         ],
-        'pageScans': [
+        'page_scans': [
             {
                 'page': page_scan.page,
-                'imageData': page_scan.image_data,
-                'uploadedOn': page_scan.uploaded_on.isoformat()
+                'image_data': page_scan.image_data,
+                'uploaded_on': page_scan.uploaded_on.isoformat()
             } for page_scan in page_scans
         ]
-    }
+    })
 
-#TODO: Da rivedere la logica di salvataggio dell'articolo
+# TODO: Da rivedere la logica di salvataggio dell'articolo
 @upload_bp.route('/saveEditedArticle', methods=['POST'])
 def save_edited_article():
-    article_json = request.json
+    article_json = camel_to_snake(request.json)
     body_str = article_json.get('body')
 
     if not body_str:
         return {"error": "Missing 'body' in request"}, 400
 
     try:
-        body = json.loads(body_str)
+        body = camel_to_snake(json.loads(body_str))
     except json.JSONDecodeError as e:
         return {"error": f"Invalid JSON in 'body': {str(e)}"}, 400
 
     try:
-        with open('risposta.json', 'w') as f:
-            f.write(json.dumps(body, indent=2))
-
         article_without_figures = Article.create_blueprint_with(
             **{k: v for k, v in body.items() if k != 'figures'}
         )
@@ -133,7 +129,7 @@ def save_edited_article():
 
 @upload_bp.route('/updateMagazine', methods=['POST'])
 def update_magazine():
-    magazine_json: dict = camel_to_snake_dict(request.json)
+    magazine_json: dict = camel_to_snake(request.json)
     magazine = Magazine.update_blueprint_with(**magazine_json)
     Database.get_instance().update_magazine(magazine)
     return "success"

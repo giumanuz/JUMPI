@@ -8,7 +8,7 @@ from flask import jsonify, request, Blueprint
 from app.services.database.database import Database
 from app.services.file_processor import process_files
 from app.utils.classes import Magazine, Article, ArticlePageScan
-from app.utils.parser import camel_to_snake_dict, snake_to_camel_case, snake_to_camel_dict
+from app.utils.parser import camel_to_snake, snake_to_camel_case, snake_to_camel
 
 auth_bp = Blueprint('auth', __name__)
 

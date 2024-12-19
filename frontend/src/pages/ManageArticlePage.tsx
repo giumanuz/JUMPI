@@ -24,6 +24,8 @@ function ManageArticlePage() {
     return <div className="container mt-4">Loading magazine data...</div>;
   }
 
+  console.log(articles);
+
   return (
     <div className="container mt-4">
       <h1>Manage Articles</h1>
