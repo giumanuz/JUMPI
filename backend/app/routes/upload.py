@@ -49,9 +49,9 @@ def get_magazines():
 @upload_bp.route('/uploadArticle', methods=['POST'])
 def upload_article_and_return_results():
     # TODO: remove this, just for testing
-    with open('output.json', 'r') as f:
-        return jsonify(json.loads(f.read()))
-    return
+    # with open('output.json', 'r') as f:
+    #     return jsonify(json.loads(f.read()))
+    # return
     form_data = request.form.to_dict()
     form_data['pageRange'] = json.loads(form_data.get('pageRange'))
     files = request.files
@@ -93,11 +93,12 @@ def upload_article_and_return_results():
         ]
     }
 
-
+#TODO: Da rivedere la logica di salvataggio dell'articolo
 @upload_bp.route('/saveEditedArticle', methods=['POST'])
 def save_edited_article():
     article_json = request.json
     body_str = article_json.get('body')
+
     if not body_str:
         return {"error": "Missing 'body' in request"}, 400
 
@@ -106,17 +107,28 @@ def save_edited_article():
     except json.JSONDecodeError as e:
         return {"error": f"Invalid JSON in 'body': {str(e)}"}, 400
 
-    article_without_figures = Article.create_blueprint_with(
-        **{k: v for k, v in body.items() if k != 'figures'}
-    )
+    try:
+        with open('risposta.json', 'w') as f:
+            f.write(json.dumps(body, indent=2))
 
-    article_id = Database.get_instance().add_article(article_without_figures)
+        article_without_figures = Article.create_blueprint_with(
+            **{k: v for k, v in body.items() if k != 'figures'}
+        )
 
-    article_with_figures = Article.create_blueprint_with(
-        id=article_id,
-        figures=body.get('figures', [])
-    )
-    return Database.get_instance().update_article(article_with_figures)
+        logging.error("prima richiesta")
+        article_id = Database.get_instance().add_article(article_without_figures)
+        logging.error(f"article_id: {article_id}")
+
+        article = Database.get_instance().get_article(article_id)
+        article.figures = body.get('figures', [])
+
+        logging.error("seconda richiesta")
+        Database.get_instance().update_article(article)
+
+        return {"id": article_id}, 200
+    except Exception as e:
+        logging.error(f"Error processing article: {e}")
+        return {"error": "Internal server error"}, 500
 
 
 @upload_bp.route('/updateMagazine', methods=['POST'])

@@ -65,13 +65,18 @@ const ResultPage = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error(`Errore nella richiesta: ${response.statusText}`);
+      if (response.status === 200) {
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 600);
+      } else {
+        throw new Error(`Error in the response: ${response.statusText}`);
       }
-
-      setSubmitSuccess(true);
     } catch (error: any) {
-      setSubmitError(error.message || "Errore sconosciuto");
+      setSubmitError(
+        error.response?.data?.error || error.message || "Unknown error"
+      );
     } finally {
       setIsSubmitting(false);
     }
