@@ -1,4 +1,6 @@
 from base64 import b64encode
+import base64
+from io import BytesIO
 import logging
 import os
 from PIL import Image, ImageDraw
@@ -132,36 +134,39 @@ class AzureDiReader(OcrReader):
         figures = []
         for figure in self.json_data.get("figures", []):
             boundingRegions = figure.get("boundingRegions", [])
-            polygon = Polygon(boundingRegions["polygon"])
-            image_polygon = self._crop_image(self.image, polygon)
-            caption = figure.get(
-                "caption", {}) or figure.get("footnotes", {})
-            caption_content = caption.get("content", "")
+            for br in boundingRegions:
+                polygon = br.get("polygon", [])
+                image_polygon = self._crop_image(self.image, polygon)
+                caption = figure.get("caption") or (
+                    figure.get("footnotes", [{}])[0])
+                caption_content = caption.get("content", "")
 
-            # TODO: vedere se è corretto la base64 delle figures
-            article_figure = ArticleFigure(
-                page=boundingRegions.get("pageNumber", -1),
-                caption=caption_content,
-                image_data=b64encode(
-                    image_polygon.tobytes()).decode('utf-8')
-            )
-            
-            figures.append(article_figure)
+                buffered = BytesIO()
+                image_polygon.save(buffered, format="PNG")
+                image_data = base64.b64encode(
+                    buffered.getvalue()).decode('utf-8')
+
+                article_figure = ArticleFigure(
+                    page=br.get("pageNumber", -1),
+                    caption=caption_content,
+                    image_data=image_data
+                )
+
+                figures.append(article_figure)
 
         return figures
 
-    def _crop_image(self, points: list[int], image: Image) -> Image:
+    def _crop_image(self, image: Image, points: list[int]) -> Image:
         imArray = numpy.asarray(image)
         maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
         ImageDraw.Draw(maskIm).polygon(points, outline=1, fill=1)
         mask = numpy.array(maskIm)
-        newImArray = numpy.empty(imArray.shape, dtype='uint8')
 
-        newImArray[:, :, :3] = imArray[:, :, :3]
+        newImArray = imArray.copy()
+        for i in range(3):
+            newImArray[:, :, i] = newImArray[:, :, i] * mask
 
-        newImArray[:, :, 3] = mask*255
-
-        return Image.fromarray(newImArray, "RGBA")
+        return Image.fromarray(newImArray, "RGB")
 
     def __analyze_document(self) -> AnalyzeResult:
         try:

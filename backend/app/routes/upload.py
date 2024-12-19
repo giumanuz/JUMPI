@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import re
 
 from flask import jsonify, request, Blueprint
@@ -71,7 +72,7 @@ def upload_article_and_return_results():
     for scan_fs in scans_file_storages:
         scan_fs.close()
 
-    return {
+    a = {
         'articleId': article_id,
         'text': process_result.text,
         'scanResults': [
@@ -81,6 +82,9 @@ def upload_article_and_return_results():
             } for i, image_data in enumerate(process_result.comparison_base64_images)
         ]}
 
+
+    logging.error(a)
+    return jsonify(a)
 
 @upload_bp.route('/updateMagazine', methods=['POST'])
 def update_magazine():
