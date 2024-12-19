@@ -1,20 +1,15 @@
-import base64
-import json
-import logging
 import re
 
 from flask import jsonify, request, Blueprint
 
 from app.services.database.database import Database
-from app.services.file_processor import process_files
-from app.utils.classes import Magazine, Article, ArticlePageScan
-from app.utils.parser import camel_to_snake, snake_to_camel_case, snake_to_camel
+from app.utils.converters import snake_to_camel_case
 
 auth_bp = Blueprint('auth', __name__)
 
 
 @auth_bp.errorhandler(TypeError)
-# TODO: non so se questo è utile per noi @edo
+# TODO: non so se questo sia utile per noi @edo
 def handle_exception(e: TypeError):
     error_msg = e.args[0]
     matches = re.match(

@@ -8,7 +8,7 @@ from flask import jsonify, request, Blueprint
 from app.services.database.database import Database
 from app.services.file_processor import process_files
 from app.utils.classes import Magazine, Article, ArticlePageScan
-from app.utils.parser import camel_to_snake, snake_to_camel_case, snake_to_camel
+from app.utils.converters import camel_to_snake, merge_lines, snake_to_camel_case, snake_to_camel
 
 upload_bp = Blueprint('upload', __name__)
 
@@ -93,6 +93,8 @@ def upload_article_and_return_results():
     })
 
 # TODO: Da rivedere la logica di salvataggio dell'articolo
+
+
 @upload_bp.route('/saveEditedArticle', methods=['POST'])
 def save_edited_article():
     article_json = camel_to_snake(request.json)
@@ -110,6 +112,8 @@ def save_edited_article():
         article_without_figures = Article.create_blueprint_with(
             **{k: v for k, v in body.items() if k != 'figures'}
         )
+        article_without_figures.content = merge_lines(
+            article_without_figures.content)
 
         logging.error("prima richiesta")
         article_id = Database.get_instance().add_article(article_without_figures)

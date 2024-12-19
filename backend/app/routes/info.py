@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from app.services.database.database import Database
-from app.utils.parser import snake_to_camel, snake_to_camel_case
+from app.utils.converters import snake_to_camel, snake_to_camel_case
 import re
 
 info_bp = Blueprint('info', __name__)

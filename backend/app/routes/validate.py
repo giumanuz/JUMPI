@@ -1,4 +1,3 @@
-import logging
 from flask import Blueprint, jsonify
 from app.services.database.database import Database
 

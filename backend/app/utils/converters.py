@@ -1,3 +1,5 @@
+import re
+
 def snake_to_camel_case(snake_str: str):
     components = snake_str.split('_')
     return components[0] + ''.join(x.title() for x in components[1:])
@@ -23,3 +25,9 @@ def camel_to_snake(camel_obj):
         return [camel_to_snake(i) for i in camel_obj]
     else:
         return camel_obj
+
+def merge_lines(text):
+    text = re.sub(r'-\n', '', text)
+    text = re.sub(r'\n', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip() 
